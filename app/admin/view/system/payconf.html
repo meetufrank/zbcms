@@ -1,0 +1,246 @@
+{include file="common/head"/}
+
+<div class="admin-main layui-anim layui-anim-upbit">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>支付配置</legend>
+    </fieldset>
+    <div class="layui-tab layui-tab-card" >
+  <ul class="layui-tab-title">
+      {foreach name="info" item="vo" key="k"}
+       <li {if condition="$k eq 0"}class="layui-this" {/if}>{$vo.payname}配置</li>
+    {/foreach}
+  </ul>
+  <div class="layui-tab-content">
+      {foreach $info as $vo}
+      {switch name="$vo.id"}
+           {case value="1"}  
+    <div class="layui-tab-item layui-show">
+      <form class="layui-form layui-form-pane">
+          <input type="hidden" lay-verify="required" name="id"  value="{$vo.id}" class="layui-input">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                APPID
+            </label>
+            <div class="layui-input-4">
+                <input type="text" lay-verify="required" name="app_id" placeholder="APPID" {if condition="isset($vo.data.app_id)"}value="{$vo.data.app_id}"{/if} class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户私钥</label>
+            <div class="layui-input-4">
+                <input type="text" lay-verify="required" name="merchant_private_key" placeholder="商户私钥" {if condition="isset($vo.data.merchant_private_key)"}value="{$vo.data.merchant_private_key}"{/if}  class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">支付宝公钥</label>
+            <div class="layui-input-4">
+                <input type="text" name="alipay_public_key" lay-verify="required" placeholder="支付宝公钥" {if condition="isset($vo.data.alipay_public_key)"}value="{$vo.data.alipay_public_key}"{/if}  class="layui-input">
+            </div>
+        </div>
+       <div class="layui-form-item">
+            <label class="layui-form-label">{$vo.payname}logo</label>
+            <input type="hidden" name="pic" id="pic{$vo.id}" {if condition="isset($vo.logo)"}value="{$vo.logo}"{/if}>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary" id="adBtn{$vo.id}"><i class="icon icon-upload3"></i>点击上传</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="adPic{$vo.id}" {if condition="isset($vo.logo)"}src="__PUBLIC__{$vo.logo}"{/if} >
+                        <p id="demoText{$vo.id}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <button type="reset" class="layui-btn layui-btn-primary">{:lang('reset')}</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="trySend{$vo.id}">测试</button>
+            </div>
+        </div>
+     </form>
+    </div>
+      {/case}
+      {case value="2"}  
+    <div class="layui-tab-item ">
+      <form class="layui-form layui-form-pane">
+          <input type="hidden" lay-verify="required" name="id"  value="{$vo.id}" class="layui-input">
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                {$vo.payname}APPID
+            </label>
+            <div class="layui-input-4">
+                <input type="text" lay-verify="required" name="appid" placeholder="{$vo.payname}APPID" {if condition="isset($vo.data.appid)"}value="{$vo.data.appid}" {/if} class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">{$vo.payname}SECRET</label>
+            <div class="layui-input-4">
+                <input type="text" lay-verify="required" name="appsecret" placeholder="{$vo.payname}SECRET" {if condition="isset($vo.data.appsecret)"}value="{$vo.data.appsecret}" {/if} class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">商户ID</label>
+            <div class="layui-input-4">
+                <input type="text" name="mchid" lay-verify="required" placeholder="商户ID" {if condition="isset($vo.data.mchid)"}value="{$vo.data.mchid}" {/if} class="layui-input">
+            </div>
+        </div>
+          <div class="layui-form-item">
+            <label class="layui-form-label">商户秘钥</label>
+            <div class="layui-input-4">
+                <input type="text" lay-verify="required" name="key" placeholder="商户支付秘钥" {if condition="isset($vo.data.key)"}value="{$vo.data.key}" {/if} class="layui-input">
+            </div>
+        </div>
+           <div class="layui-form-item">
+            <label class="layui-form-label">回调域名</label>
+            <div class="layui-input-4">
+                <input type="text" lay-verify="required" name="notify" placeholder="回调域名" {if condition="isset($vo.data.notify)"}value="{$vo.data.notify}" {/if} class="layui-input">
+            </div>
+        </div>
+       <div class="layui-form-item">
+            <label class="layui-form-label">{$vo.payname}logo</label>
+            <input type="hidden" name="pic" id="pic{$vo.id}" {if condition="isset($vo.logo)"}value="{$vo.logo}"{/if}>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary" id="adBtn{$vo.id}"><i class="icon icon-upload3"></i>点击上传</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="adPic{$vo.id}" {if condition="isset($vo.logo)"}src="__PUBLIC__{$vo.logo}"{/if} >
+                        <p id="demoText{$vo.id}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <button type="reset" class="layui-btn layui-btn-primary">{:lang('reset')}</button>
+                <button type="button" class="layui-btn layui-btn-normal" id="trySend{$vo.id}">测试</button>
+            </div>
+        </div>
+     </form>
+    </div>
+      {/case}
+          {default /}
+          <div class="layui-tab-item">需要配置</div>
+             {/switch}
+       {/foreach}
+  </div>
+</div>
+    
+</div>
+{include file="common/foot"/}
+<script>
+layui.use('element', function(){
+  var $ = layui.jquery
+  ,element = layui.element; //Tab的切换功能，切换事件监听等，需要依赖element模块
+  
+  //触发事件
+  var active = {
+    tabAdd: function(){
+      //新增一个Tab项
+      element.tabAdd('demo', {
+        title: '新选项'+ (Math.random()*1000|0) //用于演示
+        ,content: '内容'+ (Math.random()*1000|0)
+        ,id: new Date().getTime() //实际使用一般是规定好的id，这里以时间戳模拟下
+      })
+    }
+    ,tabDelete: function(othis){
+      //删除指定Tab项
+      element.tabDelete('demo', '44'); //删除：“商品管理”
+      
+      
+      othis.addClass('layui-btn-disabled');
+    }
+    ,tabChange: function(){
+      //切换到指定Tab项
+      element.tabChange('demo', '22'); //切换到：用户管理
+    }
+  };
+  
+  $('.site-demo-active').on('click', function(){
+    var othis = $(this), type = othis.data('type');
+    active[type] ? active[type].call(this, othis) : '';
+  });
+  
+  //Hash地址的定位
+  var layid = location.hash.replace(/^#test=/, '');
+  element.tabChange('test', layid);
+  
+  element.on('tab(test)', function(elem){
+    location.hash = 'test='+ $(this).attr('lay-id');
+  });
+  
+});
+</script>
+<script>
+    layui.use(['form', 'layer','upload'], function () {
+        var form = layui.form,layer = layui.layer,$= layui.jquery;upload = layui.upload;
+        
+        //提交监听
+        form.on('submit(submit)', function (data) {
+            loading =layer.load(1, {shade: [0.1,'#fff']});
+            $.post("{:url('system/payedit')}",data.field,function(res){
+                layer.close(loading);
+                if(res.code > 0){
+                    layer.msg(res.msg,{icon: 1, time: 1000},function(){
+                        location.href =location.href;
+                    });
+                }else{
+                    layer.msg(res.msg,{icon: 2, time: 1000});
+                }
+            });
+        });
+        
+        //普通图片上传
+         {foreach $info as $vo}
+         $('#trySend{$vo.id}').click(function(){
+          
+             loading =layer.load(1, {shade: [0.1,'#fff']});
+             var tmpWin  = window.open();
+             $.post("{:url('system/addorder')}",'',function(res){
+                layer.close(loading);
+                if(res.code > 0){
+                    
+                    var orderid=res.id;
+                   tmpWin.location.href = "{:url('System/payceshi')}?id={$vo.id}&orderid="+orderid;
+                 
+                }else{
+                    
+                   tmpWin.document.write('服务器处理异常');
+                    layer.msg(res.msg,{icon: 2, time: 1000});
+                }
+            });
+    
+           
+        });
+        
+            var uploadInst{$vo.id} = upload.render({
+                elem: '#adBtn{$vo.id}'
+                ,url: '{:url("UpFiles/upload")}'
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#adPic{$vo.id}').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res){
+                    if(res.code>0){
+                        $('#pic{$vo.id}').val(res.url);
+                    }else{
+                        //如果上传失败
+                        return layer.msg('上传失败');
+                    }
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText{$vo.id}');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst{$vo.id}.upload();
+                    });
+                }
+            });
+            {/foreach}
+    })
+</script>
+</body>
+</html>

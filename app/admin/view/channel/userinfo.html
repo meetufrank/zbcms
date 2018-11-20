@@ -1,0 +1,59 @@
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit">
+    <fieldset class="layui-elem-field layui-field-title">
+        <legend>用户统计</legend>
+    </fieldset>
+    <div class="demoTable">
+
+        <a href="{:url('out')}?ad_id={$id}" class="layui-btn" style="float:right;"><i class="fa fa-plus" aria-hidden="true"></i>数据导出</a>
+        <div style="clear: both;"></div>
+    </div>
+    <table class="layui-table" id="list" lay-filter="list"></table>
+</div>
+{include file="common/foot"/}
+
+<script type="text/html" id="cu_date">
+{{d.cu_date}}
+    </script>
+
+
+
+
+<div class="layui-form-item">
+    <div class="layui-input-block">
+        <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+    </div>
+</div>
+
+<script type="text/html" id="order">
+    <input name="{{d.ad_id}}" data-id="{{d.ad_id}}" class="list_order layui-input" value=" {{d.sort}}" size="10"/>
+</script>
+<script type="text/html" id="open">
+    <input type="checkbox" name="open" value="{{d.ad_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" {{ d.open == 1 ? 'checked' : '' }}>
+</script>
+
+<script>
+    layui.use(['table','form'], function() {
+
+        var table = layui.table,form = layui.form,$ = layui.jquery;
+
+        var tableIn = table.render({
+            id: 'ad',
+            elem: '#list',
+            url: '{:url("userinfo")}',
+            where:{ad_id:'{:input("ad_id")}'},
+            method: 'post',
+            page:true,
+            cols: [[
+                {checkbox: true, fixed: true},
+                {field: 'id', title: '{:lang("id")}', width: 80, fixed: true},
+                {field: 'cu_name', title: '用户名称', width: 400,templet: '#channel_name'},
+                {field: 'cu_date', title: '登录时间', width: 300,templet: '#cu_date'},
+                {width: 260, align: 'center', toolbar: '#action'}
+            ]],
+            limit:10
+        });
+
+
+    })
+</script>

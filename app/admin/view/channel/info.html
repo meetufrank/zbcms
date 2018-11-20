@@ -1,0 +1,144 @@
+<style>
+    #drbmd{
+        position: relative;
+    }
+    #drbmd .use{
+        position: relative;
+        top: -45px;
+        left: 13px;
+    }
+    #drbmd .baimingdan{
+        position: absolute;
+        left: 350px;
+        top: 1px;
+    }
+
+    .layui-form-label{
+        width:110px !important;
+        padding:8px 15px;
+        height:38px !important;
+        line-height:20px;
+        border-width:1px;
+        border-style:solid;
+        border-radius:2px 0 0 2px;
+        text-align:center;
+        background-color:#FBFBFB;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        box-sizing:border-box;
+        border-color: #e6e6e6;
+    }
+
+</style>
+
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <!--最上面横线部分-->
+    <!--<fieldset class="layui-elem-field layui-field-title">-->
+        <!--<legend>{$title}</legend>-->
+    <!--</fieldset>-->
+
+    <form action="{:url('whitelist_user_list')}" enctype="multipart/form-data" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="text-align: center">推流地址</label>
+            &nbsp;&nbsp;&nbsp;
+            <label>{$info.pushurl}</label>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">拉流rtmp地址</label>
+            &nbsp;&nbsp;&nbsp;
+            <label>{$info.rtmpurl}</label>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">拉流flv地址</label>
+            &nbsp;&nbsp;&nbsp;
+            <label>{$info.flvurl}</label>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">拉流m3u8地址</label>
+            &nbsp;&nbsp;&nbsp;
+            <label>{$info.m3u8url}</label>
+        </div>
+        <input type="type" style="display: none;" name="pid" value="{$info.id}"/>
+        <div id="drbmd">
+            <div class="layui-form-item">
+                <label class="layui-form-label">观众白名单</label>
+
+            </div>
+
+            <div class="layui-form-item use">
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a><input type="file" name="image"></a>
+
+                <a class="baimingdan">
+                    <span>导入观众白名单</span>
+                    <input type="submit" value="导入">
+                    <a href="http://meetuuu.oss-cn-shanghai.aliyuncs.com/wj/zhibo/excel/Excel%E6%A8%A1%E6%9D%BF.xlsx" style="position: absolute;top: 52px;left: 114px;">下载Excel模板</a>
+                </a>
+
+            </div>
+            <br/>
+        </div>
+    </form>
+    <form class="layui-form layui-form-pane" action="{:url('usertype')}" method="post">
+
+
+        <input type="type" style="display: none;" name="pid" value="{$info.id}"/>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">报名问卷</label>
+            <div class="layui-input-block">
+                <input id='cb' onclick="ischeck()" style="display: inline-block" class="layui-form-radio" type="checkbox"  name="bmwj" value="1" title="报名问卷" {if condition="$info.user_type eq 1"}checked="checked"{/if}>报名问卷
+            </div>
+        </div>
+
+        <div id="yzmdiv">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">验证码观看</label>
+
+                </div>
+
+                <div class="layui-form-item">
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    提示文字:&nbsp;&nbsp;<input name="code_title" type="text" value="{$codeview_info.code_title}">
+                    <br/><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    自定义验证码:&nbsp;&nbsp;<input name="codevar" type="text" value="{$codeview_info.codevar}">
+                </div>
+        </div>
+
+
+
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+{include file="common/foot"/}
+<script src="__STATIC__/common/js/angular.min.js"></script>
+<script src="__STATIC__/admin/js/jquery.min.js"></script>
+<script>
+
+    function ischeck(){
+        var isChecked = $('#cb').is(":checked");
+        if(isChecked == true){
+            $("#yzmdiv").css("display","none");  //隐藏验证码
+        }else if(isChecked == false){
+            $("#yzmdiv").css("display","block");  //显示验证码
+        }
+    }
+
+</script>

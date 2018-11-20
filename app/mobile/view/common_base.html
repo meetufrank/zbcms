@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!--    <meta name="description" content="A simple jQuery image cropping plugin.">-->
+<!--    <meta name="keywords" content="HTML, CSS, JS, JavaScript, jQuery plugin, image cropping, image crop, image move, image zoom, image rotate, image scale, front-end, frontend, web development">
+    <meta name="author" content="Chen Fengyuan">-->
+    <title>{$site_title}</title>
+
+    <link rel="stylesheet" href="__MOBILE__/css/iconfont.css">
+    <link rel="stylesheet" href="__MOBILE__/css/reset.css">
+    {assign name="kjdata" value="$Think.session.kjdata|json_decode=xxx" /}
+    {assign name="bsdata" value="$Think.session.bsdata|json_decode=xxx" /}
+    {block name="style"}{/block}
+    </head>
+    <body>
+    {block name="header"}
+      {include file="common/header"/}
+    {/block}
+    {block name="content"}
+    {/block}
+    {block name="footer"}
+    {include file="common/footer"/}
+    {/block}
+    
+  
+    
+    
+    <script src="__MOBILE__/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/plugins/layui/layui.js"></script>
+    	<script>
+	    (function () {
+	        var timer;
+	        changeFixedW();
+	        function changeFixedW() {
+	            var width = window.screen.width;
+	            var fixedW = 750;
+	            var scale = width / fixedW;
+	            var meta = document.createElement('meta');
+	            meta.setAttribute('name','viewport');
+	            meta.setAttribute('content','width='+fixedW+',initial-scale='+scale+',maximum-scale='+scale+',user-scalable=no');
+	            document.head.appendChild(meta);
+	        }
+	        window.addEventListener('resize', function () {
+	            clearTimeout(timer);    
+	            timer = setTimeout(changeFixedW, 300);
+	        }, false);
+	        window.addEventListener('pageshow', function (e) {
+	            if (e.persisted) {
+	                clearTimeout(timer);
+	                timer = setTimeout(changeFixedW, 300);
+	            }
+	        }, false);
+	    })();
+             $('.menuRight').click(function(){
+            $('.show').toggle(500);
+        });
+	</script>
+        {block name="js"}{/block}
+        
+          </body>
+  </html>  
