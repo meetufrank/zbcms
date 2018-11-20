@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>报名问卷</title>
+    <link rel="stylesheet" href="__STATIC__/logininfo/bootstrap-3.3.7-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__STATIC__/logininfo/css/demo.css">
+    <style>
+        /* 手机端竖屏 */
+        @media screen and (orientation:portrait) and (max-width: 720px) {
+            .banner img{
+                width: 100%;
+            }
+            .nicheng input{
+                width: 100%;
+            }
+            .tell input{
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<form action="{:url('Home/Chatmobile/index')}" method="post">
+    <input type="hidden" name="ad_id" value="{$info.id}">
+<div class="all">
+    <div class="contant">
+        <!--banner-->
+        <div class="banner">
+            <img src="__PUBLIC__/{$info.channel_logo}">
+        </div>
+        <!--问卷 昵称手机输入框-->
+        <div class="form">
+            <!--问卷文字-->
+            <div class="title">
+                <p>问卷</p>
+                <p>问卷</p>
+            </div>
+            <!--输入框部分-->
+            <div class="biaodan">
+                <!--昵称-->
+                <div class="nicheng">
+                    <p>昵称</p>
+                    <input type="text" name="name" class="username"   id="name"  data-foolish-msg="请输入正确的昵称">
+                </div>
+                <!--手机号-->
+                <div class="tell">
+                    <p>手机</p>
+                    <input type="tel" name="phone" class="userphone"  id="phone" data-foolish-msg="请输入正确的电话号码">
+                </div>
+                <!--提交按钮-->
+                <p class="submit">
+                    <button type="submit" class="matter-button">提交</button>
+                    <!--<span class="matter-button">提交</span>-->
+                </p>
+            </div>
+
+        </div>
+    </div>
+</div>
+</form>
+
+<script src="__STATIC__/logininfo/js/jquery.min.js"></script>
+<script src="__STATIC__/logininfo/layer/mobile/layer.js"></script>
+<script>
+    function checkUserName(username){
+        if ((/^[\u4E00-\u9FA5A-Za-z]+$/.test(username))) {
+            return true;
+        }else{
+            return false;
+        }
+    }
+    function checkMobile(mobile) {
+        if ((/^1[3|4|5|6|7|8]\d{9}$/.test(mobile))) { return true; } else { return false; } }
+
+    // var requestData;
+    // if(valid && !checkUserName(requestData.username) ){ valid=false; var tips=$ ( ".username").attr( "data-foolish-msg"); $( ".username").focus(); }
+    // if(valid && !checkMobile(requestData.userphone)){ var tips=$ ( ".userphone").attr( "data-foolish-msg"); $( ".userphone").focus(); valid=false; }
+
+    $('.matter-button').on('click', function() {
+        var requestData = {
+            username:$('.username').val(),
+            userphone:$('.userphone').val(),
+        }
+        var valid = true;
+        if(valid && requestData.matter == ''){
+            valid = false;
+            var tips = $(".matter").attr("data-foolish-msg");
+            $(".matter").focus();
+        }
+        if(valid && !checkUserName(requestData.username) ){ valid=false; var tips=$ ( ".username").attr( "data-foolish-msg"); $( ".username").focus(); }
+        if(valid && !checkMobile(requestData.userphone)){ var tips=$ ( ".userphone").attr( "data-foolish-msg"); $( ".userphone").focus(); valid=false; }
+        //问题
+        var UserName = requestData.username;		//提问电话
+        var UserMail = requestData.useremail;		//提问内容
+        var UserTel = requestData.userphone;		//提问邮箱
+        var SelectType = requestData.matter;		//提问姓名
+        var TextSay = requestData.matterconter;
+        if(valid){
+            $.ajax({
+                type:"POST",
+                url:"",
+                dataType: "json",
+                data:{"SelectType":SelectType,"UserName":UserName,"UserTel":UserTel,"UserMail":UserMail,"TextSay":TextSay},
+                success: function(data){
+                    if(data.code == 1){
+                        layer.open({
+                            content: '{$Think.lang.index_Formtijiaotrue}'
+                            ,skin: 'msg'
+                            ,time: 2 //2秒后自动关闭
+                        });
+                        window.location.href=window.location.href;
+                    }
+                }
+            });
+        }else{
+            layer.open({
+                content: tips
+                ,skin: 'msg'
+                ,time: 2 //2秒后自动关闭
+            });
+        }
+    });
+
+</script>
+
+</body>
+</html>

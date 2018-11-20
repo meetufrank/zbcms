@@ -1,125 +1,687 @@
-{include file="common/head"/}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title></title>
+
+    <link rel="stylesheet" type="text/css" href="__PC__/css/style.css">
+    <link rel="stylesheet" type="text/css" href="__PC__/iconfont/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Buttons/2.0.0/css/buttons.min.css">
+    <!-- 阿里云html5播放器的CSS -->
+    <link rel="stylesheet" type="text/css" href="https://g.alicdn.com/de/prismplayer/2.5.0/skins/default/aliplayer-min.css">
+    <!-- <link href="//nos.netease.com/vod163/nep.min.css" rel="stylesheet"> -->
+    <style type="text/css">
+        .prism-big-play-btn{
+            position: absolute;
+            left: 400px  !important;
+            bottom: 212px  !important;
+            display: block;
+        }
+        /*悬停播放按钮样式*/
+        .prism-big-play-btn:hover{
+            border: none !important;
+            border-style:none !important;
+            border-width:0px !important;
+            border-radius:63px !important;
+            border-color:#333 !important;
+        }
+        /*让播放器结束的时候也显示播放按钮*/
+        .pause{
+            display: block!important;
+        }
+
+        /*更改原本的开始播放按钮*/
+        /*.play{*/
+        /*background-image: url('public/static/pc/images/play2.png') !important;*/
+        /*background-size: 63px 63px;*/
+        /*background-repeat: no-repeat;*/
+        /*z-index: 999999999999999999999;*/
+        /*width: 63px;*/
+        /*height: 63px;*/
+        /*position: absolute;*/
+        /*left: 35%;*/
+        /*top: 500px;*/
+        /*}*/
+
+        canvas{
+            margin-top: 25px;
+        }
+        #wxcodes{
+            margin-top: 30px;
+        }
+        .footer{overflow: hidden;}
+        /*微信logo位置*/
+        .wechat{
+            display: inline-block;
+            position: absolute;
+            left: 180px;
+            bottom: 0px;
+            cursor: pointer;
+        }
+        .wechat img{
+            width:27px !important;
+            height: 27px !important;
+        }
+
+
+
+
+        /*  页面弹出层 title input btn 样式 */
+        .zhezhao{
+            position: fixed;
+            z-index: 999999;
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        .authorized-wrap{
+            display: inline-block;
+            padding-bottom: 40px;    /* 整体下内边距 */
+            vertical-align: middle;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f2f2f2;
+            margin-top: 200px;
+        }
+        .auth-code-wrap{
+            position: relative;
+            width: 360px;
+        }
+        .title{
+            position: relative;
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 1px solid #E6E6E6;
+            color: #040405;
+            font-size: 18px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .content{
+            margin: 20px auto 0;
+            width: 300px;
+        }
+        .content input{
+            padding-left: 5px;
+            width: 100%;
+            height: 46px;
+            font-size: 13px;
+            outline: none;
+            border: 1px solid #b3b6bb;
+        }
+        .btn{
+            display: inline-block;
+            margin-top: 25px;
+            width: 300px;
+            height: 46px;
+            line-height: 46px;
+            font-size: 16px;
+            color: #fff;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #1e78dc;
+            cursor: pointer;
+            border: 0px;
+        }
+        /*提示文字样式*/
+        #tishi{
+            color: red;
+            margin-left: -195px !important;
+            position: relative;
+            top: 5px;
+            font-size: 10px;
+        }
+
+
+        /*用户白名单弹出层*/
+        .backg{
+            position: fixed;
+            z-index: 999999;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        .neirong{
+            display: inline-block;
+            padding-bottom: 40px;
+            vertical-align: middle;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f2f2f2;
+            margin-top: 150px;  /*上外边距 整体框框下调  */
+        }
+        .neirong .biaoti{
+            position: relative;
+            width: 360px;
+        }
+        .neirong .biaoti div:first-child{
+            position: relative;
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 1px solid #E6E6E6;
+            color: #040405;
+            font-size: 18px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .neirong .biaoti .shuru{
+            margin: 20px auto 0;
+            width: 300px;
+        }
+        .neirong .biaoti .shuru input{
+            padding: 10px;
+            width: 94%;
+            height: 25px;
+            font-size: 16px;
+            outline: none;
+            border: 1px solid #b3b6bb;
+        }
+        .neirong .biaoti .shuru input + input{
+            margin-top: 10px;
+        }
+        .neirong .biaoti .shuru .btn{
+            display: inline-block;
+            margin-top: 25px;
+            width: 300px;
+            height: 46px;
+            line-height: 46px;
+            font-size: 16px;
+            color: #fff;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #1e78dc;
+            cursor: pointer;
+            border: 0px;
+        }
+    </style>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+
+
+</head>
+<body>
+<div class="head"></div>
+<div class="container">
+
+
+    <!--验证码-->
+    {if condition="$info.user_type eq 2"}
+            <div class="zhezhao">
+                <div class="authorized-wrap">
+                    <div class="auth-code-wrap">
+                        <!--title 标题-->
+                        <div class="title">{$yzm_info.code_title}</div>
+                        <div class="content">
+                            <!--input 输入框-->
+                            <input type="text" id="codevar" placeholder="请输入验证码">
+                            <!--立即观看 按钮-->
+                            <button class="btn" onclick="yzmgk({$info.id})">立即观看</button>
+                            <span id="tishi"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {/if}
+
+    <!--用户白名单 弹出层-->
+    <!--深灰色背景色-->
+    {if condition="$info.user_type eq 3"}
+            <div class="backg">
+                <!--内容部分-->
+                <div class="neirong">
+                    <div class="biaoti">
+                        <!--title-->
+                        <div>欢迎观看本直播</div>
+                        <!--输入框 点击按钮 -->
+                        <div class="shuru">
+                            <input type="text" id="w_name" placeholder="请输入用户名">
+                            <span id="s1" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
+                            <span id="s2" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
+                            <input type="password" id="w_pwd" placeholder="请输入密码">
+                            <span id="s3"  style="font-size: 13px;color: red;text-align: left;position: relative;left: -115px;"></span>
+                            <button class="btn" onclick="bmd({$info.id})">立即观看</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    {/if}
+
+    <div class="container-left">
+        <div class="left-top">
+            <img src="__PUBLIC__/{$info.channel_logo}">
+            <div class="title">
+                <h4>{$info.channel_name}</h4>
+                <div class="text-msg">
+                      <span class="channel-heads">
+                        <i class=" iconfont icon-guankanrenshu"></i>
+                        <span class="">{$acount}</span>
+                      </span>
+
+
+                    <div class="sharebox">
+                              <span class="channel-share" >
+                                <i class="iconfont icon-fenxiang"></i>
+                                <span class="">分享</span>
+                                <span class="sharebuttonbox btn-hidee">
+                                  <img class="sharebtn-wechat" src="__PC__/images/wechat.png">
+                                  <img class="sharebtn-space" src="__PC__/images/space.png" style="display: none;">
+                                  <img class="sharebtn-blog" src="__PC__/images/blog.png" style="display: none;">
+                                </span>
+                              </span>
+                    </div>
+                </div>
+            </div>
+            <div class="text-phone">
+                <img src="__PC__/images/phone.png" class="phone">
+                <p>手机观看</p>
+                <div class="qrcode-float">
+                    <div id="qrcode" class="qrcode-radius"></div>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!--后增加的开始播放按钮-->
+        <!--<div class="play"></div>-->
+        <div class="left-video" id="left-video">
+            <div  class="prism-player" id="J_prismPlayer" style="width: 865px;height: 487px;">
+
+            </div>
+        </div>
+        <div class="left-player-bar">
+            <div class="dm-box" style="display: none;">弹幕</div>
+            <div class="dm-check " id="dm-check" style="display: none;">
+                <img src="__PC__/images/btn-off.png" id="btn-off" class="btn-off btn-off-yes">
+                <img src="__PC__/images/btn-on.png" id="btn-on" class="btn-on btn-on-hidden">
+            </div>
+            <div class="interactive-icon-box" style="display: none;">
+                <div class="interactive-icon icon-yellow">
+                    <div class="icon-zone">
+                        <p class="icon-text">我要<br/>抽奖</p>
+                    </div>
+                </div>
+                <div class="interactive-icon icon-blue" id="icon-vote" style="position: relative;">
+                    <div class=" icon-zone vote-icon">
+                        <i class="i-icon iconfont-btn">&#xe627;</i>
+                        <p class="icon-text">投票</p>
+                    </div>
+                    <!-- 文字投票 -->
+                    <div class="vote-content vote-content-hidden" id="vote-content" style="display: none;" >
+                        <div class="vote-box-close">
+                            <i class="icon-close">&#xe69a;</i>
+                        </div>
+                        <div class="vote-radio" style="display: none;" >
+                            <p class="vote-title">文字投票(单选)</p>
+                            <form name="vote-form">
+                                <ul>
+                                    <li class="vote-item">
+                                        <p class="vote-name">
+                                            <input type="radio" name="vote-ques-1" class="radio-input">
+                                            <label class="vote-text" for="">内容内容</label>
+                                        </p>
+                                    </li>
+                                    <li class="vote-item">
+                                        <p class="vote-name">
+                                            <input type="radio" name="vote-ques-1" class="radio-input" >
+                                            <label class="vote-text" for="">内容</label>
+                                        </p>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                        <div class="vote-check" >
+                            <p class="vote-title">文字投票(多选，最多选2项)</p>
+                            <form name="vote-form">
+                                <ul>
+                                    <li class="vote-item">
+                                        <p class="vote-name">
+                                            <input type="checkbox" name="vote-ques-1" class="radio-input" >
+                                            <label class="vote-text" for="">内容</label>
+                                        </p>
+                                    </li>
+                                    <li class="vote-item">
+                                        <p class="vote-name">
+                                            <input type="checkbox" name="vote-ques-1" class="radio-input" >
+                                            <label class="vote-text" for="">内容</label>
+                                        </p>
+                                    </li>
+                                </ul>
+                            </form>
+                        </div>
+                        <p class="vote-button">投票</p>
+
+                    </div>
+                    <!-- 图文投票 -->
+                    <div id="vote-wrap" class="pc-vote-wrap vote-content-hidden"  >
+                        <div class="vote-img-title">
+                            <p class="vote-img-title-text">1/1(单选)图文投票单选</p>
+                            <div class="vote-img-close">
+                                <i class="anticon-close">&#xe617;</i>
+                            </div>
+                        </div>
+
+                        <div class="vote-select-group-warp">
+                            <div class="vote-select-item nth-odd">
+                                <div class="vote-selection-item-content">
+                                    <div class="vote-select-img-wrap">
+                                        <div class="select-img-wrap">
+                                            <img src="__PC__/images/timg1.jpg" class="select-img" >
+                                        </div>
+                                        <p class="select-name">1</p>
+                                    </div>
+                                    <div class="vote-select-bottom-wrap">
+                                        <div class="vote-num-wrap">0票</div>
+                                        <div class="vote-btn-wrap">
+                                            <button class="img-vote-btn">投票</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="vote-select-item nth-even">
+                                <div class="vote-selection-item-content">
+                                    <div class="vote-select-img-wrap">
+                                        <div class="select-img-wrap">
+                                            <img src="__PC__/images/timg1.jpg" class="select-img" >
+                                        </div>
+                                        <p class="select-name">1</p>
+                                    </div>
+                                    <div class="vote-select-bottom-wrap">
+                                        <div class="vote-num-wrap">0票</div>
+                                        <div class="vote-btn-wrap">
+                                            <button class="img-vote-btn">投票</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="interactive-icon icon-red" id="icon-reward" >
+                    <div class="icon-zone">
+                        <i class="i-icon iconfont-btn">&#xe602;</i>
+                        <p class="icon-text">打赏</p>
+                    </div>
+                    <!-- 现金打赏 -->
+
+                    <div class="reward-wrap index-display" id="reward-wrap">
+                        <div id="reward-pay-close">
+                            <i class="reward-icon closeicon">&#xe69a;</i>
+                        </div>
+
+                        <div class="cash-banner">
+                            <span>打赏</span>
+                        </div>
+                        <div class="cash-price-wrap">
+                            <p class="p-price">
+                                <span class="label">金额</span>
+                                <input type="text" name="money" class="money">
+                                <span class="pay-btn">微信支付</span>
+                                <span class="pay-type-btn">其他支付方式</span>
+                            </p>
+                        </div>
+                        <div class="cash-rank-box">
+                            <div class="cash-rank-title">
+                                <span class="title-left">共<i class="num" id="userNum">0</i>人参与</span>
+                                <span class="title-right">累计金额<i class="num" id="totalSum">￥0</i></span>
+                            </div>
+                        </div>
+                        <div id="cash-rank-content"></div>
+                    </div>
+                    <div class="reward-layer-shade index-display">
+                        <div id="reward-pay-close">
+                            <i class="reward-icon closeicon">&#xe69a;</i>
+                        </div>
+                    </div>
+                    <div class="layer-box index-display">
+                        <div class="verifycode-wrap">
+                            <div class="title">
+                                <i class="reward-icon close-icon">&#xe69a;</i>
+                                微信扫码支付
+                            </div>
+                            <div class="qr-img-div">
+                                <img src="__PC__/images/user1.png">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div id="tab" class="tab" style="display: none;">
+            <ol>
+                <li class="active">热点</li>
+                <li>时政</li>
+                <li>财经</li>
+            </ol>
+            <ul>
+                <li class="cur">热点</li>
+                <li>时政</li>
+                <li>财经</li>
+            </ul>
+
+        </div>
+
+    </div>
+
+    <div class="container-right" id="container-right">
+        <!-- <div class="right-ppt" id="right-ppt" style="display: none;">
+          <div class="ppt-show-box">
+            <a type="button" class="ppt-show-btn">
+              <img src="images/switch.png" class="iconfont img-switch">
+                  <span class="switch">切换窗口</span>
+            </a>
+          </div>
+        </div> -->
+        <div class="common-box common-box-bg " id="common-box">
+            <input type="text" value="1" id="chat" style="display: none;" />
+            <p class="common-title">
+                <span>共<span class="common-num">{$chatcount}</span>条聊天</span>
+                <span class="common-nike">
+                  <span>我的昵称：</span>
+                  <span class="common-num">{$usernames}</span>
+                </span>
+            </p>
+            <iframe src="{:url('chatpc/index')}?cid={$info.id}&username={$usernames}" class="common-norank"></iframe>
+                <div class="wechat">
+                    <a href="https://open.weixin.qq.com/connect/qrconnect?
+appid=wx7eee3208b7b59ea1&redirect_uri=http://www.rflinker.com/zhibo/Home/Userlogin/index.html?ad_id={$info.id}%26user_type=4&response_type=code
+&scope=snsapi_login&state=STATE#wechat_redirect"><img src="__PC__/images/wechat.png" style="width: 32px;height: 32px;padding-left: 10px;"></a>
+                </div>
+        </div>
+    </div>
+
+</div>
+<div class="footer" style="margin-top: 100px;">
+    <p class="footer-text">测试页脚</p>
+    <div id="wxcodes">
+        <div id="wxqrcode" style='text-align:center;margin:-20px 0 15px 0;'></div>
+        <p style='text-align:left;font-size: 12px;line-height: 22px;color: #666;text-indent:1em'>打开微信，点击底部的“发现”，</P>
+        <p style='text-align:left;font-size: 12px;line-height: 22px;color: #666;text-indent:1em'>使用“扫一扫”即可将网页分享至朋友圈。</P>
+    </div>
+</div>
+
+
+
+
+<!-- <script type="text/javascript" src="js/jquery.js"></script> -->
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script type="text/javascript" src="__PC__/layer/layer/layer.js"></script>
+
+<script type="text/javascript" src="__PC__/js/script.js"></script>
+<script type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.5.0/aliplayer-min.js"></script>
+<!-- <script src="//nos.netease.com/vod163/nep.min.js"></script> -->
+<!--点击播放按钮 按钮隐藏-->
+
+
 <script>
-    $(document).ready(function() {
-        //Camera Jquery
-        $('#camera-slide').camera({
-            thumbnails: false,
-            hover: false,
-            pagination: false,
-        });
+    <!--验证码观看-->
+    function yzmgk(id){
+        var codevar = $("#codevar").val();  //自定义验证码值
+        $.ajax({
+            url:"{:url('Userlogin/yzmgk')}",
+            type:'get',
+            dataType:'json',
+            data:{ad_id:id,user_type:2,codevar:codevar},
+            async:true,
+            success:function(data){
+               if(data == 1){  //请输入正确的验证码
+                    document.getElementById('tishi').innerHTML = "<span>请输入正确的验证码</span>";
+               }else if(data == 2){  //正确关闭弹出层
+                    $('.zhezhao').css('display','none');
+               }
+            }
+        });//ajax结束
+    }
+
+
+    <!--用户白名单观看-->
+    function bmd(id){
+        var w_name = $("#w_name").val();  //用户名
+        var w_pwd = $("#w_pwd").val();  //用户密码
+        $.ajax({
+            url:"{:url('Userlogin/bmd')}",
+            type:'get',
+            dataType:'json',
+            data:{ad_id:id,w_name:w_name,w_pwd:w_pwd},
+            async:true,
+            success:function(data){
+                if($('#w_name').val() === ""){
+                    $('#s2').html("<span>用户名不能为空</span>");
+                }else if(data == 1){  //用户名不存在
+                     // alert("用户名不存在");
+                     $('#s2').html("<span> </span>")
+                     $('#s1').html("<span>用户名不正确</span>");
+                }else if(data == 2){  //密码错误
+                     // alert("密码错误");
+                    $('#s1').html("<span> </span>");
+                     $('#s3').html("<span>密码错误</span>");
+                }else if(data == 3){  //验证正确
+                     // alert("验证正确");
+                     $('.backg').css('display','none');
+                }
+            }
+        });//ajax结束
+    }
+</script>
+
+<script>
+    $("div.prism-big-play-btn").click(function(){
+        $(this).css('display','none');
+    })
+</script>
+
+<!--点击立即播放 隐藏弹出层-->
+<!--<script>-->
+    <!--$('.btn').click(function(){-->
+        <!--$('.zhezhao').css('display','none');-->
+    <!--});-->
+<!--</script>-->
+
+<script>
+    var rtmpurl = "{$info.m3u8url}";
+
+
+    var player = new Aliplayer({
+        id: 'J_prismPlayer',
+        cover: "__PC__/images/video.jpg",  //播放器封面图
+        width: '100%',
+        autoplay: false,
+        isLive:true,//播放内容是否为直播，直播时会禁止用户拖动进度条
+        // autoPlayDelay:10,//延迟多长时间后播放，单位为秒
+        // autoPlayDelayDisplayText:'正在转码，请稍后……',//提示文本，比如正在转码，请稍后……
+        // 启用延迟播放时，需要把autoplay属性设置为true
+        //支持播放地址播放,此播放优先级最高
+        source : rtmpurl,
+        // //播放方式二：点播用户推荐
+        // vid : '1e067a2831b641db90d570b6480fbc40',
+        // playauth : '',
+        // cover: 'http://liveroom-img.oss-cn-qingdao.aliyuncs.com/logo.png',
+        // //播放方式三：仅MTS用户使用
+        // vid : '1e067a2831b641db90d570b6480fbc40',
+        // accId: '',
+        // accSecret: '',
+        // stsToken: '',
+        // domainRegion: '',
+        // authInfo: '',
+        // //播放方式四：使用STS方式播放
+        // vid : '1e067a2831b641db90d570b6480fbc40',
+        // accessKeyId: '',
+        // securityToken: '',
+        // accessKeySecret: ''
+
+
+    },function(player){
+        console.log('播放器创建好了。')
+    });
+    // 播放器结束事件
+    player.on('error',function(e){
+        console.log('播放器结束了');
+
+        //隐藏
+        // $('.prism-ErrorMessage').css();
+        $(".prism-error-content").hide();
+        $(".prism-error-operation").hide();
+        $(".prism-detect-info.prism-center").hide();
+        $('.prism-ErrorMessage').css('background-image', 'url(' + "__PC__/images/video.jpg" + ')');
+
+
+        //解析
+        var errorData = e.paramData;
+        console.dir(errorData);
+        //console.log(errorData);
     });
 </script>
-<!-- slideshow start here -->
-<section id="slideshow-wrapper">
-    <div class="camera_wrap" id="camera-slide">
-        <!-- slide 1 here -->
-        {volist name="adList" id="vo" key="i"}
-        {if condition='$i eq 1'}
-        <div data-src="__HOME__/images/slideshow/bg-slide1.jpg">
-            <div class="caption-type1 moveFromLeft">
-                <h1>{$vo.name}</h1>
-                <p>{$vo.content}</p>
-                <a href="http://demo.cltphp.com/" target="_blank" title="CLTPHP演示站点" class="button-slide medium gray">演示站点</a>
-            </div>
-            <div class="caption-type1 moveFromRight">
-                <img src="__PUBLIC__{$vo.pic}" alt="{$vo.name}" />
-            </div>
-        </div>
-        {elseif condition='$i eq 2'}
-        <!-- slide 2 here -->
-        <div data-src="__HOME__/images/slideshow/bg-slide2.jpg">
-            <div class="caption-type2 moveFromTop">
-                <h1>{$vo.name}</h1>
-                <p>{$vo.content}</p>
-            </div>
-            <div class="caption-type2 moveFromBottom">
-                <img src="__PUBLIC__{$vo.pic}" alt="{$vo.name}" />
-            </div>
-        </div>
-        {else /}
-        <!-- slide 3 here -->
-        <div data-src="__HOME__/images/slideshow/bg-slide3.jpg">
-            <div class="caption-type3 moveFromLeft">
-                <img src="__PUBLIC__{$vo.pic}" alt="{$vo.name}" />
-            </div>
-            <div class="caption-type3 moveFromRight">
-                <h1>{$vo.name}</h1>
-                <p>{$vo.content}</p>
-                <!--<img src="__HOME__/images/slideshow/slide3a.png" alt="" class="html-badge" />-->
-            </div>
-        </div>
-        {/if}
-        {/volist}
-    </div>
-    <div id="slideshow-noscript"><h4>你准备好与CLTPHP共同搭建您的网络平台了吗？</h4></div>
-</section>
-<!-- slideshow end here --> 
-<div class="copyrights">Collect from <a href="http://www.cltphp.com/"  title="CLTPHP内容管理系统">CLTPHP内容管理系统</a></div>
-<!-- featured client start here -->
-<section id="featured-wrapper">
-    <div id="featured-logo-list">
-        <div class="row">
-            <div class="two columns mobile-two mobile-view">
-                <h6 class="featured-client">第三方资源 :</h6>
-            </div>
-            <div class="two columns mobile-two mobile-view">
-                <img src="__HOME__/images/sample-images/client1.png" alt="layui" />
-            </div>
-            <div class="two columns mobile-two mobile-view">
-                <img src="__HOME__/images/sample-images/client2.png" alt="thinkphp" />
-            </div>
-            <div class="two columns mobile-two mobile-view">
-                <img src="__HOME__/images/sample-images/client3.png" alt="angularjs" />
-            </div>
-            <div class="two columns mobile-two mobile-view">
-                <img src="__HOME__/images/sample-images/client4.png" alt="jquery" />
-            </div>
-            <div class="two columns mobile-two mobile-view">
-                <img src="__HOME__/images/sample-images/client5.png" alt="ztree" />
-            </div>
-        </div>
-    </div>
-</section>
-<!-- featured client end here -->
 
-<!-- maincontent start here -->
-<section id="content-wrapper">
-    <div class="row">
-        {clt:list_join db='article' dbfield='catid' id='vo' joindb='category' joinfield='id' where="posid = 1" order="listorder asc,createtime desc" limit='4'}
-        <div class="three columns mobile-two">
-            <h5><a style="{:style($vo['title_style'])}" href="{:url('home/'.$vo['catdir'].'/info',array('id'=>$vo['id'],'catId'=>$vo['catid']))}" title="{$vo.title}">{:str_cut($vo.title,12,'...')}</a></h5>
-            <div class="link-url">
-                <a href="{:url('home/'.$vo['catdir'].'/info',array('id'=>$vo['id'],'catId'=>$vo['catid']))}" target="_blank" title="{$vo.title}">
-                    <img src="{:imgUrl($vo['title_thumb'],'__HOME__/images/portfolio-thumb/p'.$k.'.jpg')}" alt="{$vo.title}" class="fade" />
-                </a>
-            </div>
-        </div>
-        {/clt:list_join}
-    </div>
-    <div id="featured-wrapper2">
-        <div class="row front-feature-icon">
-            {clt:list db='debris' id='list' limit="3" where="type_id = 1"}
-            <div class="four columns mobile-one">
-                <img src="__HOME__/images/sample-images/front-icon{$k+1}.png" alt="{$list.title}" class="img-center" />
-                <h5>{$list.title}</h5>
-                <p>{$list.content}</p>
-            </div>
-            {/clt:list}
-        </div>
-    </div>
-    <div class="row">
-        <div class="twelve columns">
-            <div class="featured-box">
-                <div class="nine columns">
-                    <h5>你准备好与CLTPHP共同打造您的网络平台了吗？</h5>
-                    <p>CLTPHP建站系统免费下载，只有您的支持，才能使得我们在开源的世界里走的更好！</p>
-                </div>
-                <div class="three columns">
-                    <a href="http://qiniu.cltphp.com/cltphp5.2.2.zip" class="button medium gray arrow-icon" rel="nofollow" title="{$sys.title}">点击下载</a>
-                </div>
-                <div class="clear"></div>
-            </div>
-        </div>
-    </div>
-</section>
-{include file="common/footer"/}
+<!--二维码-->
+<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<script src="__PC__/js/jquery-qrcode-master/jquery.qrcode.min.js"></script>
+
+<script>
+
+    //手机观看二维码
+    //width 宽  height 高  text 文本内容
+    var id = "{$info.id}";
+    var type = "{$info.user_type}";
+    var qrcodelink = "http://www.rflinker.com/zhibo/home/MobileUserlogin/index.html?ad_id="+id+"&user_type="+type;
+    $('#qrcode').qrcode({width: 83,height: 78,text: qrcodelink});
+
+    $(".sharebuttonbox.btn-hidee").click(function () {
+
+        layer.open({
+            type: 1,
+            title: '分享到微信朋友圈',
+            area: ['350px', '420px'],
+            content:  $('#wxcodes'),
+        })
+    })
+    $('#wxqrcode').qrcode({width: 263,height: 249,text: qrcodelink});
+
+</script>
+
+</body>
+</html>

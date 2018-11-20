@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
+    <title>mobile live</title>
+    <link rel="stylesheet" type="text/css" href="__MB__/css/common.css">
+    <!-- layim移动端 -->
+    <link rel="stylesheet" type="text/css" href="__MB__/layim/css/layui.mobile.css">
+
+
+
+    <style type="text/css">
+
+
+        /*手机端视频背景图片位置 background-image*/
+        #video{
+            /*background-position: 0  -40px !important;*/
+            background-size: 100% 192px !important;
+        }
+        /*手机端直播背景*/
+        #video{
+            background-image: url('/zhibo/public/static/mobile/images/phone.jpg') !important;
+        }
+
+
+        body .layim-title{display: none;}
+        body .layim-chat-main, body .layui-layim{top: 0}
+        body .layim-panel{position: fixed;top: 240px;}
+        body .layim-panel .layim-content{top: 240px;}
+        body .layim-chat-main{top: 240px;bottom: 50px; background: #fff;}
+
+        /*聊天 滚动条 取消*/
+        .layim-chat-main ul{
+            overflow-y: hidden !important;
+        }
+        /*每个li的高度 左边距距离*/  /* li 下边框 虚线 border-bottom: 1px dotted #77787c  */
+        body .layim-chat-main ul li{
+            padding-left: 50px;
+            border-bottom: 1px dotted #77787c;
+            /*margin-bottom: 10px;*/
+            margin-bottom: 0px !important;
+            min-height: 0px !important;
+        }
+
+        body .layim-chat-main ul .layim-chat-system{margin: 5px 0 1px;}
+        body .layim-chat-footer{height: 40px;justify-content: space-between;}
+        body .layim-chat-send{display: inline;float: right;width: 80%;}
+
+        /*输入框左间距*/
+        body .layim-chat-send input{
+            height: 30px;
+            width: 65%;
+            margin-left: -15px;
+        }
+
+        /*发送按钮*/
+        body .layim-chat-send button{
+            height: 30px;
+            width: 20%;
+            margin-left: 20px;
+            background-color: #0aa1ed !important;
+        }
+        /*字体大小*/
+        body .layim-chat-text, .layim-chat-user{
+            font-size: 13px;
+        }
+        /*对话框背景/字体颜色*/
+        .layim-chat-text{
+            background-color: transparent !important;
+            color: #333 !important;
+        }
+        /*聊天对话框上下间距*/
+        body .layim-chat-text{
+            margin-top: 18px;
+            padding: 0px 15px;
+        }
+        /* 聊天对话框高度 */
+        body .layim-chat-text{
+            min-height: 25px !important;
+            /*line-height: 28px !important;*/
+        }
+        /*头像大小*/
+        body .layim-chat-user img{
+            width: 35px;
+            height: 35px;
+            padding-top: 5px !important; /* 头像上下边距 */
+        }
+        /*用户昵称左边距*/
+        body .layim-chat-user cite{
+            font-size: 8px;
+            left: 45px !important;  /* 距离左边距离 */
+        }
+
+        body .layim-chat-text:after{display:none;}
+        body .layim-chat-tool{display: inline;}
+        body .layim-layer{bottom: 60px;}
+        body .layim-chat-send button{padding: 0 10px;}
+        body .layui-m-layer{z-index: 1;}
+
+
+        /*开始按钮*/
+        .play{
+            position: absolute !important;
+            z-index: 99999999999999999999;
+            display: inline-block;  /* 变成行内快 不留白(播放器上面) */
+            width: 50px;
+            height: 50px;
+            background-image: url('public/static/pc/images/play1.png');
+            background-size: 40px 40px;
+            background-repeat: no-repeat;
+        }
+
+        /*适配iphone5*/
+        @media screen and (max-width: 320px){
+            .play{
+                position: absolute;
+                top: 17% !important;
+                left: 40% !important;
+            }
+        }
+        /*适配iphone6 / 7 */
+        @media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation : portrait) {
+            .play{
+                position: absolute;
+                top: 14% !important;
+                left: 40% !important;
+            }
+        }
+
+        /*适配iphone6Plus*/
+        @media screen and (min-width: 414px) and (max-width: 763px){
+            .play{
+                position: absolute;
+                top: 13% !important;
+                left: 40% !important;
+            }
+        }
+        /*适配iphoneX*/
+        @media screen and (min-width: 375px) and (max-width: 812px){
+            .play{
+                position: absolute;
+                top: 13% !important;
+                left: 40% !important;
+            }
+        }
+
+
+        /*  页面弹出层 title input btn 样式 */
+        .zhezhao{
+            position: fixed;
+            z-index: 999999;
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        .authorized-wrap{
+            display: inline-block;
+            padding-bottom: 40px;    /* 整体下内边距 */
+            vertical-align: middle;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f2f2f2;
+            margin-top: 80px;
+        }
+        .auth-code-wrap{
+            position: relative;
+            width: 360px;
+        }
+        .title{
+            position: relative;
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 1px solid #E6E6E6;
+            color: #040405;
+            font-size: 18px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .content{
+            margin: 20px auto 0;
+            width: 300px;
+        }
+        .content input{
+            padding-left: 5px;
+            width: 100%;
+            height: 46px;
+            font-size: 13px;
+            outline: none;
+            border: 1px solid #b3b6bb;
+        }
+        .btn{
+            display: inline-block;
+            margin-top: 25px;
+            width: 300px;
+            height: 46px;
+            line-height: 46px;
+            font-size: 16px;
+            color: #fff;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #1e78dc;
+            cursor: pointer;
+            border: 0px;
+        }
+        /*提示文字样式*/
+        #tishi{
+            color: red;
+            margin-left: -195px !important;
+            position: relative;
+            top: 5px;
+            font-size: 10px;
+        }
+
+        /*手机端弹出层位置*/
+        @media (max-width: 768px){
+            .neirong{
+                margin-top:70px !important;
+            }
+        }
+        /*用户白名单弹出层*/
+        .backg{
+            position: fixed;
+            z-index: 999999;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            text-align: center;
+        }
+        .neirong{
+            display: inline-block;
+            padding-bottom: 40px;
+            vertical-align: middle;
+            -webkit-border-radius: 8px;
+            -moz-border-radius: 8px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f2f2f2;
+            margin-top: 150px;  /*上外边距 整体框框下调  */
+        }
+        .neirong .biaoti{
+            position: relative;
+            width: 360px;
+        }
+        .neirong .biaoti div:first-child{
+            position: relative;
+            height: 50px;
+            line-height: 50px;
+            border-bottom: 1px solid #E6E6E6;
+            color: #040405;
+            font-size: 18px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+        .neirong .biaoti .shuru{
+            margin: 20px auto 0;
+            width: 300px;
+        }
+        .neirong .biaoti .shuru input{
+            padding: 10px;
+            width: 94%;
+            height: 25px;
+            font-size: 16px;
+            outline: none;
+            border: 1px solid #b3b6bb;
+        }
+        .neirong .biaoti .shuru input + input{
+            margin-top: 10px;
+        }
+        .neirong .biaoti .shuru .btn{
+            display: inline-block;
+            margin-top: 25px;
+            width: 300px;
+            height: 46px;
+            line-height: 46px;
+            font-size: 16px;
+            color: #fff;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #1e78dc;
+            cursor: pointer;
+            border: 0px;
+        }
+
+
+    </style>
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+<body>
+<!--验证码-->
+{if condition="$info.user_type eq 2"}
+<div class="zhezhao">
+    <div class="authorized-wrap">
+        <div class="auth-code-wrap">
+            <!--title 标题-->
+            <div class="title">{$yzm_info.code_title}</div>
+            <div class="content">
+                <!--input 输入框-->
+                <input type="text" id="codevar" placeholder="请输入验证码">
+                <!--立即观看 按钮-->
+                <button class="btn" onclick="yzmgk({$info.id})">立即观看</button>
+                <span id="tishi"></span>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}
+
+<!--用户白名单 弹出层-->
+<!--深灰色背景色-->
+{if condition="$info.user_type eq 3"}
+<div class="backg">
+    <!--内容部分-->
+    <div class="neirong">
+        <div class="biaoti">
+            <!--title-->
+            <div>欢迎观看本直播</div>
+            <!--输入框 点击按钮 -->
+            <div class="shuru">
+                <input type="text" id="w_name" placeholder="请输入用户名">
+                <span id="s1" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
+                <span id="s2" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
+                <input type="password" id="w_pwd" placeholder="请输入密码">
+                <span id="s3"  style="font-size: 13px;color: red;text-align: left;position: relative;left: -115px;"></span>
+                <button class="btn" onclick="bmd({$info.id})">立即观看</button>
+            </div>
+        </div>
+    </div>
+</div>
+{/if}
+
+<script type="text/javascript" src="__MB__/ckplayer/ckplayer.js"></script>
+
+            <!--video视频开始按钮-->
+            <div class="play"></div>
+
+        <!--video 视频/音频-->
+        <div class="video" id="video" style="width: 100%;height: 240px;z-index: 99999;"></div>
+
+<!--外部引入jQuery-->
+<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+<!--点击按钮隐藏-->
+<script>
+    // 点击播放按钮 按钮隐藏
+    $(".play").click(function(){
+        $('.play').css('display','none');
+    });
+</script>
+
+<script type="text/javascript">
+
+    var rtmpurl = "{$info.m3u8url}";
+    var videoObject = {
+        container: '.video',//“#”代表容器的ID，“.”或“”代表容器的class
+        variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
+        poster:'__MB__/images/video.jpg',
+        loaded:'loadedHandler',//监听播放器加载成功
+        debug:true,
+        live:true,
+        video:rtmpurl //视频地址
+    };
+    var player=new ckplayer(videoObject);
+    function loadedHandler() {
+        // console.log('进入监听事件');
+        player.addListener('error', errorHandler); //监听视频加载出错
+        player.addListener('ended', endedHandler);
+    }
+
+    function errorHandler() {
+        // alert('出错');
+        player.getByElement('#video').style.background='url(__MB__/images/video.jpg) no-repeat 100% 0/100% 100% ';
+        var divvideo = document.getElementById('video').children[0];
+        // console.log(divvideo);
+        divvideo.style.background='';
+        divvideo.children[0].style.background='';
+
+    }
+    function endedHandler() {
+        // alert('结束');
+        player.getByElement('#video').style.background='url(__MB__/images/video.jpg) no-repeat ';
+        var divvideo = document.getElementById('video').children[0];
+        // console.log(divvideo);
+        divvideo.style.background='';
+        divvideo.children[0].style.background='';
+    }
+
+
+</script>
+
+<!--验证码观看-->
+<script>
+    function yzmgk(id){
+
+        var codevar = $("#codevar").val();  //自定义验证码值
+        $.ajax({
+            url:"{:url('Userlogin/yzmgk')}",
+            type:'get',
+            dataType:'json',
+            data:{ad_id:id,user_type:2,codevar:codevar},
+            async:true,
+            success:function(data){
+                if(data == 1){  //请输入正确的验证码
+                    document.getElementById('tishi').innerHTML = "<span>请输入正确的验证码</span>";
+                }else if(data == 2){  //正确关闭弹出层
+                    $('.zhezhao').css('display','none');
+                }
+            }
+        });//ajax结束
+    }
+
+
+    <!--用户白名单观看-->
+    function bmd(id){
+        var w_name = $("#w_name").val();  //用户名
+        var w_pwd = $("#w_pwd").val();  //用户密码
+        $.ajax({
+            url:"{:url('Userlogin/bmd')}",
+            type:'get',
+            dataType:'json',
+            data:{ad_id:id,w_name:w_name,w_pwd:w_pwd},
+            async:true,
+            success:function(data){
+                if($('#w_name').val() === ""){
+                    $('#s2').html("<span>用户名不能为空</span>");
+                }else if(data == 1){  //用户名不存在
+                    // alert("用户名不存在");
+                    $('#s2').html("<span> </span>")
+                    $('#s1').html("<span>用户名不正确</span>");
+                }else if(data == 2){  //密码错误
+                    // alert("密码错误");
+                    $('#s1').html("<span> </span>");
+                    $('#s3').html("<span>密码错误</span>");
+                }else if(data == 3){  //验证正确
+                    // alert("验证正确");
+                    $('.backg').css('display','none');
+                }
+            }
+        });//ajax结束
+    }
+</script>
+
+<script src="__PC__/layim/src/layui.js"></script>
+<script>
+
+    var chat_init = {$return_json};
+
+
+    //循环取出群组信息
+    for(var key in chat_init) {
+        for (var k in chat_init) {
+            //群组id
+            var cid = chat_init['group']['id'];
+        }
+    }
+
+    layui.use('mobile', function(){
+        var mobile = layui.mobile
+            //初始化配置
+            ,layim = mobile.layim
+            ,layer = mobile.layer;
+        layim.config({
+
+            //初始用户数据
+            init: chat_init,
+            isgroup: true, //是否开启“群聊”
+            voice: false //是否开启消息提醒声音
+
+        });
+
+
+        //创建群聊
+        layim.chat({
+            id: cid    //群聊id
+            ,name: ''   //群聊name
+            ,type: 'group' //friend、group等字符，如果是group，则创建的是群聊
+            ,avatar: ''    //群聊头像
+        });
+
+        //alert(cid);
+
+
+        //建立WebSocket通讯
+        //var socket = new WebSocket('ws://127.0.0.1:8282');
+        var socket = new WebSocket('ws://139.129.217.147:8282');
+
+
+        //连接成功时触发
+        socket.onopen = function(){
+            var login_data = '{"type":"init","data":{"cid":'+cid+'}}';
+            socket.send(login_data);
+            //layer.msg('连接成功');
+        };
+
+
+        //监听发送消息
+        layim.on('sendMessage', function(data){
+
+            // //ajax 接口
+            // ( 查询禁言表，根据这个直播间id和当前登录用户的id，查到的话，return  2 )
+            //data.mine.jinyan=2;
+
+            var mine = JSON.stringify(data.mine);
+            console.log(mine);
+            // console.log(to);
+            var to = JSON.stringify(data.to);
+
+            var login_data = '{"type":"chatMessage","data":{"mine":'+mine+', "to":'+to+'}}';
+            socket.send(login_data);
+        });
+
+        //监听收到的消息
+        socket.onmessage = function(res){
+            //console.log(res.data);
+
+            var data = eval("("+res.data+")");
+            switch(data['message_type']){
+                // 服务端ping客户端
+                case 'ping':
+                    console.log(data);
+                    socket.send('{"type":"ping","groupid":"'+window.groupid+'"}');
+                    break;
+                // 在线
+                case 'online':
+                    layim.setFriendStatus(data.id, 'online');
+                    break;
+                // 离线短信
+                case 'sendmsg':
+                    $.ajax({
+                        url:"{:url('Phone/sendMsg')}",
+                        type:"post",
+                        data:{data:JSON.stringify(data.data)},
+                        success:function(){
+
+                        }
+                    });
+                    break;
+                // 下线
+                case 'offline':
+                    layim.setFriendStatus(data.id, 'offline');
+                    break;
+                // 检测聊天数据
+                case 'chatMessage':
+                    console.log(res.data);
+                    layim.getMessage(data.data);
+                    break;
+
+                // 离线消息推送
+                case 'logMessage':
+                    setTimeout(function(){layim.getMessage(data.data)}, 1000);
+                    break;
+                // 用户退出 更新用户列表
+                case 'logout':
+                    layim.setFriendStatus(data.id, 'offline');
+                    break;
+            }
+        };
+    });
+
+</script>
+
+<!--微信分享-->
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+
+    // 通过config接口注入权限验证配置
+    wx.config({
+        debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+        appId: '{$appId}',   // 必填，公众号的唯一标识
+        timestamp:'{$timestamp}' , // 必填，生成签名的时间戳
+        nonceStr: '{$nonceStr}', // 必填，生成签名的随机串
+        signature: '{$signature}',// 必填，签名
+        jsApiList: [
+            'onMenuShareTimeline',
+            'onMenuShareAppMessage',
+        ] // 必填，需要使用的JS接口列表
+    });
+    // 通过ready接口处理成功验证
+
+
+    wx.ready(function(){
+        //分享到朋友圈
+        wx.onMenuShareTimeline({
+            title: '{$info.channel_name}', // 分享标题
+            link: 'http://www.rflinker.com/zhibo/home/chatmobile/index.html?ad_id={$info.id}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 'http://www.rflinker.com/zhibo/public/{$info.channel_logo}', // 分享图标
+            success: function () {
+                // 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+                // 用户取消分享后执行的回调函数
+            }
+        });
+
+        //分享给朋友
+        wx.onMenuShareAppMessage({
+            title: '{$info.channel_name}', // 分享标题
+            desc: '{$info.channel_name}', // 分享描述
+            link: 'http://www.rflinker.com/zhibo/home/chatmobile/index.html?ad_id={$info.id}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 'http://www.rflinker.com/zhibo/public/{$info.channel_logo}', // 分享图标
+            type: '', // 分享类型,music、video或link，不填默认为link
+            dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
+            success: function () {
+
+// 用户确认分享后执行的回调函数
+            },
+            cancel: function () {
+// 用户取消分享后执行的回调函数
+            }
+        });
+
+    });
+
+</script>
+
+
+
+
+</body>
+</html>

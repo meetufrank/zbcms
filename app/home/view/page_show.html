@@ -37,7 +37,7 @@
                 <ul class="popular-list">
                     {clt:list_join db='article' dbfield='catid' id='vo' joindb='category' joinfield='id' where="posid = 1 or posid=2" order="listorder asc,createtime desc" limit='8'}
                     <li>
-                        <img src="{:imgUrl($vo['title_thumb'],'__HOME__/images/portfolio-thumb/p'.$k.'.jpg')}" alt="" class="img-border" />
+                        <img src="{:imgUrl($vo['title_thumb'],__HOME__.'/images/portfolio-thumb/p'.$k.'.jpg')}" alt="" class="img-border" />
                         <p class="popular-title">
                             <a href="{:url('home/'.$vo['catdir'].'/info',array('id'=>$vo['id'],'catId'=>$vo['catid']))}" style="{:style($vo['title_style'])}" title="{$vo.title}">{$vo.title}</a>
                         </p>

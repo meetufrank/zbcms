@@ -117,13 +117,15 @@
 
                 {volist name="category" id="vo"}
                 <li {if condition="$controller eq $vo['catdir']"}class="selected"{/if}>
-                    <a href="{:url('home/'.$vo['catdir'].'/index',['catId'=>$vo['id']] )}" title="{$vo.catname}-CLTPHP内容管理系统">{$vo.catname}</a>
                     {if condition="$vo['child'] eq 1"}
-                    <ul>
-                        {volist name="$vo.sub" id="v"}
-                            <li><a href="{:url('home/'.$vo['catdir'].'/index',['catId'=>$v['id']] )}" title="{$v.catname}-CLTPHP内容管理系统"><span>-</span> {$v.catname}</a></li>
-                        {/volist}
-                    </ul>
+                        <a href="#">{$vo.catname}</a>
+                        <ul>
+                            {volist name="$vo.sub" id="v"}
+                                <li><a href="{:url('home/'.$vo['catdir'].'/index',['catId'=>$v['id']] )}" title="{$v.catname}-CLTPHP内容管理系统"><span>-</span> {$v.catname}</a></li>
+                            {/volist}
+                        </ul>
+                    {else /}
+                        <a href="{:url('home/'.$vo['catdir'].'/index',['catId'=>$vo['id']] )}" title="{$vo.catname}-CLTPHP内容管理系统">{$vo.catname}</a>
                     {/if}
                 </li>
                 {/volist}

@@ -55,7 +55,6 @@ class Channel extends Common
         if(request()->isPost()) {
             //构建数组
             $data = input('post.');
-            print_r($data);exit;
 
             $data['addtime'] = time();
 

@@ -51,15 +51,14 @@ class EmptyController extends Common{
                     $list[$k]['title_color'] =$list_style[0];
                     $list[$k]['title_weight'] =$list_style[1];
                     $title_thumb = $v['thumb'];
-                    $list[$k]['title_thumb'] = $title_thumb?__PUBLIC__.$title_thumb:config('view_replace_str.__HOME__').'/images/portfolio-thumb/p'.($k+1).'.jpg';
+                    $list[$k]['title_thumb'] = $title_thumb?__PUBLIC__.$title_thumb:__HOME__.'/images/portfolio-thumb/p'.($k+1).'.jpg';
                 }
                 $this->assign('list',$list);
             }else{
-                $arrchildid = db('category')->where('id',$map['catid'])->value('arrchildid');
-                $this->assign('arrchildid',$arrchildid);
+
                 $list=$this->dao->alias('a')
                     ->join(config('database.prefix').'category c','a.catid = c.id','left')
-                    ->where(array('catid'=>array('in',$arrchildid)))
+                    ->where($map)
                     ->field('a.*,c.catdir')
                     ->order('listorder asc,createtime desc')
                     ->paginate($this->pagesize);
@@ -72,7 +71,7 @@ class EmptyController extends Common{
                     $list['data'][$k]['title_color'] =$list_style[0];
                     $list['data'][$k]['title_weight'] =$list_style[1];
                     $title_thumb = $v['thumb'];
-                    $list['data'][$k]['title_thumb'] = $title_thumb?__PUBLIC__.$title_thumb:config('view_replace_str.__HOME__').'/images/portfolio-thumb/p'.($k+1).'.jpg';
+                    $list['data'][$k]['title_thumb'] = $title_thumb?__PUBLIC__.$title_thumb:__HOME__.'/images/portfolio-thumb/p'.($k+1).'.jpg';
                 }
                 $this->assign('list',$list['data']);
                 $this->assign('page',$page);
@@ -85,12 +84,12 @@ class EmptyController extends Common{
     public function info(){
         $this->dao->where('id',input('id'))->setInc('hits');
         $info = $this->dao->where('id',input('id'))->find();
-        $info['pic'] = $info['pic']?__PUBLIC__.$info['pic']:config('view_replace_str.__HOME__')."/images/sample-images/blog-post".rand(1,3).".jpg";
+        $info['pic'] = $info['pic']?__PUBLIC__.$info['pic']:__HOME__."/images/sample-images/blog-post".rand(1,3).".jpg";
         $title_style = explode(';',$info['title_style']);
         $info['title_color'] = $title_style[0];
         $info['title_weight'] = $title_style[1];
         $title_thumb = $info['thumb'];
-        $info['title_thumb'] = $title_thumb?__PUBLIC__.$title_thumb:config('view_replace_str.__HOME__').'/images/sample-images/blog-post'.rand(1,3).'.jpg';
+        $info['title_thumb'] = $title_thumb?__PUBLIC__.$title_thumb:__HOME__.'/images/sample-images/blog-post'.rand(1,3).'.jpg';
         if(DBNAME=='picture'){
             $pics = explode(':::',$info['pics']);
             foreach ($pics as $k=>$v){
@@ -119,4 +118,3 @@ class EmptyController extends Common{
         return $result;
     }
 }
-
