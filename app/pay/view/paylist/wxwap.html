@@ -6,20 +6,21 @@
     <title>微信支付</title>
     <script type="text/javascript">
 	//调用微信JS api 支付
+
 	function jsApiCall()
 	{
+
+        var cid = "{$cid}";
 		WeixinJSBridge.invoke(
-			'getBrandWCPayRequest',
-			<?php echo $jsApiParameters; ?>,
+			'getBrandWCPayRequest',{$jsApiParameters},
 			function(res){
 				 WeixinJSBridge.log(res.err_msg);
 				// alert(res.err_code+res.err_desc+res.err_msg);
 				if (res.err_msg == "get_brand_wcpay_request:ok") {
-                    window.location.href="{:url('mobile/user/userorder')}";
-
+                    window.location.href='{:url("home/chatmobile/index")}?ad_id='+cid;
                 }else if (res.err_msg == "get_brand_wcpay_request:cancel")  {
                      alert("支付过程中用户取消");
-                     window.location.href="{:url('mobile/user/userorder')}";
+                     window.location.href='{:url("home/index/pcpaylive")}?ad_id='+cid;
                  }else{
                     //支付失败
                     alert(res.err_msg)

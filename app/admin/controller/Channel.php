@@ -6,6 +6,7 @@ use think\Controller;
 use excel\excels;
 use app\oss\controller\Aly;  //阿里云oss 操作控制器
 use app\wdcz\controller\Wdcz;  //阿里云智能媒体管理控制器
+use think\session;
 class Channel extends Common
 {
     public function _initialize(){
@@ -25,6 +26,7 @@ class Channel extends Common
             $list = db('channel')
                 ->field('id,channel_name,channel_logo,user_type')
                 ->where('channel_name', 'like', "%" . $key . "%")
+                ->order("id desc")
                 ->paginate(array('list_rows'=>$pageSize,'page'=>$page))
                 ->toArray();
 
@@ -48,13 +50,37 @@ class Channel extends Common
         return date(preg_replace('`(?<!\\\\)u`', $milliseconds, $format), $timestamp);
     }
 
+    //频道管理员权限验证
+    public function ischanneladmin(){
+        if(request()->isPost()){
 
+            $ca_user = input("ca_user");
+            $ca_pwd = input("ca_pwd");
+
+            $data = [
+                'ca_user' => $ca_user,
+                'ca_pwd' => md5($ca_pwd),
+            ];
+
+            $is = Db::name('channel_admin')->where($data)->find();
+            if(!empty($is)){
+                Session::set('ca_id',$is['id']);
+                return $this -> fetch("index");
+            }else{
+                $this->error('请输入正确的用户名和密码!','channel/ischanneladmin',3);exit;
+            }
+
+        }else{
+            return $this -> fetch();
+        }
+    }
 
 
     public function add(){
         if(request()->isPost()) {
             //构建数组
             $data = input('post.');
+
 
             $data['addtime'] = time();
 
@@ -95,27 +121,48 @@ class Channel extends Common
             $data['flvurl'] = $flvurl;
             $data['m3u8url'] = $m3u8url;
             $data['streamname'] = $StreamName.'/';
-            db('channel')->insert($data);
+            $data['play_url'] = "1";   //直播页面播放链接url
+            $pid = db('channel')->insertGetId($data);  //自增频道主键id
+            $play_url = "http://meetzb.meetv.com.cn/zhibo/Home/userlogin/index.html?ad_id=".$pid."&&user_type=0";
+            Db::name('channel')->where('id', $pid)->update(['play_url' => $play_url]);
 
             $result['code'] = 1;
             $result['msg'] = '直播频道添加成功!';
             cache('adList', NULL);
             $result['url'] = url('index');
+
             return $result;
 
 
         }else{
+            $ca_id = Session::get('ca_id');
+
+
+            if($ca_id == ''){
+                return $this -> fetch('ischanneladmin');
+            }
             $adtypeList=db('ad_type')->order('sort')->select();
             $this->assign('adtypeList',json_encode($adtypeList,true));
 
-            $this->assign('title',lang('add').lang('ad'));
+            $this->assign('title',"添加直播频道");
             $this->assign('info','null');
+            $this->assign("ca_id",$ca_id);
             return $this->fetch('form');
         }
     }
 
     //查看直播详情
     public function info(){
+        //登录权限信息
+        $ca_id = Session::get("ca_id");
+
+        if($ca_id == ''){
+            return $this -> fetch('ischanneladmin');
+        }
+        $ca_info = db('channel_admin')->where("id = $ca_id")->find();
+        $this -> assign("ca_info",$ca_info);
+
+
         $id=input('ad_id');
         $info = db('channel')->where("id = $id")->find();
 
@@ -133,8 +180,84 @@ class Channel extends Common
     }
 
 
+    //视频回放/预览
+    public function playback(){
+
+        $ad_id = $_GET['ad_id'];  //频道id
+        $this -> assign("ad_id",$ad_id);
+
+        $list = db('video_folder')
+            ->field('id,video_folder_name,video_name,upload_time')
+            ->select();
+        //添加预告/回放
+       $pid = Db::table('clt_playback')->where('pid',$ad_id)->find();
+       if($pid['id'] == ''){
+           $data = ['pid'=>$ad_id,'type' => 2,'playback_url' => ''];
+           Db::name('playback')->insert($data);
+       }
+
+        $this -> assign('list',$list);
+        return $this -> fetch();
+    }
+
+    //视频回放/预览编辑
+    public function playbackedit(){
+
+        $pid = $_POST['pid'];
+        $vid = $_POST['videourl'];
+        $kg = $_POST['my-checkbox'];
+
+        //根据视频id查出路径
+        $video_info = db('video_folder')
+            ->where("id = $vid")
+            ->field('id,video_folder_name,video_name,upload_time')
+            ->find();
+
+        $videourl = "https://meetuuu.oss-cn-shanghai.aliyuncs.com/".$video_info['video_folder_name'];
 
 
+        if($kg == "on"){
+            $kg = 1;  //开启
+        }else{
+            $kg = 2;  //关闭
+        }
+
+        Db::name('playback')
+            ->where('pid', $pid)
+            ->update(['type' => $kg,'playback_url' => $videourl]);
+
+        return $this->fetch('index');
+    }
+
+
+    //互动聊天管理
+    public function chatadmin(){
+        $id = input('ad_id');   //频道id
+        $cinfo = db('channel')->where("id = $id")->find();
+        $this -> assign('cid',$id);
+        return $this->fetch();
+    }
+
+
+    //付费观看
+    public function paylive(){
+        $id = input('ad_id');  //频道id
+        $pinfo = Db::table('clt_payinfo')->where('cid',$id)->find();  //查找付费直播信息
+
+        $this -> assign('pinfo',$pinfo);
+        $this -> assign('cid',$id);
+        return $this -> fetch();
+    }
+
+
+
+    //互动助手
+    public function Interactive_assistant(){
+        $id = input('ad_id');   //频道id
+        $cinfo = db('channel')->where("id = $id")->find();
+        $this -> assign('cid',$id);
+        return $this->fetch();
+    }
 
     //用户统计
     public function userinfo(){
@@ -195,6 +318,7 @@ class Channel extends Common
 
 
             $pid = $_POST['pid'];
+
             //导入用户数据前,清空原先该频道的用户白名单
             Db::name ('whitelist_user_list')->where('pid',$pid)->delete();
             for($i=3;$i<$highestRow+1;$i++){  //i = 3 从第三行开始循环
@@ -208,12 +332,167 @@ class Channel extends Common
                 Db::name('whitelist_user_list')->insert($data);
 
             }
-            Db::name('channel')->where('id', $pid)->update(['user_type'=>'3']);
+
+            $play_url = "http://meetzb.meetv.com.cn/zhibo/Home/userlogin/index.html?ad_id=".$pid."&&user_type=3";
+            Db::name('channel')->where('id', $pid)->update(['user_type'=>'3','play_url' => $play_url]);
             return $this -> fetch("index");
 
         }
 
     }
+
+
+
+    //用户数据导出
+    public function user_record($ad_id)
+    {
+
+        //导出
+        $path = dirname(__FILE__); //找到当前脚本所在路径
+        vendor("PHPExcel.PHPExcel.PHPExcel");
+        vendor("PHPExcel.PHPExcel.Writer.IWriter");
+        vendor("PHPExcel.PHPExcel.Writer.Abstract");
+        vendor("PHPExcel.PHPExcel.Writer.Excel5");
+        vendor("PHPExcel.PHPExcel.Writer.Excel2007");
+        vendor("PHPExcel.PHPExcel.IOFactory");
+        $objPHPExcel = new \PHPExcel();
+        $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+
+
+        // 实例化完了之后就先把数据库里面的数据查出来
+        $where_u_r = "cid = $ad_id";
+        $sql = db('user_record')->where($where_u_r)->select();
+
+
+        // 设置表头信息
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', '第三方id')
+            ->setCellValue('B1', '观众名')
+            ->setCellValue('C1', '地址')
+            ->setCellValue('D1', '观看总时长')
+            ->setCellValue('E1', '最后进入时间')
+            ->setCellValue('F1', '最后在线时间')
+            ->setCellValue('G1', '最后观看设备')
+            ->setCellValue('H1', '最后登录ip')
+            ->setCellValue('I1', '访问来源');
+
+
+
+        /*--------------开始从数据库提取信息插入Excel表中------------------*/
+
+        $i=2;  //定义一个i变量，目的是在循环输出数据是控制行数
+        $count = count($sql);  //计算有多少条数据
+        for ($i = 2; $i <= $count+1; $i++) {
+
+            $userid = "\t".$sql[$i-2]['userid']."\t";
+
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $userid);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $sql[$i-2]['username']);
+            $objPHPExcel->getActiveSheet()->setCellValue('C' . $i, $sql[$i-2]['address']);
+
+            $date=floor((strtotime($sql[$i-2]['leave_time'])-strtotime($sql[$i-2]['get_time']))/86400);
+            $hour=floor((strtotime($sql[$i-2]['leave_time'])-strtotime($sql[$i-2]['get_time']))%86400/3600);
+            $minute=floor((strtotime($sql[$i-2]['leave_time'])-strtotime($sql[$i-2]['get_time']))%86400/60);
+            $second=floor((strtotime($sql[$i-2]['leave_time'])-strtotime($sql[$i-2]['get_time']))%86400%60);
+
+            $watchz_times =$date."天".$hour."小时".$minute."分钟".$second."秒";
+            $fen_time = $minute."分钟";
+            $objPHPExcel->getActiveSheet()->setCellValue('D' . $i, $fen_time);
+            $objPHPExcel->getActiveSheet()->setCellValue('E' . $i, $sql[$i-2]['get_time']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F' . $i, $sql[$i-2]['leave_time']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G' . $i, $sql[$i-2]['watch_equipment']);
+            $objPHPExcel->getActiveSheet()->setCellValue('H' . $i, $sql[$i-2]['user_ip']);
+            $objPHPExcel->getActiveSheet()->setCellValue('I' . $i, 'qiandao.easylaa.com');
+        }
+
+        //设置单元格宽度
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('C')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('D')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('E')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('F')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('H')->setWidth(50);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('I')->setWidth(50);
+
+        /*--------------下面是设置其他信息------------------*/
+
+        $objPHPExcel->getActiveSheet()->setTitle('productaccess');      //设置sheet的名称
+        $objPHPExcel->setActiveSheetIndex(0);                   //设置sheet的起始位置
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');   //通过PHPExcel_IOFactory的写函数将上面数据写出来
+
+        $PHPWriter = \PHPExcel_IOFactory::createWriter( $objPHPExcel,"Excel2007");
+
+        $datetime = date("YmdHis");
+        $filename = "用户统计数据".$datetime.".xlsx";
+
+        header('Content-Disposition: attachment;filename='.$filename);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        $PHPWriter->save("php://output"); //表示在$path路径下面生成demo.xlsx文件
+
+    }
+
+
+    //康弘用户数据导出
+    public function kanghonout()
+    {
+
+        //导出
+        $path = dirname(__FILE__); //找到当前脚本所在路径
+        vendor("PHPExcel.PHPExcel.PHPExcel");
+        vendor("PHPExcel.PHPExcel.Writer.IWriter");
+        vendor("PHPExcel.PHPExcel.Writer.Abstract");
+        vendor("PHPExcel.PHPExcel.Writer.Excel5");
+        vendor("PHPExcel.PHPExcel.Writer.Excel2007");
+        vendor("PHPExcel.PHPExcel.IOFactory");
+        $objPHPExcel = new \PHPExcel();
+        $objWriter = new \PHPExcel_Writer_Excel5($objPHPExcel);
+        $objWriter = new \PHPExcel_Writer_Excel2007($objPHPExcel);
+
+
+        // 实例化完了之后就先把数据库里面的数据查出来
+        $id = input("ad_id");
+        $sql = db('access')->where("cid = $id")->select();
+
+        // 设置表头信息
+        $objPHPExcel->setActiveSheetIndex(0)
+            ->setCellValue('A1', '访问时间')
+            ->setCellValue('B1', 'ip地址');
+
+        /*--------------开始从数据库提取信息插入Excel表中------------------*/
+
+        $i=2;  //定义一个i变量，目的是在循环输出数据是控制行数
+        $count = count($sql);  //计算有多少条数据
+        for ($i = 2; $i <= $count+1; $i++) {
+            $objPHPExcel->getActiveSheet()->setCellValue('A' . $i, $sql[$i-2]['adate']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B' . $i, $sql[$i-2]['ip']);
+        }
+
+        //设置单元格宽度
+        $objPHPExcel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
+        $objPHPExcel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
+
+        /*--------------下面是设置其他信息------------------*/
+
+        $objPHPExcel->getActiveSheet()->setTitle('productaccess');      //设置sheet的名称
+        $objPHPExcel->setActiveSheetIndex(0);                   //设置sheet的起始位置
+        $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');   //通过PHPExcel_IOFactory的写函数将上面数据写出来
+
+        $PHPWriter = \PHPExcel_IOFactory::createWriter( $objPHPExcel,"Excel2007");
+
+        $datetime = date("YmdHis");
+        $filename = "康弘用户列表".$datetime.".xlsx";
+
+        header('Content-Disposition: attachment;filename='.$filename);
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+
+        $PHPWriter->save("php://output"); //表示在$path路径下面生成demo.xlsx文件
+
+    }
+
 
 
     //用户数据导出
@@ -290,9 +569,14 @@ class Channel extends Common
 
     }
 
+    //门户管理
+    public function gateway(){
+        return $this -> fetch();
+    }
+
 
     //聊天数据导出
-    public function chatdataout()
+    public function chatdataout($ad_id)
     {
 
         //导出
@@ -309,8 +593,8 @@ class Channel extends Common
 
 
         // 实例化完了之后就先把数据库里面的数据查出来
-        $id = input("ad_id");
-        $sql = db('chat')->where("cid = $id")->select();
+
+        $sql = db('chat')->where("cid = $ad_id")->select();
 
         // 设置表头信息
         $objPHPExcel->setActiveSheetIndex(0)
@@ -352,64 +636,27 @@ class Channel extends Common
 
 
 
-
-    //修改频道基础信息
- /*   public function edit(){
-
-            $cid = input('ad_id'); //频道id
-            $cInfo = db('channel')->where(array('id'=>$cid))->find();  //查询出该频道信息
-            $this -> assign('cInfo',$cInfo);
-            return $this->fetch('edit');
-    }
-
-    public function edit_info(){
-        $channel_name = input('channel_name');  //频道名称
-        $channel_logo = input('channel_logo');  //频道logo
-        print_r($channel_name);
-        print_r($channel_logo);
-        exit;
-
-    }*/
-
     //修改频道基础信息
     public function edit(){
         if(request()->isPost()) {
             $data = input('post.');
-
-            $pid = $data['pid'];  //频道id
-
-
-
-            // 获取表单上传文件 例如上传了001.jpg
-            $file_clogo = request()->file('channel_logo');
-            // 移动到框架应用根目录/uploads/ 目录下
-            $info_clogo = $file_clogo->validate(['size'=>500000,'ext'=>'jpg,png,gif'])->move('public' . DS . 'uploads');
-            if($info_clogo){
-                // 成功上传后 获取上传信息
-                // 输出 jpg
-                echo $info_clogo->getExtension();
-                // 输出 20160820/42a79759f284b767dfcb2a0197904287.jpg
-                echo $info_clogo->getSaveName();
-                // 输出 42a79759f284b767dfcb2a0197904287.jpg
-                echo $info_clogo->getFilename();
-            }else{
-                // 上传失败获取错误信息
-                echo $file_clogo->getError();
-            }
-            $updata = [
-                'channel_name' => $data['channel_name'],   //频道名称
-                'channel_logo' => "/uploads/".$info_clogo->getSaveName(),
-            ];
-            Db::name('channel')->where("id = $pid")->update($updata);
-            return $this -> fetch("index");
-
+            db('channel')->update($data);
+            $result['code'] = 1;
+            $result['msg'] = '频道修改成功!';
+            cache('adList', NULL);
+            $result['url'] = url('index');
+            return $result;
         }else{
-            $c_id = input('ad_id');   //直播频道id
-            $channel_Info = db('channel')->where(array('id'=>$c_id))->find();
+            $adtypeList=db('channel')->order('id')->select();
+            $ad_id=input('ad_id');
 
-            $this->assign('info',$channel_Info);
-            /*$this->assign('title',lang('edit').lang('ad'));*/
-            return $this->fetch('edit');
+            $channelInfo=db('channel')->where(array('id'=>$ad_id))->find();
+
+            $this->assign('adtypeList',json_encode($adtypeList,true));
+            $this->assign('info',json_encode($channelInfo,true));
+            //print_r($channelInfo);exit;
+            $this->assign('title',"修改直播频道");
+            return $this->fetch('form');
         }
     }
 
@@ -467,13 +714,18 @@ class Channel extends Common
 
 
         if($bmwj != ''){  //报名问卷
+
+            $play_url = "http://meetzb.meetv.com.cn/zhibo/Home/userlogin/index.html?ad_id=".$pid."&&user_type=1";
             Db::name('channel')
                 ->where('id', $pid)
-                ->update(['user_type' => 1]);
+                ->update(['user_type' => 1,'play_url' => $play_url]);
+
         }else if($code_title != '' && $bmwj == ''){  //验证码观看
+            $play_url = "http://meetzb.meetv.com.cn/zhibo/Home/userlogin/index.html?ad_id=".$pid."&&user_type=2";
             Db::name('channel')
                 ->where('id', $pid)
-                ->update(['user_type' => 2]);  //更改频道用户登录模式
+                ->update(['user_type' => 2,'play_url' => $play_url]);  //更改频道用户登录模式
+
 
             //添加到验证码观看
             $code_view_data = [
@@ -535,6 +787,27 @@ class Channel extends Common
     /***************************位置*****************************/
     //位置
 
+    //新增付费观看
+    public function payadd(){
+        if(request()->isPost()) {
+
+            $data = input('post.');
+            $cid = $data['cid'];  //频道id
+
+            $pinfo = Db::table('clt_payinfo')->where('cid',$cid)->find();
+            $data['ptime'] = date("Y-m-d h:i:s");
+
+            if(!empty($pinfo)){   //修改
+                db('payinfo')->where('cid',$cid)->update($data);
+            }else{   //新增
+                db('payinfo')->insert($data);
+            }
+
+
+
+            $this -> success('操作成功!',url('Channel/index'));
+        }
+    }
 
 
     public function type(){

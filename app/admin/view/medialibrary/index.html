@@ -13,7 +13,8 @@
 </style>
 
 <script type="text/html" id="action">
-    <a href="{:url('info')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">观看详情</a>
+    <a href="{:url('info')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">视频设置</a>
+    <a href="{:url('typedelete')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">删除</a>
 </script>
 
 <div class="admin-main layui-anim layui-anim-upbit">
@@ -22,11 +23,11 @@
     </fieldset>
     <blockquote class="layui-elem-quote">
         <div class="layui-inline">
-            <input class="layui-input" name="key" id="key" placeholder="请输入频道关键字">
+            <input class="layui-input" name="key" id="key" placeholder="请输入视频文件关键字">
         </div>
         <button class="layui-btn" id="search" data-type="reload">{:lang('search')}</button>
         <a href="{:url('index')}" class="layui-btn">显示全部</a>
-
+        <a href="{:url('addvideo')}" class="layui-btn">上传视频</a>
         <button type="button" class="layui-btn layui-btn-danger" id="delAll">批量删除</button>
     </blockquote>
     <table class="layui-table" id="list" lay-filter="list"></table>
@@ -41,7 +42,7 @@
 
 
 <script type="text/html" id="imgsrc">
-   <video style="width:95%;height:100%;" src="{{d.videourl}}" controls="controls"></video>
+   <video style="width:95%;height:180px;" src="{{d.videourl}}" controls="controls"></video>
 </script>
 
 <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
@@ -59,12 +60,12 @@
             page:true,
             cols: [[
                 {checkbox: true, style:'height:200px',fixed: true},
-                {field: 'id', title: '{:lang("id")}', width: 60, fixed: true},
-                {field: 'channel_name', title: '频道名称', width: 150,align: 'center',templet: '#channel_name'},
-                {field: 'video_name',title: '视频名称', width: 300,align: 'center',style:'height:200px',templet:'#video_name'},
-                {field: 'videourl',title: '视频预览', width: 300,align: 'center',style:'height:200px',templet:'#imgsrc'},
-                {field: 'upload_time',title: '上传时间', width: 150,align: 'center',style:'height:200px',templet:'#upload_time'},
-                {width: 500, align: 'center', toolbar: '#action'}
+                /*{field: 'id', title: '{:lang("id")}', width: 50, fixed: true},*/
+                {field: 'channel_name', title: '频道名称/上传视频', width: 150,align: 'left',templet: '#channel_name'},
+                {field: 'video_name',title: '视频名称', width: 300,align: 'left',style:'height:200px',templet:'#video_name'},
+                {field: 'videourl',title: '视频预览', width: 300,align: 'left',style:'height:50px',templet:'#imgsrc'},
+                {field: 'upload_time',title: '上传时间', width: 150,align: 'left',style:'height:200px',templet:'#upload_time'},
+                {width: 150, align: 'left', toolbar: '#action'}
             ]],
             limit:10
         });

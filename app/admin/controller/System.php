@@ -196,6 +196,7 @@ class System extends Common
             } elseif ($unifiedOrderResult["code_url"] != NULL) {
                 //从统一支付接口获取到code_url
                 $code_url = $unifiedOrderResult["code_url"];
+
                 //商户自行增加处理流程
                 /*
                   $data['u_id'] = session('uid');

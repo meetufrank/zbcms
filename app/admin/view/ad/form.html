@@ -31,6 +31,20 @@
                 </div>
             </div>
         </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告图片的</label>
+            <input type="hidden" name="pic" id="pic" value="{{field.pic}}">
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary" id="adBtner"><i class="icon icon-upload3"></i>点击上传</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="adPicer">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="layui-form-item">
             <label class="layui-form-label">{:lang('ad')}URL</label>
             <div class="layui-input-4">
@@ -99,6 +113,35 @@
                     //预读本地文件示例，不支持ie8
                     obj.preview(function(index, file, result){
                         $('#adPic').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res){
+                    if(res.code>0){
+                        $('#pic').val(res.url);
+                    }else{
+                        //如果上传失败
+                        return layer.msg('上传失败');
+                    }
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });
+
+
+            //普通图片上传
+            var uploadInst = upload.render({
+                elem: '#adBtner'
+                ,url: '{:url("UpFiles/upload")}'
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#adPicer').attr('src', result); //图片链接（base64）
                     });
                 },
                 done: function(res){

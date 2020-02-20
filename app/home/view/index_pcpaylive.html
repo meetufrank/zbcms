@@ -1,0 +1,228 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{$pinfo.pname}</title>
+    <link rel="stylesheet" href="__PC__/paylive/pc.css">
+</head>
+<body>
+<!--灰色背景-->
+<div class="fixBg">
+
+    <!--内容部分-->
+    <!--付费界面-->
+    <div class="pay">
+        <div class="pay_wrap">
+            <div class="title">{$pinfo.pname}</div>
+            <div class="content">
+                <p class="price-wrap">
+                    <span>¥</span>
+                    <span class="price">{$pinfo.pprice}</span>
+                </p>
+                <p class="pay-tip widthen">手机号作为您付费后进入直播间的凭证</p>
+                <input type="text" maxlength="11" placeholder="请输入你的手机号" class="payInput">
+                <span class="btn payBtn">付费观看</span>
+                <div class="pay-money-status">
+                    <span>我已付费，</span>
+                    <span class="login-btn">登录</span>
+                    <span>观看</span>
+                </div>
+            </div>
+            <p class="verify-time">观看截止时间：{$pinfo.pend_time} 23:59:59</p>
+
+            <!--支付弹框-->
+            <div class="pay-type-box">
+                <div class="title">
+                    <span>选择付款方式</span>
+                    <img src="__PC__/paylive/close.png" class="close" alt="">
+                </div>
+                <div class="type-box">
+                    <img src="//static.mudu.tv/assets/wechatpay.png" />
+                </div>
+            </div>
+
+            <!--二维码弹框-->
+            <div class="wechat-code-box">
+                <div class="title">
+                    <span>微信扫码支付</span>
+                    <img src="__PC__/paylive/close.png" class="close" alt="">
+                </div>
+                <div class="content" id="qrcode">
+                    <!--<img src="__PC__/paylive/erwm.jpg" />-->
+                </div>
+            </div>
+
+            <!--支付成功-->
+            <div class="paySuccess">
+                <p>支付成功</p>
+                <a href="javascript:void(0);">确认</a>
+            </div>
+
+        </div>
+    </div>
+
+    <!--登录界面-->
+    <div class="authorized-wrap">
+        <div class="auth-code-wrap">
+            <div class="title">
+                {$pinfo.pname}
+            </div>
+            <div class="content">
+                <input maxlength="11" type="text" placeholder="请输入你的手机号" class="loginInput"/>
+
+                <span class="btn loginBtn">立即观看</span>
+                <div class="pay-money-status">
+                    <span>未付费，返回</span>
+                    <span class="login-btn1">付费</span>
+                    <span>界面</span>
+                </div>
+            </div>
+            <p class="verify-time">观看截止时间：{$pinfo.pend_time} 23:59:59</p>
+        </div>
+    </div>
+    <input type="hidden" id="out_trade_no"/>
+
+</div>
+
+
+<script src="__PC__/paylive/jquery.min.js"></script>
+<script src="__PC__/paylive/layui/layui.all.js"></script>
+<script>
+    /*
+			由于微信支付完成后不可以跳转，这里写了个监听跳转
+		*/
+    function Check(){
+        var out_trade_no = $("#out_trade_no").val();
+        var cid = "{$pinfo.cid}";
+        $.post("{:url('pay/paylist/paylog')}",{out_trade_no:out_trade_no},function(result){
+
+            //支付成功跳转
+            if(result==1){
+
+                location.href = "http://easycast.cloud/index.php/index-ad_id-"+cid+".html"; //页面跳转
+                //window.close();
+            }
+        });
+    }
+    window.setInterval("Check()",3000);
+
+    $(".close").click(function(){
+        var $this = $(this);
+        $this.parent().parent().hide();
+    })
+    // 验证手机号
+    $(".payBtn").click(function(){      //  付费页面
+        var $phone = $(".payInput").val();
+        var reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
+        if($phone == ""){
+            layer.msg("手机号不能为空");
+            return false;
+        }else if(!reg.test($phone)){
+            layer.msg("手机号格式错误");
+            return false;
+        }else{
+            var cid = "{$cid}";   //频道id
+            var phone = $(".payInput").val();  //支付时手机号
+            $.ajax({
+                type:"post",
+                url:"{:url('home/index/pcpayphone')}",
+                dataType:"json",
+                data:{cid:cid,phone:phone},
+                success:function(data){
+                     if(data == 2){
+                         $(".pay-type-box").show();
+                     }else if(data == 1){
+                         layer.msg("已支付过");
+                         return false;
+                     }
+                }
+            });
+
+
+            $(".type-box").click(function(){
+                //$(".wechat-code-box").show();
+                var cid = "{$cid}";   //频道id
+                var pid = "{$pinfo.id}";  //付费直播id
+                var pend = 1;   //支付端类型 1为电脑端
+                var phone = $(".payInput").val();  //支付时手机号
+
+                $.ajax({
+                    type:"post",
+                    url:"{:url('pay/paylist/save_order')}",
+                    dataType:"json",
+                    data:{id:4,cid:cid,pid:pid,pend:pend,phone:phone},
+                    success:function(data){
+
+                        if(data.unifiedOrderResult.code_url != null)
+                        {
+                            var out_trade_no = data.out_trade_no;
+                            $("#out_trade_no").val(out_trade_no);
+                            var code_url = data.code_url;
+                            var url = 'http://easycast.cloud/index.php/pay/paylist/qrcode?data='+code_url;
+
+                            var wording=document.createElement('p');
+                            wording.innerHTML = "请打开微信使用扫一扫进行微信支付";
+                            var code=document.createElement('DIV');
+                            var img=document.createElement("img");
+                            img.src=url;
+                            code.appendChild(img);
+                            var element=document.getElementById("qrcode");
+                            $("#qrcode").html('');
+                            element.appendChild(wording);
+                            element.appendChild(code);
+                            $(".wechat-code-box").show();
+                        }
+                    }
+                });
+            })
+        }
+    });
+
+    $(".loginBtn").click(function(){      //  登录页面
+        var $phone = $(".loginInput").val();
+        var reg = /^1([38]\d|5[0-35-9]|7[3678])\d{8}$/;
+        if($phone == ""){
+            layer.msg("手机号不能为空");
+            return false;
+        }else if(!reg.test($phone)){
+            layer.msg("手机号格式错误");
+            return false;
+        }else{
+            var cid = "{$cid}";   //频道id
+            var phone = $(".loginInput").val();  //支付时手机号
+            $.ajax({
+                type:"post",
+                url:"{:url('home/index/pcpayisphone')}",
+                dataType:"json",
+                data:{cid:cid,phone:phone},
+                success:function(data){
+                    if(data == 2){
+                         layer.msg("该手机号未支付");
+                    }else if(data == 1){
+                        location.href = "http://easycast.cloud/index.php/index-ad_id-"+cid+".html"; //页面跳转
+                    }
+                }
+            });
+            /*layer.msg("通过");*/
+        }
+    });
+
+
+    $(".login-btn").click(function(){   //  点击切换
+        $(".pay").hide();
+        $(".authorized-wrap").show();
+    });
+
+    $(".login-btn1").click(function(){   //  点击切换
+        $(".pay").show();
+        $(".authorized-wrap").hide();
+    });
+</script>
+
+
+
+</body>
+</html>

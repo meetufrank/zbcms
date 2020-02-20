@@ -5,20 +5,37 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
-    <title></title>
-
+    <title>{$info.channel_name}</title>
     <link rel="stylesheet" type="text/css" href="__PC__/css/style.css">
     <link rel="stylesheet" type="text/css" href="__PC__/iconfont/iconfont.css">
+<!--    表情插件-->
+    <link rel="stylesheet" href="__PC__/lib/css/jquery.mCustomScrollbar.min.css"/>
+    <link rel="stylesheet" href="__PC__/css/jquery.emoji.css"/>
+
     <link rel="stylesheet" type="text/css" href="//cdn.bootcss.com/Buttons/2.0.0/css/buttons.min.css">
+
+    <!--swiper-->
+    <link rel="stylesheet" href="__PC__/css/swiper.min.css">
+    <script src="__PC__/js/swiper.min.js"></script>
     <!-- 阿里云html5播放器的CSS -->
-    <link rel="stylesheet" type="text/css" href="https://g.alicdn.com/de/prismplayer/2.5.0/skins/default/aliplayer-min.css">
+    <link rel="stylesheet" href="https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css" />
     <!-- <link href="//nos.netease.com/vod163/nep.min.css" rel="stylesheet"> -->
+<!--    倒计时-->
+    <link href="__PC__/jcountdown/jcountdown.css" rel="stylesheet" type="text/css">
+
+
     <style type="text/css">
+        body{
+            background-image:url("__PUBLIC__/{$info.channel_bgpic}");
+            background-size: 100%;
+            background-repeat:no-repeat;
+            background-color: #E2DFD6;
+        }
         .prism-big-play-btn{
             position: absolute;
             left: 400px  !important;
             bottom: 212px  !important;
-            display: block;
+
         }
         /*悬停播放按钮样式*/
         .prism-big-play-btn:hover{
@@ -29,9 +46,9 @@
             border-color:#333 !important;
         }
         /*让播放器结束的时候也显示播放按钮*/
-        .pause{
-            display: block!important;
-        }
+        /*.use{*/
+        /*    display: block!important;*/
+        /*}*/
 
         /*更改原本的开始播放按钮*/
         /*.play{*/
@@ -50,7 +67,7 @@
             margin-top: 25px;
         }
         #wxcodes{
-            margin-top: 30px;
+            margin-top: 40px;   /* 页面二维码 */
         }
         .footer{overflow: hidden;}
         /*微信logo位置*/
@@ -62,8 +79,10 @@
             cursor: pointer;
         }
         .wechat img{
-            width:27px !important;
-            height: 27px !important;
+            width: 23px !important;
+            height: 23px !important;
+            position: relative;
+            top: -3px;
         }
 
 
@@ -95,7 +114,7 @@
             position: relative;
             width: 360px;
         }
-        .title{
+        .title1{
             position: relative;
             height: 50px;
             line-height: 50px;
@@ -210,6 +229,560 @@
             cursor: pointer;
             border: 0px;
         }
+
+        #wxqrcode{
+            margin-top: -15px !important; /* 弹出二维码的位置*/
+        }
+
+        .layui-layer-page{
+            height: 400px !important;
+        }
+        /*正在直播文字样式*/
+        .nowLive{
+            display: none;
+            width: 70px;
+            color: red;
+            border: 1px solid #e88d8d;
+            border-radius: 5px;
+            background: pink;
+            text-align: center;
+            margin-right: 10px;
+            height: 25px;
+            line-height: 25px;
+            font-weight: bold;
+        }
+        /*播放视频*/
+        .shipin{
+            display: none;
+        }
+
+        .fengmian{
+            position: absolute;
+            width: 64.2%;
+            height: 78%;
+            display: none;
+        }
+        .fengmian .bj{
+            width: 100%;
+            height: 97%;
+            position: absolute;
+            z-index: 10;
+        }
+        .fengmian .kaishi{
+            position: absolute;
+            z-index: 99;
+            top: 194px;
+            left: 386px;
+        }
+        .fengmian .kaishi:hover{
+            cursor: pointer;
+        }
+
+        /*手机观看二维码*/
+        #qrcode canvas{
+            margin-top: 25px;
+        }
+
+        .prism-setting-btn{
+            display: none;
+        }
+        .prism-cc-btn{
+            display: none;
+        }
+
+
+
+        /*顶部滑动 后更改*/
+        .alone{
+            display: inline-block;
+            width: 48%;
+            padding: 5px 0;
+            vertical-align: text-top;
+            position: relative;
+            margin-bottom: 10px;
+        }
+        .alone img{
+            width: 40px;
+            height: 40px;
+            float: left;
+            margin-right: 10px;
+            border-radius: 50%;
+            padding-top: 5px;
+        }
+        .alone .aText{
+            margin-bottom: 15px;
+        }
+        .alone .aText p{
+            padding-left: 50px;
+            font-size: 12px;
+            position: absolute;
+            bottom: 0;
+        }
+        .alone .aText .showText{
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+            padding-left: 50px;
+            /*text-overflow: ellipsis;*/
+            /*white-space: nowrap;*/
+            /*overflow: hidden;*/
+        }
+        .ggTitle{
+            background: #fff;
+            border-bottom: 1px solid #f4f4f4;
+            padding: 5px 22px;
+            color: #999;
+        }
+
+        .bigGg{
+            margin-bottom: 10px;
+            width: 1200px;
+            background: #fff;
+            padding: 5px 0;
+        }
+        .sharebox{
+            position: relative;
+        }
+        .sharebuttonbox{
+            position: absolute;
+            left: 60px;
+            top: -1px;
+        }
+
+
+        /*选项卡部分*/
+        .tab-box {
+            position: relative;
+            margin-top: 10px;
+            background: #fff;
+        }
+        .tab-box .tab-box-title {
+            -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#e6ffffff,endColorstr=#e6ffffff);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#e6ffffff,endColorstr=#e6ffffff);
+            zoom: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .tab-box-title {
+            border-bottom: 2px solid #d9d9d9;
+        }
+        .tab-box-title .tab-menu {
+            position: relative;
+            display: inline-block;
+            width: 195px;
+            height: 64px;
+            line-height: 64px;
+            text-align: center;
+            font-size: 17px;
+            color: #000;
+            cursor: pointer;
+        }
+        .tab-box-title .tab-menu:hover,.tab-box-title .tab-menu.active {
+            color: #1e78dc;
+        }
+        .tab-box-title .triangle-box {
+            position: relative;
+            border-bottom: 2px solid #1e78dc;
+        }
+        .tab-box-title .triangle {
+            position: absolute;
+            display: block;
+            left: 50%;
+            bottom: 0;
+            margin-left: -11px;
+            height: 0;
+            width: 0;
+            font-size: 0;
+            line-height: 0;
+            border-color: transparent transparent #1e78dc transparent;
+            border-style: dashed dashed solid dashed;
+            border-width: 0 11px 13px;
+        }
+        .tab-box-title .triangle-s {
+            position: absolute;
+            display: block;
+            bottom: -2px;
+            left: 50%;
+            margin-left: -10px;
+            height: 0;
+            width: 0;
+            font-size: 0;
+            line-height: 0;
+            border-color: transparent transparent #f4f4f4 transparent;
+            border-style: dashed dashed solid dashed;
+            border-width: 0 10px 12px;
+        }
+        .tab-box .tab-box-content {
+            -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#e6ffffff,endColorstr=#e6ffffff);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#e6ffffff,endColorstr=#e6ffffff);
+            zoom: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .tab-box-content {
+            position: relative;
+            font-size: 14px;
+        }
+        .tab-box-content .detail-box {
+            position: relative;
+            padding: 30px 20px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .tab-box-content .detail-box p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        .detail-box p a{
+            color: rgb(0,0,238);
+        }
+
+        /*后更改聊天的样式*/
+        .comments-moments .tabs {
+            padding-left: 8px;
+            height: 32px;
+            background-color: #eeefee;
+        }
+        .comments-moments .tabs .tab {
+            color: #666;
+            display: inline-block;
+        }
+        .comments-moments .tabs .tab span {
+            display: inline-block;
+            height: 32px;
+            line-height: 32px;
+            font-size: 14px;
+        }
+        .comments li{
+            padding-top: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dotted #eceef8;
+            text-align: center;
+        }
+
+
+        .comment-box {
+            position: relative;
+            width: 318px;
+            border: 1px solid #e9e9e9;
+            background: none;
+            -ms-filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#e6ffffff,endColorstr=#e6ffffff);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#e6ffffff,endColorstr=#e6ffffff);
+            zoom: 1;
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+        .comment-box .title {
+            padding-left: 20px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 12px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        .comment-box .comment-num {
+            padding: 0 5px;
+            color: #1e78dc;
+        }
+        .comment-box .comment-nick {
+            float: right;
+            margin-right: 20px;
+            max-width: 180px;
+        }
+        .comment-box .nick {
+            float: right;
+            max-width: 100px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-style: normal;
+            white-space: nowrap;
+            color: #336699;
+        }
+        .comment-box .comments {
+            padding: 0 10px;
+            height: 478px;
+            overflow: auto;
+        }
+        .comment {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px dotted #eceef8;
+            text-align: center;
+        }
+        .comment .avatar {
+            float: left;
+            display: inline-block;
+            *display: inline;
+            zoom: 1;
+            margin: 0px 10px;
+            width: 40px;
+            height: 40px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+        }
+        .comment .user-info {
+            *margin-top: -13px;
+            text-align: left;
+        }
+        .comment .user-info, .comment .time {
+            margin-left: 60px;
+        }
+        .comment .user-info .username {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            font-size: 13px;
+            line-height: 17px;
+            color: #111111;
+            vertical-align: top;
+            display: inline-block;
+            max-width: 118px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+        .comment .text {
+            margin-left: 60px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #787878;
+            line-height: 1.5;
+            text-align: left;
+            word-wrap: break-word;
+            word-break: normal;
+            overflow: hidden;
+        }
+        .comment .text img{
+            width: 20px;
+        }
+        .comment .time {
+            text-align: left;
+            font-size: 12px;
+            color: #BEBEBE;
+            margin-top: 5px;
+        }
+        .publish-box {
+            position: relative;
+            padding: 5px;
+            height: 100px;
+            font-size: 0;
+            background-color: #edeef0;
+        }
+        .publish-box .input-wrap {
+            position: relative;
+            width: 100%;
+            height: 55px;
+            vertical-align: middle;
+            background-color: #fff;
+            border: 1px solid #d6d6d7;
+            overflow: hidden;
+        }
+        .publish-box .input-wrap #input-text {
+            padding: 8px 10px;
+            width: 296px;
+            *width: 276px;
+            height: 55px;
+            outline: none;
+            border: none;
+            font-size: 13px;
+            resize: none;
+        }
+        .publish-box .send-wrap {
+            position: relative;
+            display: inline-block;
+            width: 304px;
+            margin-left: 7px;
+        }
+        .publish-box .publish-btn {
+            display: inline-block;
+            *display: inline;
+            *zoom: 1;
+            margin-top: 8px;
+            width: 82px;
+            height: 32px;
+            line-height: 32px;
+            text-align: center;
+            font-size: 14px;
+            color: #fff;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            vertical-align: middle;
+            background-color: #1e78dc;
+        }
+        #emoji_btn_1{
+            top:826px !important;
+            display:none;
+        }
+        #emoji_container_1{
+            top: 500px !important;
+            left: 960.5px !important;
+            width: 309px !important;
+        }
+        .emoji_content ul li{
+            width: 38px !important;
+            height: 38px !important;
+        }
+        .emoji_content ul li a{
+            line-height: 38px !important;
+        }
+        .emoji_content ul li a img{
+            max-width: 38px !important;
+            max-height: 38px !important;
+        }
+        .emoji_tab_list ul li{
+            line-height: 19px !important;
+        }
+        .user-info .top {
+             display: none;
+            margin-top: -2px;
+            padding: 0 3px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #ffa32c;
+            font-size: 12px;
+            position: relative;
+            top: -3px;
+            margin-left: 2px;
+            line-height: 15px;
+        }
+        .broadcast {
+            margin-top: 3px;
+            line-height: 1.6;
+            word-wrap: break-word;
+            word-break: break-all;
+            position: relative;
+            text-align: right;
+        }
+        .broadcast-cmts {
+            /*position: absolute;*/
+            /*right: 0;*/
+            /*bottom: -24px;*/
+            /*display: none;*/
+            font-size: 0;
+        }
+        .broadcast-cmt {
+            display: inline-block;
+            margin-right: 8px;
+            padding: 3px 4px;
+            line-height: 12px;
+            font-size: 12px;
+            color: #3c8cd2;
+            cursor: pointer;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            border: 1px solid #3c8cd2;
+            background-color: #fcfcfc;
+        }
+        .broadcast .topcmt {
+            color: #fa5b22;
+            border: 1px solid #fa5b22;
+        }
+        .broadcast .cancelTop {
+            color: #fa5b22;
+            border: 1px solid #fa5b22;
+        }
+        .broadcast .gaged {
+            color: #e65555;
+            background-color: #fff;
+            border: 1px solid #e65555;
+            margin-right: 0;
+        }
+        .gag-btn {
+            margin-right: 0;
+        }
+        .broadcast .broadcast-cmt:hover {
+            color: #fff;
+            background-color: #3c8cd2;
+        }
+        .broadcast .topcmt:hover {
+            color: #fff;
+            background-color: #fa5b22;
+        }
+        .broadcast .cancelTop:hover {
+            color: #fff;
+            background-color: #fa5b22;
+        }
+        .broadcast .gaged {
+            color: #e65555;
+            background-color: #fff;
+            border: 1px solid #e65555;
+        }
+        .broadcast .gaged:hover {
+            color: #fff;
+            background-color: #e65555;
+        }
+        .publish-box .input-wrap .input-tip {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 8px 10px;
+            font-size: 13px;
+            color: #ccc;
+            background-color: #fff;
+            display: none;
+        }
+        .emoji_tab_list{
+            width:273px !important;
+        }
+
+        /*显示天数部分*/
+        .countdown-title {
+            display: inline-block;
+            padding: 0 16px;
+            margin: 140px 0 50px 0;
+            height: 67px;
+            line-height: 67px;
+            background-color: #29AAE1;
+            color: #FFFFFF;
+            -webkit-border-radius: 0.05em;
+            -moz-border-radius: 0.05em;
+            border-radius: 0.05em;
+            letter-spacing: 0.01em;
+        }
+        .countdown-title > span {
+            font-size: 32px;
+            vertical-align: top;
+        }
+        .countdown-title .countdown-days {
+            font-size: 50px;
+            letter-spacing: 0.1em;
+            margin-left: 0.2em;
+        }
+        .countdown-title .countdown-day {
+            font-size: 24px;
+        }
+
+        .countdown1{
+            display: inline-block;
+            position: relative;
+            top: -4px;
+        }
+        .jCountdown.flip.white .group>.container{
+            background: none;
+        }
+
+        .admin-title {
+            margin-top: -1px;
+            padding: 0 3px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            color: #fff;
+            background-color: #5c95eb;
+            font-size: 12px;
+            position: relative;
+            top: 2px;
+            margin-left: 2px;
+            line-height: 15px;
+            vertical-align: top;
+            display: inline-block;
+        }
+
+
+
     </style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -224,70 +797,116 @@
 
 </head>
 <body>
-<div class="head"></div>
-<div class="container">
+<div class="head">
+    <!--<img src="__PUBLIC__/{$info.channel_bgpic}">-->
+</div>
+
+        <div  class="container">
+
+
+
 
 
     <!--验证码-->
     {if condition="$info.user_type eq 2"}
-            <div class="zhezhao">
-                <div class="authorized-wrap">
-                    <div class="auth-code-wrap">
-                        <!--title 标题-->
-                        <div class="title">{$yzm_info.code_title}</div>
-                        <div class="content">
-                            <!--input 输入框-->
-                            <input type="text" id="codevar" placeholder="请输入验证码">
-                            <!--立即观看 按钮-->
-                            <button class="btn" onclick="yzmgk({$info.id})">立即观看</button>
-                            <span id="tishi"></span>
-                        </div>
-                    </div>
+    <div class="zhezhao">
+        <div class="authorized-wrap">
+            <div class="auth-code-wrap">
+                <!--title 标题-->
+                <div class="title1">{$yzm_info.code_title}</div>
+                <div class="content">
+                    <!--input 输入框-->
+                    <input type="text" id="codevar" placeholder="请输入验证码">
+                    <!--立即观看 按钮-->
+                    <button class="btn" onclick="yzmgk({$info.id})">立即观看</button>
+                    <span id="tishi"></span>
                 </div>
             </div>
+        </div>
+    </div>
     {/if}
 
     <!--用户白名单 弹出层-->
     <!--深灰色背景色-->
     {if condition="$info.user_type eq 3"}
-            <div class="backg">
-                <!--内容部分-->
-                <div class="neirong">
-                    <div class="biaoti">
-                        <!--title-->
-                        <div>欢迎观看本直播</div>
-                        <!--输入框 点击按钮 -->
-                        <div class="shuru">
-                            <input type="text" id="w_name" placeholder="请输入用户名">
-                            <span id="s1" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
-                            <span id="s2" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
-                            <input type="password" id="w_pwd" placeholder="请输入密码">
-                            <span id="s3"  style="font-size: 13px;color: red;text-align: left;position: relative;left: -115px;"></span>
-                            <button class="btn" onclick="bmd({$info.id})">立即观看</button>
-                        </div>
-                    </div>
+    <div class="backg" style="display: none;">
+        <!--内容部分-->
+        <div class="neirong">
+            <div class="biaoti">
+                <!--title-->
+                <div>欢迎观看本直播</div>
+                <!--输入框 点击按钮 -->
+                <div class="shuru">
+                    <input type="text" id="w_name" placeholder="请输入用户名">
+                    <span id="s1" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
+                    <span id="s2" style="font-size: 13px;color: red;text-align: left;position: relative;left: -100px;"></span>
+                    <input type="password" id="w_pwd" placeholder="请输入密码">
+                    <span id="s3"  style="font-size: 13px;color: red;text-align: left;position: relative;left: -115px;"></span>
+                    <button class="btn" onclick="bmd({$info.id})">立即观看</button>
                 </div>
             </div>
+        </div>
+    </div>
     {/if}
 
-    <div class="container-left">
+
+            {if condition="$info.id eq 103"}
+                    <div class="tab-box" style="margin: 0 0 5px; width: 72.1%;">
+                        <!--content-->
+                        <div class="tab-box-content">
+                            <div class="detail-box" style="padding: 10px 20px 10px;">
+                                <p>请协助填写会议反馈问卷，地址为<a href="http://edmcn.net/cisco/20200107_1/CIN_poll.htm">http://edmcn.net/cisco/20200107_1/CIN_poll.htm</a> ，谢谢！</p>
+                            </div>
+                        </div>
+                    </div>
+            {elseif condition="$info.id eq 102"}
+                    <div class="tab-box" style="margin: 0 0 5px; width: 72.1%;">
+                        <!--content-->
+                        <div class="tab-box-content">
+                            <div class="detail-box" style="padding: 10px 20px 10px;">
+                                <p>请协助填写会议反馈问卷，地址为<a href="https://engage2demand.cisco.com/LP=19319">https://engage2demand.cisco.com/LP=19319</a> ，谢谢！</p>
+                            </div>
+                        </div>
+                    </div>
+            {elseif condition="$info.id eq 99"}
+                    <div class="tab-box" style="margin: 0 0 5px; width: 72.1%;">
+                        <!--content-->
+                        <div class="tab-box-content">
+                            <div class="detail-box" style="padding: 10px 20px 10px;">
+                                <p>请协助填写会议反馈问卷，地址为<a href="http://edmcn.net/cisco/20200109_1/CIN_poll.htm">http://edmcn.net/cisco/20200109_1/CIN_poll.htm</a> ，谢谢！</p>
+                            </div>
+                        </div>
+                    </div>
+            {/if}
+
+            <!--判断显示聊天框测试直播频道和思科-->
+            {if condition="($info.id eq 103) OR ($info.id eq 102) OR ($info.id eq 99) OR ($info.id eq 108)"}
+            <div class="container-left fl">
+{else/}
+            <div class="container-left fl" style="position:relative;margin: 0 auto;float: none !important;">
+        {/if}
+
         <div class="left-top">
             <img src="__PUBLIC__/{$info.channel_logo}">
+
+            <div id="wd"></div>
+
             <div class="title">
                 <h4>{$info.channel_name}</h4>
                 <div class="text-msg">
-                      <span class="channel-heads">
+                    <span class="nowLive">正在直播</span>
+                    <span class="channel-heads">
                         <i class=" iconfont icon-guankanrenshu"></i>
                         <span class="">{$acount}</span>
                       </span>
 
 
-                    <div class="sharebox">
+                    <div class="sharebox" style="display: none;">
                               <span class="channel-share" >
                                 <i class="iconfont icon-fenxiang"></i>
                                 <span class="">分享</span>
                                 <span class="sharebuttonbox btn-hidee">
-                                  <img class="sharebtn-wechat" src="__PC__/images/wechat.png">
+                                  <img class="sharebtn-wechat" src="__PC__/images/wechat.png" style="padding-top: 5px;">
                                   <img class="sharebtn-space" src="__PC__/images/space.png" style="display: none;">
                                   <img class="sharebtn-blog" src="__PC__/images/blog.png" style="display: none;">
                                 </span>
@@ -295,7 +914,7 @@
                     </div>
                 </div>
             </div>
-            <div class="text-phone">
+            <div class="text-phone" style="display: none;">
                 <img src="__PC__/images/phone.png" class="phone">
                 <p>手机观看</p>
                 <div class="qrcode-float">
@@ -310,7 +929,27 @@
             <div  class="prism-player" id="J_prismPlayer" style="width: 865px;height: 487px;">
 
             </div>
+
+            <!--播放视频的播放器-->
+            <!--没有直播的封面-->
+            <!--<div class="fengmian">-->
+            <!--<div>-->
+            <!--<img class="bj" src="../../../../zhibo/public/static/mobile/images/phone.jpg">-->
+            <!--<p>-->
+            <!--<img src="../../../../zhibo/public/static/mobile/images/player.png">-->
+            <!--</p>-->
+            <!--</div>-->
+            <!--</div>-->
+            <!--<div class="fengmian">-->
+            <!--<img class="bj" src="../../../../zhibo/public/static/mobile/images/phone.jpg">-->
+            <!--<img class="kaishi" src="../../../../zhibo/public/static/mobile/images/player.png" style="width:80px !important; height: 80px !important;">-->
+            <!--</div>-->
+
+            <!--<video class="shipin" width="100%" height="100%;" src="https://meetuuu.oss-cn-shanghai.aliyuncs.com/recording/record/AppName/StreamName181121141716161340/2018-12-05-16-17-38_2018-12-05-16-17-46.mp4" controls="controls" muted autoplay="autoplay"></video>
+-->
         </div>
+
+
         <div class="left-player-bar">
             <div class="dm-box" style="display: none;">弹幕</div>
             <div class="dm-check " id="dm-check" style="display: none;">
@@ -486,56 +1125,926 @@
 
         </div>
 
-    </div>
-
-    <div class="container-right" id="container-right">
-        <!-- <div class="right-ppt" id="right-ppt" style="display: none;">
-          <div class="ppt-show-box">
-            <a type="button" class="ppt-show-btn">
-              <img src="images/switch.png" class="iconfont img-switch">
-                  <span class="switch">切换窗口</span>
-            </a>
-          </div>
-        </div> -->
-        <div class="common-box common-box-bg " id="common-box">
-            <input type="text" value="1" id="chat" style="display: none;" />
-            <p class="common-title">
-                <span>共<span class="common-num">{$chatcount}</span>条聊天</span>
-                <span class="common-nike">
-                  <span>我的昵称：</span>
-                  <span class="common-num">{$usernames}</span>
-                </span>
-            </p>
-            <iframe src="{:url('chatpc/index')}?cid={$info.id}&username={$usernames}" class="common-norank"></iframe>
-                <div class="wechat">
-                    <a href="https://open.weixin.qq.com/connect/qrconnect?
-appid=wx7eee3208b7b59ea1&redirect_uri=http://www.rflinker.com/zhibo/Home/Userlogin/index.html?ad_id={$info.id}%26user_type=4&response_type=code
-&scope=snsapi_login&state=STATE#wechat_redirect"><img src="__PC__/images/wechat.png" style="width: 32px;height: 32px;padding-left: 10px;"></a>
+        <!--反馈问卷部分(选项卡)-->
+        {if condition="($info.id eq 103) OR ($info.id eq 102) OR ($info.id eq 99)"}
+                <div class="tab-box" style="display:none;">
+                    <!--title-->
+                    <div class="tab-box-title">
+                        <div class="tab-menu active">
+                            <span>反馈问卷</span>
+                            <div class="triangle-box">
+                                <span class="triangle"></span>
+                                <span class="triangle-s"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <!--content-->
+                    <div class="tab-box-content">
+                        <div class="detail-box">
+                            <p>请协助填写会议反馈问卷，地址为 <a href="http://edmcn.net/cisco/20191224_1/CIN_poll.htm">http://edmcn.net/cisco/20191224_1/CIN_poll.htm</a> ，谢谢！</p>
+                        </div>
+                    </div>
                 </div>
+        {/if}
+
+        <!--            倒计时部分-->
+        {if condition="$info.id eq 99"}
+            {if condition="$ctype neq 1"}
+                    <div style="background: #000;text-align: center;position: absolute;width: 100.2%;height: 487px;top: 105px;left: -1px; z-index: 1001;" class="removeDiv">
+                        <!--html 显示倒计时-->
+                        <div class="countdown-title">
+                            <span>距直播开始</span>
+                            <div class="countdown1"></div>  <!-- 只是显示天数 -->
+                            <!--<span class="countdown-days">06</span>-->
+                            <span class="countdown-day">天</span>
+                        </div>
+                        <!--倒计时-->
+                        <div class="countdown"></div>
+                    </div>
+            {/if}
+        {/if}
+
+    </div>
+    <input type="hidden" id="livetype" value="{$livetype}">  <!--直播状态-->
+
+
+
+
+
+
+<!--    聊天框-->
+            <!--测试频道和思科显示聊天框-->
+            {if condition="($info.id eq 103) OR ($info.id eq 102) OR ($info.id eq 99) OR ($info.id eq 108)"}
+    <div class="container-right" id="container-right" >
+        {else/}
+        <div class="container-right" id="container-right" style="display:none;">
+        {/if}
+        <div class="comments-moments noppt norank">
+            <div class="tabs">
+                <p class="tab">
+                    <span>聊天互动</span>
+                </p>
+            </div>
+<!--            聊天-->
+            <div id="comment-box" class="comment-box">
+                <p class="title">
+                    <span>共</span>
+                    <span class="comment-num">{$chatcount}</span>
+                    <span>条聊天</span>
+                    <span class="comment-nick">
+                        <span>我的昵称</span>
+                        <span>：</span>
+                        <i class="nick">{$usernames}</i>
+                    </span>
+                </p>
+                <ul class="comments noppt norank">
+
+                    <div id="zhiding">
+                            {volist name="chat_list" id="data"}
+                                <!--是否审核通过-->
+                                {if condition="$data.to_examine neq 1"}
+                                    <!--是否为置顶-->
+                                    {if condition="$data.chattopping_time neq ''"}
+                                        <!--是否为官方消息-->
+                                        {if condition="$data.userimgurl eq $gfimg"}
+                                            <li class="comment{$data.id} zhiD" id="newLine">
+                                                <img src="{$data.userimgurl}" alt="" class="avatar">
+                                                <p class="user-info">
+                                                    <span class="username">{$data.username}</span><span class="admin-title">官方</span><span class="top" style="display: inline;">顶</span>
+                                                    <span></span>
+                                                </p>
+                                                <div class="text">{$data.content}</div>
+                                                <p class="time">{$data.chattime}</p>
+                                                <div class="broadcast" style="display: none;">
+                                                                                              <span class="broadcast-cmts">
+                                                                                                  <span class="broadcast-cmt topcmt" style="display: none;">置顶</span>
+                                                                                                  <span class="broadcast-cmt cancelTop" style="">取消置顶</span>
+                                                                                                  <span class="broadcast-cmt delcmt">删除</span>
+                                                                                                  <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                                                  <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                                                                                             </span>
+                                                </div>
+                                            </li>
+
+                                        {else/}
+                                            <li class="comment{$data.id} zhiD" id="newLine">
+                                                <img src="{$data.userimgurl}" alt="" class="avatar">
+                                                <p class="user-info">
+                                                    <span class="username">{$data.username}</span><span class="top" style="display: inline;">顶</span>
+                                                    <span></span>
+                                                </p>
+                                                <div class="text">{$data.content}</div>
+                                                <p class="time">{$data.chattime}</p>
+                                                <div class="broadcast" style="display: none;">
+                                                                                              <span class="broadcast-cmts">
+                                                                                                  <span class="broadcast-cmt topcmt" style="display: none;">置顶</span>
+                                                                                                  <span class="broadcast-cmt cancelTop" style="">取消置顶</span>
+                                                                                                  <span class="broadcast-cmt delcmt">删除</span>
+                                                                                                  <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                                                  <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                                                                                             </span>
+                                                </div>
+                                            </li>
+                                        {/if}
+
+                                    {/if}
+                                {/if}
+                            {/volist}
+                    </div>
+
+
+
+                    <div style="position: relative;" class="insert">
+                        {volist name="chat_list" id="data"}
+                        {if condition="$data.to_examine neq 1"}
+                        <!--普通消息-->
+                        {if condition="$data.chattopping_time eq ''"}
+
+                                <!--是否为官方消息-->
+                                {if condition="$data.userimgurl eq $gfimg"}
+                                    <li class="comment{$data.id}">
+                                        <img src="{$data.userimgurl}" alt="" class="avatar">
+                                        <p class="user-info">
+                                            <span class="username">{$data.username}</span><span class="admin-title">官方</span><span class="top">顶</span>
+                                            <span></span>
+                                        </p>
+                                        <div class="text">{$data.content}</div>
+                                        <p class="time">{$data.chattime}</p>
+                                        <div class="broadcast" style="display: none;">
+                                                                                                     <span class="broadcast-cmts">
+                                                                                                         <span class="broadcast-cmt topcmt{$data.id}">置顶</span>
+                                                                                                         <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+                                                                                                         <span class="broadcast-cmt delcmt">删除</span>
+                                                                                                         <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                                                         <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                                                                                                    </span>
+                                        </div>
+                                    </li>
+                                {else/}
+                                    <li class="comment{$data.id}">
+                                        <img src="{$data.userimgurl}" alt="" class="avatar">
+                                        <p class="user-info">
+                                            <span class="username">{$data.username}</span><span class="top">顶</span>
+                                            <span></span>
+                                        </p>
+                                        <div class="text">{$data.content}</div>
+                                        <p class="time">{$data.chattime}</p>
+                                        <div class="broadcast" style="display: none;">
+                                                                                         <span class="broadcast-cmts">
+                                                                                             <span class="broadcast-cmt topcmt{$data.id}">置顶</span>
+                                                                                             <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+                                                                                             <span class="broadcast-cmt delcmt">删除</span>
+                                                                                             <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                                             <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                                                                                        </span>
+                                        </div>
+                                    </li>
+                                {/if}
+                        {/if}
+
+                        {/if}
+                        {/volist}
+                    </div>
+                </ul>
+<!--                底部输入框-->
+                <div id="publish-box" class="publish-box">
+                    <div class="input-wrap">
+                        <div class="input-tip"><p>您已被禁言</p></div>
+                        <textarea id="input-text"></textarea>
+<!--                        <textarea class="form-control" id="content"></textarea>-->
+                    </div>
+
+                    <div class="send-wrap" >
+                        <div class="wechat" style="display: none;">
+                            <a href="https://open.weixin.qq.com/connect/qrconnect?appid=wx7eee3208b7b59ea1&redirect_uri=http://easycast.cloud/Home/Userlogin/index.html?ad_id={$info.id}%26user_type=5&response_type=code&scope=snsapi_login&state=STATE#wechat_redirect"><img src="__PC__/images/wechat.png" style="width: 32px;height: 32px;padding-left: 10px;"></a>
+                        </div>
+                        <span id="publish-btn" class="publish-btn right">发送</span>
+
+                    </div>
+            </div>
         </div>
+
+
     </div>
 
 </div>
-<div class="footer" style="margin-top: 100px;">
-    <p class="footer-text">测试页脚</p>
-    <div id="wxcodes">
-        <div id="wxqrcode" style='text-align:center;margin:-20px 0 15px 0;'></div>
+<div class="footer" style="margin-top: 100px; background-color: rgb(255, 255, 255);height: 70px;">
+    <div id="wd"></div>
+    <p class="footer-text">{$info.bottomtext}</p>
+    <p style="text-align: center;font-size: 14px;margin-top: 5px;"><a href="http://www.beian.miit.gov.cn" style="color: #939393;text-decoration:none;">沪ICP备15033928号-5</a></p>
+    <div id="wxcodes" style="display: none;">
+        <div id="wxqrcode" style='text-align:center;margin:-20px 0 15px 0;'> <div id="wet"></div>  </div>
         <p style='text-align:left;font-size: 12px;line-height: 22px;color: #666;text-indent:1em'>打开微信，点击底部的“发现”，</P>
         <p style='text-align:left;font-size: 12px;line-height: 22px;color: #666;text-indent:1em'>使用“扫一扫”即可将网页分享至朋友圈。</P>
     </div>
 </div>
+<input id="StreamName" type = "hidden" value="{$streamname}"/>
 
 
+            <li class="comment" style="display: none;" id="newLine">
+                <img src="https://static.mudu.tv/index/avatar.png" alt="" class="avatar">
+                <p class="user-info">
+                    <span class="username">上海市网友</span><span class="top">顶</span>
+                    <span></span>
+                </p>
+                <div class="text">123</div>
+                <p class="time">2019-07-09 16:22</p>
+                <div class="broadcast">
+                      <span class="broadcast-cmts">
+                          <span class="broadcast-cmt topcmt">置顶</span>
+                          <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+                          <span class="broadcast-cmt delcmt">删除</span>
+                          <span class="broadcast-cmt gag-btn">禁言</span>
+                          <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                     </span>
+                </div>
+            </li>
+
+<input style="display:none;" type="text" value="{$user_ip}" id="userip"/>
+
+<input type="hidden" value="{$userid}" id="userid"/>
+            <input type="hidden" value="{$info.count_down}" id="count_down"/>
+</div>
+            <!-- <script type="text/javascript" src="js/jquery.js"></script> -->
+<!--<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>-->
+            <script src="__PC__/js/jquery-1.8.2.min.js"></script>
+            <script src="__PC__/jcountdown/jquery.jcountdown.min.js?v=0.2"></script><!-- 倒计时 -->
+<!--            表情插件js-->
+
+            <script src="__PC__/lib/script/jquery.mousewheel-3.0.6.min.js"></script>
+            <script src="__PC__/lib/script/jquery.mCustomScrollbar.min.js"></script>
+            <script src="__PC__/js/jquery.emoji.js"></script>
 
 
-<!-- <script type="text/javascript" src="js/jquery.js"></script> -->
-<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
 <script type="text/javascript" src="__PC__/layer/layer/layer.js"></script>
-
 <script type="text/javascript" src="__PC__/js/script.js"></script>
-<script type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.5.0/aliplayer-min.js"></script>
+<script charset="utf-8" type="text/javascript" src="https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-min.js"></script>
+
 <!-- <script src="//nos.netease.com/vod163/nep.min.js"></script> -->
 <!--点击播放按钮 按钮隐藏-->
+<script>
+
+    var endTime =  $("#count_down").val();
+    window._mytime='{$server_time}';
+    window._ctime=Date.parse(new Date);
+    /**     激活天数*/
+    $(function() {
+
+        config = {
+            timeText:  endTime, //倒计时时间，格式：年/月/日 时:分:秒
+            timeZone:'8' , //时区，GMT号码
+            style: "flip", //显示的样式，可选值有flip,slide,metal,crystal(翻动、滑动、金属、水晶)
+            color: "white", //显示的颜色，可选值white,black(黑色、白色)
+            width: 0, //倒计时宽度，无限制，默认为0
+            textGroupSpace: 0, //天、时、分、秒之间间距
+            textSpace: 5, //数字之间间距
+            reflection: 0, //是否显示倒影
+            reflectionOpacity: 10, //倒影透明度
+            reflectionBlur: 0, //倒影模糊程度
+            dayTextNumber: 2, //倒计时天数数字个数
+            displayDay: !0, //是否显示天数
+            displayHour: 0, //是否显示小时数
+            displayMinute: 0, //是否显示分钟数
+            displaySecond: 0, //是否显示秒数
+            displayLabel: 0, //是否显示倒计时底部label
+            onFinish: function() {}//完成事件，您可以在时间结束时执行一些脚本，在创建倒计时时只需传递一个函数即可。
+        };
+        $(".countdown1").jCountdown(config);
+    });
+
+    /**     激活时分秒*/
+    $(function() {
+
+        config = {  //  显示小时/分钟/秒数的初始化插件
+            timeText: endTime, //倒计时时间，格式：年/月/日 时:分:秒
+            timeZone:'8' , //时区，GMT号码
+            style: "flip", //显示的样式，可选值有flip,slide,metal,crystal(翻动、滑动、金属、水晶)
+            color: "black", //显示的颜色，可选值white,black(黑色、白色)
+            width: 0, //倒计时宽度，无限制，默认为0
+            textGroupSpace: 25, //天、时、分、秒之间间距
+            textSpace: 5, //数字之间间距
+            reflection: !0, //是否显示倒影
+            reflectionOpacity: 10, //倒影透明度
+            reflectionBlur: 0, //倒影模糊程度
+            dayTextNumber: 2, //倒计时天数数字个数
+            displayDay: 0, //是否显示天数
+            displayHour: !0, //是否显示小时数
+            displayMinute: !0, //是否显示分钟数
+            displaySecond: !0, //是否显示秒数
+            displayLabel: 0, //是否显示倒计时底部label
+            onFinish: function() {}//完成事件，您可以在时间结束时执行一些脚本，在创建倒计时时只需传递一个函数即可。
+        };
+        $(".countdown").jCountdown(config);
+    });
+    $(function() {
+        //循环监听倒计时
+        function listenEnd() {
+
+            var endarr = $(".djsdiv");
+
+            var count=0;
+
+            $.each(endarr, function (i) {
+                var isend = $(this).children(".text").attr('style');
+
+                if(isend=='background-position: -450px -896px;'){  //结束
+                    count++;
+                }
+            })
+
+            if(count==14){  //全部为0
+                $(".removeDiv").remove();   //删除倒计时
+                clearInterval(listenend);
+            }
+        }
+        var listenend=setInterval(function(){ listenEnd() }, 1000);
+    });
+    // 封装删除倒计时的函数
+   /* function del(){
+        $(".removeDiv").remove();
+    }*/
+    // del();
+
+    // 点击删除
+    $(document).on('click','.delcmt',function(){
+       var $this = $(this);
+       $this.parent().parent().parent().remove();
+    });
+    // 点击置顶按钮显示当前的 顶 字
+    $(document).on('click','.topcmt',function(){
+        var $this = $(this);
+        $this.hide();
+        $this.siblings(".cancelTop").show();
+        var $d = $this.parent().parent().siblings().find(".top");
+        $d.show();
+        var $parent = $this.parent().parent().parent(); //  获取选中的最外层div
+        $(".insert").prepend($parent);  //  放到最前
+        $parent.addClass("zhiD");
+    });
+    // 取消置顶
+    $(document).on('click','.cancelTop',function(){
+        var $this = $(this);
+        $this.hide();
+        $this.siblings(".topcmt").show();
+        var $d = $this.parent().parent().siblings().find(".top");
+        $d.hide();      // 隐藏字
+        var $parent = $this.parent().parent().parent(); //  获取选中的最外层div
+        $(".insert").append($parent);
+    });
+
+    $(document).on('click','.gag-btn',function(){
+
+        // })
+        // $(".gag-btn").on('click',function(){
+        $(this).hide();
+        $(this).siblings(".gaged").show();
+        // layer.msg("上海市网友已被禁言");
+        $(".input-tip").show();
+
+    });
+    // 点击解禁
+    $(document).on('click','.gaged',function(){
+        $(this).hide();
+        $(this).siblings(".gag-btn").show();
+        // layer.msg("上海市网友已被解除禁言");
+        $(".input-tip").hide();
+    });
+
+
+
+
+
+    //聊天表情
+    $("#input-text").emoji({
+        showTab: true,
+        animation: 'fade',
+        icons: [{
+            name: "风格1",
+            path: "__PC__/img/tieba/",
+            maxNum: 50,
+            file: ".jpg",
+            // placeholder: ":{alias}:",
+            alias: {
+                1: "hehe",
+                2: "haha",
+                3: "tushe",
+                4: "a",
+                5: "ku",
+                6: "lu",
+                7: "kaixin",
+                8: "han",
+                9: "lei",
+                10: "heixian",
+                11: "bishi",
+                12: "bugaoxing",
+                13: "zhenbang",
+                14: "qian",
+                15: "yiwen",
+                16: "yinxian",
+                17: "tu",
+                18: "yi",
+                19: "weiqu",
+                20: "huaxin",
+                21: "hu",
+                22: "xiaonian",
+                23: "neng",
+                24: "taikaixin",
+                25: "huaji",
+                26: "mianqiang",
+                27: "kuanghan",
+                28: "guai",
+                29: "shuijiao",
+                30: "jinku",
+                31: "shengqi",
+                32: "jinya",
+                33: "pen",
+                34: "aixin",
+                35: "xinsui",
+                36: "meigui",
+                37: "liwu",
+                38: "caihong",
+                39: "xxyl",
+                40: "taiyang",
+                41: "qianbi",
+                42: "dnegpao",
+                43: "chabei",
+                44: "dangao",
+                45: "yinyue",
+                46: "haha2",
+                47: "shenli",
+                48: "damuzhi",
+                49: "ruo",
+                50: "OK"
+            },
+            title: {
+                1: "呵呵",
+                2: "哈哈",
+                3: "吐舌",
+                4: "啊",
+                5: "酷",
+                6: "怒",
+                7: "开心",
+                8: "汗",
+                9: "泪",
+                10: "黑线",
+                11: "鄙视",
+                12: "不高兴",
+                13: "真棒",
+                14: "钱",
+                15: "疑问",
+                16: "阴脸",
+                17: "吐",
+                18: "咦",
+                19: "委屈",
+                20: "花心",
+                21: "呼~",
+                22: "笑脸",
+                23: "冷",
+                24: "太开心",
+                25: "滑稽",
+                26: "勉强",
+                27: "狂汗",
+                28: "乖",
+                29: "睡觉",
+                30: "惊哭",
+                31: "生气",
+                32: "惊讶",
+                33: "喷",
+                34: "爱心",
+                35: "心碎",
+                36: "玫瑰",
+                37: "礼物",
+                38: "彩虹",
+                39: "星星月亮",
+                40: "太阳",
+                41: "钱币",
+                42: "灯泡",
+                43: "茶杯",
+                44: "蛋糕",
+                45: "音乐",
+                46: "haha",
+                47: "胜利",
+                48: "大拇指",
+                49: "弱",
+                50: "OK"
+            }
+        }, {
+            path: "__PC__/img/qq/",
+            name:"风格2",
+            maxNum: 91,
+            excludeNums: [41, 45, 54],
+            file: ".gif",
+            // placeholder: "#qq_{alias}#"
+        }]
+    });
+
+
+    var swiper = new Swiper('.swiper-container', {
+        // 轮播图的方向，也可以是vertical方向
+        direction:'horizontal',
+        //播放速度
+        loop: true,
+        // 自动播放时间
+        autoplay: true,
+        // 播放的速度（图片切换的速度）
+        speed:1000,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+    });
+
+
+
+
+    $(window).load(function(){
+        var live = "{$livetype}";
+        if(live == "0"){
+            // alert("进来");
+            $('.nowLive').css('display','none');
+        }else if(live == "1"){
+            $('.nowLive').css('display','inline-block');
+        }
+    });
+
+
+
+    // 单独播放器的时候
+    var info_id = "{$info.id}";
+    if(info_id == "96"){
+        $(".container-left").removeClass("fl").addClass("ma");
+    }else{
+        $(".container-left").removeClass("ma").addClass("fl");
+    }
+
+</script>
+
+<script>
+
+
+    var livebjt = "__PUBLIC__/{$info.channel_live_bgpic}";
+
+    var live = "{$livetype}";
+    if(live==1){
+        var rtmpurl = "{$playurl}";
+    }else{
+        var rtmpurl = "";
+    }
+    window.player = new Aliplayer({
+        id: 'J_prismPlayer',
+        cover: livebjt,  //播放器封面图
+        width: '100%',
+        autoplay: false,
+        isLive:true,//播放内容是否为直播，直播时会禁止用户拖动进度条
+        // autoPlayDelay:10,//延迟多长时间后播放，单位为秒
+        // autoPlayDelayDisplayText:'正在转码，请稍后……',//提示文本，比如正在转码，请稍后……
+        // 启用延迟播放时，需要把autoplay属性设置为true
+        //支持播放地址播放,此播放优先级最高
+        source : rtmpurl,
+
+
+    },function(player){
+        console.log('播放器创建好了。');
+    });
+    // 播放器结束事件
+    window.player.on('error',function(e){
+        console.log('播放器结束了');
+
+        //隐藏
+        // $('.prism-ErrorMessage').css();
+        $(".prism-error-content").hide();
+        $(".prism-error-operation").hide();
+        $(".prism-detect-info.prism-center").hide();
+        $('.prism-ErrorMessage').css('background-image', 'url(' + "__PUBLIC__/{$info.channel_live_bgpic}" + ')');
+
+
+        //解析
+        var errorData = e.paramData;
+        console.dir(errorData);
+        //console.log(errorData);
+    });
+</script>
+<script>
+    //连接websocker
+    var ws = new WebSocket('ws://121.42.207.83:8283');
+    //连接成功时触发
+    ws.onopen = function(){
+        var cid = "{$info.id}";
+        var userid = "{$userid}";  //用户id
+        var login_data = '{"type":"init","data":{"cid":'+cid+',"userid":'+userid+'}}';
+        ws.send(login_data);
+        console.log("连接成功");
+    };
+
+
+    //发送聊天消息
+    $(document).on('click','#publish-btn',function(){
+
+        var inputText = $("#input-text").val();  //获取到输入内容
+        if(inputText == ''){
+            alert("内容不可为空");
+            return;
+        }
+
+        var cid = "{$info.id}";  //频道id
+        var userid = "{$userid}";  //用户id
+        var usernames = "{$usernames}";  //用户昵称
+        var userimgurl = "{$userimgurl}";  //用户头像
+        var user_ip = "{$user_ip}";  //用户ip
+
+
+        $.ajax({
+            type:"post",
+            url:"{:url('home/Index/chatsend')}",
+            dataType:"json",
+            data:{ctext:inputText,cid:cid,userid:userid,usernames:usernames,userimgurl:userimgurl},
+            success:function(data){
+                if(data.data == 1){
+
+                    $(".insert").prepend('<li class="comment'+data.nid+'" id="newLine">\n' +
+                        '                <img src="'+data.userimgurl+'" alt="" class="avatar">\n' +
+                        '                <p class="user-info">\n' +
+                        '                    <span class="username">'+data.username+'</span><span class="top">顶</span>\n' +
+                        '                    <span></span>\n' +
+                        '                </p>\n' +
+                        '                <div class="text">'+data.ctext+'</div>\n' +
+                        '                <p class="time">'+data.ndate+'</p>\n' +
+                        '                <div class="broadcast" style="display: none;">\n' +
+                        '                      <span class="broadcast-cmts">\n' +
+                        '                          <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                        '                          <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>\n' +
+                        '                          <span class="broadcast-cmt delcmt">删除</span>\n' +
+                        '                          <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                        '                          <span class="broadcast-cmt gaged" style="display: none;">解禁</span>\n' +
+                        '                     </span>\n' +
+                        '                </div>\n' +
+                        '            </li>');
+                    $("#input-text").val('');  //清空输入框聊天数据
+                    var message = '{"type":"chatsend","cid":"'+data.cid+'","nid":"'+data.nid+'"}';  //发送消息给客户端
+                    ws.send(message); //发送到服务端
+
+                }
+            }
+        });
+
+
+    });
+
+
+    //服务端主动推送消息时会触发这里的onmessage
+    ws.onmessage = function(e){
+
+
+        var data = eval("("+e.data+")");
+
+        switch(data['message_type']){
+            case 'ping':
+                var countdown = $("#count_down").val();  //倒计时
+                var wddata = $("#livetype").val();
+                var StreamName = $("#StreamName").val();
+                var cid= "{$info.id}";
+
+                var islive = '{"data":{"wdata":"'+wddata+'","streamname":"'+StreamName+'","cid":"'+cid+'","countdowntime":"'+countdown+'"},"type":"live"}';
+
+                ws.send(islive);
+
+
+
+                //倒计时
+                var djs = '{"data":{"countdowntime":"'+countdown+'"},"type":"countdown"}';
+                ws.send(djs);
+
+                 return;
+
+            case "chatsend":    //获取到聊天信息
+
+                $(".comment-num").html(data.data.chatnum);
+                if(data.data.to_examine != 1){  //to_examine = 1 需要审核通过
+
+                    if(data.data.avatar == 'https://cdn13.mudu.tv/assets/upload/154466654253127.png'){  //  gu官方
+                        $(".insert").prepend('<li class="comment'+data.data.id+'" id="newLine">\n' +
+                            '                <img src="'+data.data.avatar+'" alt="" class="avatar">\n' +
+                            '                <p class="user-info">\n' +
+                            '                    <span class="username">'+data.data.username+'</span><span class="admin-title">官方</span><span class="top">顶</span>\n' +
+                            '                    <span></span>\n' +
+                            '                </p>\n' +
+                            '                <div class="text">'+data.data.content+'</div>\n' +
+                            '                <p class="time">'+data.data.chattime+'</p>\n' +
+                            '                <div class="broadcast" style="display: none;">\n' +
+                            '                      <span class="broadcast-cmts">\n' +
+                            '                          <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                            '                          <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>\n' +
+                            '                          <span class="broadcast-cmt delcmt">删除</span>\n' +
+                            '                          <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                            '                          <span class="broadcast-cmt gaged" style="display: none;">解禁</span>\n' +
+                            '                     </span>\n' +
+                            '                </div>\n' +
+                            '            </li>');
+                    }else{  //  普通用户
+                        $(".insert").prepend('<li class="comment'+data.data.id+'" id="newLine">\n' +
+                            '                <img src="'+data.data.avatar+'" alt="" class="avatar">\n' +
+                            '                <p class="user-info">\n' +
+                            '                    <span class="username">'+data.data.username+'</span><span class="top">顶</span>\n' +
+                            '                    <span></span>\n' +
+                            '                </p>\n' +
+                            '                <div class="text">'+data.data.content+'</div>\n' +
+                            '                <p class="time">'+data.data.chattime+'</p>\n' +
+                            '                <div class="broadcast" style="display: none;">\n' +
+                            '                      <span class="broadcast-cmts">\n' +
+                            '                          <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                            '                          <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>\n' +
+                            '                          <span class="broadcast-cmt delcmt">删除</span>\n' +
+                            '                          <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                            '                          <span class="broadcast-cmt gaged" style="display: none;">解禁</span>\n' +
+                            '                     </span>\n' +
+                            '                </div>\n' +
+                            '            </li>');
+                    }
+
+                }
+                return;
+        }
+
+
+
+   switch(data.type){
+
+       case "live":
+           //假设 我拿到 status =1 或 0
+           $("#livetype").val(data.data);   //给直播状态赋值
+           console.log(data.status);
+           if(data.status == 1) {   //不通过
+               window.location.href = window.location.href;
+           }
+           return;
+       case "logout":
+           layer.msg('账号在另一地点登录,  您已被迫下线');
+           setTimeout(function(){
+               window.location.href = "http://easycast.cloud/index.php/home-index-zhojiner-ad_id-79.html";
+               return;
+           },3000);
+
+           // alert("账号在另一地点登录,  a您已被迫下线");
+           // window.location.href = "http://easycast.cloud/index.php/home-index-zhojiner-ad_id-79.html";
+           // return;
+      /* case "countdown":    //倒计时
+           var ctype = data.ctype; //倒计时状态
+           if(ctype == 1){  //时间已到82
+
+               $(".removeDiv").remove();   //删除倒计时
+           }
+           return;
+*/
+       case "roofplacement":
+           var html = "";
+           $(".zhidingf").empty();
+           $(data.data.content).each(function(k,v){
+               html += '<div class=\"alone\" id="zhiding'+v.id+'"><img src=\"https://cdn13.mudu.tv/assets/upload/154466654253127.png\" alt=\"\"><div class=\"aText\"><div class=\"showText\">'+v.ctext+'</div><p></p> <!--2019-09-26 07:51:27--></div></div>';
+           });
+           $(".zhidingf").append(html);
+           return;
+
+       case "chatdelete":    //删除聊天数据
+           var chatid = data.data.chatid;   //获取到指定删除id
+
+           $(".comment"+chatid).remove();  //删除div
+           return;
+
+       //审核通过聊天数据
+       case "adoptchat":    //获取到聊天信息
+
+           var chatid = data.data.id;
+           $(".comment"+chatid).remove();  //删除div
+
+               $(".insert").prepend('<li class="comment'+data.data.id+'" id="newLine">\n' +
+                   '                <img src="'+data.data.avatar+'" alt="" class="avatar">\n' +
+                   '                <p class="user-info">\n' +
+                   '                    <span class="username">'+data.data.username+'</span><span class="top">顶</span>\n' +
+                   '                    <span></span>\n' +
+                   '                </p>\n' +
+                   '                <div class="text">'+data.data.content+'</div>\n' +
+                   '                <p class="time">'+data.data.chattime+'</p>\n' +
+                   '                <div class="broadcast" style="display: none;">\n' +
+                   '                      <span class="broadcast-cmts">\n' +
+                   '                          <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                   '                          <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>\n' +
+                   '                          <span class="broadcast-cmt delcmt">删除</span>\n' +
+                   '                          <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                   '                          <span class="broadcast-cmt gaged" style="display: none;">解禁</span>\n' +
+                   '                     </span>\n' +
+                   '                </div>\n' +
+                   '            </li>');
+
+           return;
+       case "chattopping":    //置顶聊天数据
+           var chatid = data.data.id;   //获取到聊天数据置顶id
+
+           $(".comment"+chatid).remove();  //先删除该div
+
+
+           //插入置顶消息
+           if(data.data.avatar == 'https://cdn13.mudu.tv/assets/upload/154466654253127.png') {  //  gu官方
+               var html = '<li class="comment' + data.data.id + ' zhiD" id="newLine">\n' +
+                   '                <img src="' + data.data.avatar + '" alt="" class="avatar">\n' +
+                   '                <p class="user-info">\n' +
+                   '                    <span class="username">' + data.data.username + '</span><span class="admin-title">官方</span><span class="top" style="display: inline;">顶</span>\n' +
+                   '                    <span></span>\n' +
+                   '                </p>\n' +
+                   '                <div class="text">' + data.data.content + '</div>\n' +
+                   '                <p class="time">' + data.data.chattime + '</p>\n' +
+                   '                <div class="broadcast" style="display: none;">\n' +
+                   '                      <span class="broadcast-cmts">\n' +
+                   '                          <span class="broadcast-cmt topcmt" style="display: none;">置顶</span>\n' +
+                   '                          <span class="broadcast-cmt cancelTop" style="">取消置顶</span>\n' +
+                   '                          <span class="broadcast-cmt delcmt">删除</span>\n' +
+                   '                          <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                   '                          <span class="broadcast-cmt gaged" style="display: none;">解禁</span>\n' +
+                   '                     </span>\n' +
+                   '                </div>\n' +
+                   '            </li>';
+           }else{
+               var html = '<li class="comment' + data.data.id + ' zhiD" id="newLine">\n' +
+                   '                <img src="' + data.data.avatar + '" alt="" class="avatar">\n' +
+                   '                <p class="user-info">\n' +
+                   '                    <span class="username">' + data.data.username + '</span><span class="top" style="display: inline;">顶</span>\n' +
+                   '                    <span></span>\n' +
+                   '                </p>\n' +
+                   '                <div class="text">' + data.data.content + '</div>\n' +
+                   '                <p class="time">' + data.data.chattime + '</p>\n' +
+                   '                <div class="broadcast" style="display: none;">\n' +
+                   '                      <span class="broadcast-cmts">\n' +
+                   '                          <span class="broadcast-cmt topcmt" style="display: none;">置顶</span>\n' +
+                   '                          <span class="broadcast-cmt cancelTop" style="">取消置顶</span>\n' +
+                   '                          <span class="broadcast-cmt delcmt">删除</span>\n' +
+                   '                          <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                   '                          <span class="broadcast-cmt gaged" style="display: none;">解禁</span>\n' +
+                   '                     </span>\n' +
+                   '                </div>\n' +
+                   '            </li>';
+           }
+
+
+
+
+           $("#zhiding").prepend(html);
+
+           return;
+       case "cancelchattopping":    //取消置顶聊天数据
+           var chatid = data.data.id;   //获取到聊天数据置顶id
+
+           $(".comment"+chatid).remove();  //先删除该div
+
+
+           //插入置顶消息
+           var html = '<li class="comment'+data.data.id+'">\n' +
+               '                                        <img src="'+data.data.avatar+'" alt="" class="avatar">\n' +
+               '                                        <p class="user-info">\n' +
+               '                                            <span class="username">'+data.data.username+'</span><span class="top">顶</span>\n' +
+               '                                            <span></span>\n' +
+               '                                        </p>\n' +
+               '                                        <div class="text">'+data.data.content+'</div>\n' +
+               '                                        <p class="time">'+data.data.chattime+'</p>\n' +
+               '                                        <div class="broadcast" style="display: none;">\n' +
+               '                                             <span class="broadcast-cmts">\n' +
+               '                                                 <span class="broadcast-cmt topcmt347">置顶</span>\n' +
+               '                                                 <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>\n' +
+               '                                                 <span class="broadcast-cmt delcmt">删除</span>\n' +
+               '                                                 <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+               '                                                 <span class="broadcast-cmt gaged" style="display: none;">解禁</span>\n' +
+               '                                            </span>\n' +
+               '                                        </div>\n' +
+               '                                    </li>';
+           $(".insert").append(html);
+
+           return;
+
+       case "prohibitions":    //禁言用户
+           var userid = data.data.userid;   //要删除的置顶消息id
+           var user_id = $("#userid").val();
+
+           if(userid == user_id){
+               $(".input-tip").show();
+           }
+           return;
+
+       case "liftaban":    //取消禁言用户
+           var userid = data.data.userid;   //要删除的置顶消息id
+           var user_id = $("#userid").val();
+
+           if(userid == user_id){
+               $(".input-tip").hide();
+           }
+           return;
+       case "removezhiding":    //置顶消息删除
+           var zdid = data.data.zdid;   //要删除的置顶消息id
+           $("#zhiding"+zdid).remove();  //删除div
+           return;
+   }
+
+
+    }
+
+</script>
 
 
 <script>
@@ -549,11 +2058,11 @@ appid=wx7eee3208b7b59ea1&redirect_uri=http://www.rflinker.com/zhibo/Home/Userlog
             data:{ad_id:id,user_type:2,codevar:codevar},
             async:true,
             success:function(data){
-               if(data == 1){  //请输入正确的验证码
+                if(data == 1){  //请输入正确的验证码
                     document.getElementById('tishi').innerHTML = "<span>请输入正确的验证码</span>";
-               }else if(data == 2){  //正确关闭弹出层
+                }else if(data == 2){  //正确关闭弹出层
                     $('.zhezhao').css('display','none');
-               }
+                }
             }
         });//ajax结束
     }
@@ -573,19 +2082,96 @@ appid=wx7eee3208b7b59ea1&redirect_uri=http://www.rflinker.com/zhibo/Home/Userlog
                 if($('#w_name').val() === ""){
                     $('#s2').html("<span>用户名不能为空</span>");
                 }else if(data == 1){  //用户名不存在
-                     // alert("用户名不存在");
-                     $('#s2').html("<span> </span>")
-                     $('#s1').html("<span>用户名不正确</span>");
+                    // alert("用户名不存在");
+                    $('#s2').html("<span> </span>")
+                    $('#s1').html("<span>用户名不正确</span>");
                 }else if(data == 2){  //密码错误
-                     // alert("密码错误");
+                    // alert("密码错误");
                     $('#s1').html("<span> </span>");
-                     $('#s3').html("<span>密码错误</span>");
+                    $('#s3').html("<span>密码错误</span>");
                 }else if(data == 3){  //验证正确
-                     // alert("验证正确");
-                     $('.backg').css('display','none');
+                    // alert("验证正确");
+                    $('.backg').css('display','none');
                 }
             }
         });//ajax结束
+    }
+    function video_play(rtmpurl){
+        var rtmpurl = rtmpurl;
+
+        var livebjt = "__PUBLIC__/{$info.channel_live_bgpic}";
+
+        window.player = new Aliplayer({
+            id: 'J_prismPlayer',
+            cover: livebjt,  //播放器封面图
+            width: '100%',
+            autoplay: false,
+            isLive:true,//播放内容是否为直播，直播时会禁止用户拖动进度条
+            // autoPlayDelay:10,//延迟多长时间后播放，单位为秒
+            // autoPlayDelayDisplayText:'正在转码，请稍后……',//提示文本，比如正在转码，请稍后……
+            // 启用延迟播放时，需要把autoplay属性设置为true
+            //支持播放地址播放,此播放优先级最高
+            source : rtmpurl,
+
+
+        },function(player){
+            console.log('播放器创建好了。')
+        });
+        // 播放器结束事件
+        window.player.on('error',function(e){
+            console.log('播放器结束了');
+
+            //隐藏
+            // $('.prism-ErrorMessage').css();
+            $(".prism-error-content").hide();
+            $(".prism-error-operation").hide();
+            $(".prism-detect-info.prism-center").hide();
+            $('.prism-ErrorMessage').css('background-image', 'url(' + "__PC__/images/video.jpg" + ')');
+
+
+            //解析
+            var errorData = e.paramData;
+            console.dir(errorData);
+            //console.log(errorData);
+        });
+    }
+    function play(rtmpurl){
+        var rtmpurl = rtmpurl;
+        var livebjt = "__PUBLIC__/{$info.channel_live_bgpic}";
+
+        window.player = new Aliplayer({
+            id: 'J_prismPlayer',
+            cover: livebjt,  //播放器封面图
+            width: '100%',
+            autoplay: false,
+            isLive:true,//播放内容是否为直播，直播时会禁止用户拖动进度条
+            // autoPlayDelay:10,//延迟多长时间后播放，单位为秒
+            // autoPlayDelayDisplayText:'正在转码，请稍后……',//提示文本，比如正在转码，请稍后……
+            // 启用延迟播放时，需要把autoplay属性设置为true
+            //支持播放地址播放,此播放优先级最高
+            source : rtmpurl,
+
+
+        },function(player){
+            console.log('播放器创建好了。');
+        });
+        // 播放器结束事件
+        window.player.on('error',function(e){
+            console.log('播放器结束了');
+
+            //隐藏
+            // $('.prism-ErrorMessage').css();
+            $(".prism-error-content").hide();
+            $(".prism-error-operation").hide();
+            $(".prism-detect-info.prism-center").hide();
+            $('.prism-ErrorMessage').css('background-image', 'url(' + "__PC__/images/video.jpg" + ')');
+
+
+            //解析
+            var errorData = e.paramData;
+            console.dir(errorData);
+            //console.log(errorData);
+        });
     }
 </script>
 
@@ -597,68 +2183,15 @@ appid=wx7eee3208b7b59ea1&redirect_uri=http://www.rflinker.com/zhibo/Home/Userlog
 
 <!--点击立即播放 隐藏弹出层-->
 <!--<script>-->
-    <!--$('.btn').click(function(){-->
-        <!--$('.zhezhao').css('display','none');-->
-    <!--});-->
+<!--$('.btn').click(function(){-->
+<!--$('.zhezhao').css('display','none');-->
+<!--});-->
 <!--</script>-->
 
-<script>
-    var rtmpurl = "{$info.m3u8url}";
 
-
-    var player = new Aliplayer({
-        id: 'J_prismPlayer',
-        cover: "__PC__/images/video.jpg",  //播放器封面图
-        width: '100%',
-        autoplay: false,
-        isLive:true,//播放内容是否为直播，直播时会禁止用户拖动进度条
-        // autoPlayDelay:10,//延迟多长时间后播放，单位为秒
-        // autoPlayDelayDisplayText:'正在转码，请稍后……',//提示文本，比如正在转码，请稍后……
-        // 启用延迟播放时，需要把autoplay属性设置为true
-        //支持播放地址播放,此播放优先级最高
-        source : rtmpurl,
-        // //播放方式二：点播用户推荐
-        // vid : '1e067a2831b641db90d570b6480fbc40',
-        // playauth : '',
-        // cover: 'http://liveroom-img.oss-cn-qingdao.aliyuncs.com/logo.png',
-        // //播放方式三：仅MTS用户使用
-        // vid : '1e067a2831b641db90d570b6480fbc40',
-        // accId: '',
-        // accSecret: '',
-        // stsToken: '',
-        // domainRegion: '',
-        // authInfo: '',
-        // //播放方式四：使用STS方式播放
-        // vid : '1e067a2831b641db90d570b6480fbc40',
-        // accessKeyId: '',
-        // securityToken: '',
-        // accessKeySecret: ''
-
-
-    },function(player){
-        console.log('播放器创建好了。')
-    });
-    // 播放器结束事件
-    player.on('error',function(e){
-        console.log('播放器结束了');
-
-        //隐藏
-        // $('.prism-ErrorMessage').css();
-        $(".prism-error-content").hide();
-        $(".prism-error-operation").hide();
-        $(".prism-detect-info.prism-center").hide();
-        $('.prism-ErrorMessage').css('background-image', 'url(' + "__PC__/images/video.jpg" + ')');
-
-
-        //解析
-        var errorData = e.paramData;
-        console.dir(errorData);
-        //console.log(errorData);
-    });
-</script>
 
 <!--二维码-->
-<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+<!--<script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>-->
 <script src="__PC__/js/jquery-qrcode-master/jquery.qrcode.min.js"></script>
 
 <script>
@@ -666,8 +2199,8 @@ appid=wx7eee3208b7b59ea1&redirect_uri=http://www.rflinker.com/zhibo/Home/Userlog
     //手机观看二维码
     //width 宽  height 高  text 文本内容
     var id = "{$info.id}";
-    var type = "{$info.user_type}";
-    var qrcodelink = "http://www.rflinker.com/zhibo/home/MobileUserlogin/index.html?ad_id="+id+"&user_type="+type;
+    var type = "4";
+    var qrcodelink = "http://easycast.cloud/home/mobile_userlogin/index.html?ad_id="+id+"&user_type="+type;
     $('#qrcode').qrcode({width: 83,height: 78,text: qrcodelink});
 
     $(".sharebuttonbox.btn-hidee").click(function () {
@@ -680,8 +2213,19 @@ appid=wx7eee3208b7b59ea1&redirect_uri=http://www.rflinker.com/zhibo/Home/Userlog
         })
     })
     $('#wxqrcode').qrcode({width: 263,height: 249,text: qrcodelink});
+    // $('#wxqrcode').css("display","none");
 
+
+
+    // // 点击开始按钮 隐藏封面背景 和 开始按钮 显示本地视频
+    // $('.kaishi').click(function(){
+    //     $('.bj').css('display','none');
+    //     $('.kaishi').css('display','none');
+    // });
 </script>
+
+
+
 
 </body>
 </html>

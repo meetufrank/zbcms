@@ -1,0 +1,137 @@
+<style>
+    #drbmd{
+        position: relative;
+    }
+    #drbmd .use{
+        position: relative;
+        top: -45px;
+        left: 13px;
+    }
+    #drbmd .baimingdan{
+        position: absolute;
+        left: 350px;
+        top: 1px;
+    }
+
+    .layui-form-label{
+        width:150px !important;
+        padding:8px 15px;
+        height:38px !important;
+        line-height:20px;
+        border-width:1px;
+        border-style:solid;
+        border-radius:2px 0 0 2px;
+        text-align:center;
+        background-color:#FBFBFB;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        box-sizing:border-box;
+        border-color: #e6e6e6;
+    }
+    .demo-input{padding-left: 10px; height: 38px; min-width: 262px; line-height: 38px; border: 1px solid #e6e6e6;  background-color: #fff;  border-radius: 2px;}
+</style>
+
+{include file="common/head"/}
+<script src="__STATIC__/admin/laydate/laydate.js"></script> <!-- 改成你的路径 -->
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <!--最上面横线部分-->
+    <!--<fieldset class="layui-elem-field layui-field-title">-->
+        <!--<legend>{$title}</legend>-->
+    <!--</fieldset>-->
+
+    <form action="{:url('payadd')}" method="post">
+
+
+
+        <div class="layui-form-item">
+            观众付费后需填写手机号作为再次进入直播间的唯一凭证（可导出付费记录）
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">提示文字</label>
+            &nbsp;&nbsp;&nbsp;
+            <label><input name="pname" type="text" value="{$pinfo.pname}"></label>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">观看价格</label>
+            &nbsp;&nbsp;&nbsp;
+            <label><input name="pprice" type="text" value="{$pinfo.pprice}"></label>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">观看开始时间</label>
+            &nbsp;
+            <input type="text" name="pstart_time" class="demo-input" placeholder="请选择开始时间" id="test1" value="{$pinfo.pstart_time}">
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">观看结束时间</label>
+            <input type="text" name="pend_time" class="demo-input" placeholder="请选择结束时间" id="test2" value="{$pinfo.pend_time}"/>
+        </div>
+
+        <input type="type" style="display: none;" name="cid" value="{$info.id}"/>
+
+
+
+        <input type="hidden" name="cid" value="{$cid}"/>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+            </div>
+        </div>
+    </form>
+
+
+</div>
+{include file="common/foot"/}
+<script src="__STATIC__/common/js/angular.min.js"></script>
+<script src="__STATIC__/admin/js/jquery.min.js"></script>
+
+<script>
+
+    //执行一个laydate实例
+    laydate.render({
+        elem: '#test1' //指定元素
+        ,min: 0
+    });
+
+    laydate.render({
+        elem:"#test2"
+        ,min:1
+    });
+</script>
+
+
+<script>
+
+    function wbyy(){
+        var ca_user = $("#ca_user").val();
+        var ca_pwd = $("#ca_pwd").val();
+
+        $.ajax({
+            type: "POST",
+            url: "https://api.meetv.com.cn/webex_login",
+            data: {ca_user:ca_user, ca_pwd:ca_pwd},
+            dataType: "json",
+            success: function(data){
+
+            }
+        });
+
+    }
+
+    function ischeck(){
+        var isChecked = $('#cb').is(":checked");
+        if(isChecked == true){
+            $("#yzmdiv").css("display","none");  //隐藏验证码
+        }else if(isChecked == false){
+            $("#yzmdiv").css("display","block");  //显示验证码
+        }
+    }
+
+</script>

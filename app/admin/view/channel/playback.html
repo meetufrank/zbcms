@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="__PUBLIC__/static/admin/playback/bootstrap.min.css">
+    <link rel="stylesheet" href="__PUBLIC__/static/admin/playback/index.css">
+    <script src="__PUBLIC__/static/admin/playback/jquery.min.js"></script>
+    <!--开关按钮-->
+    <link href="https://cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/css/bootstrap-switch.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/bootstrap-switch/4.0.0-alpha.1/js/bootstrap-switch.js"></script>
+    <style>
+
+        .bootstrap-switch{
+            width:65px !important;
+        }
+        .bootstrap-switch-container{
+            width: 140px !important;
+        }
+        .bootstrap-switch-container span:first-child{
+            margin-left: 0 !important;
+            width: 41px !important;
+        }
+        .bootstrap-switch-container span:nth-child(2){
+            width: 5px !important;
+        }
+        .bootstrap-switch-container span:last-child{
+            width: 41px !important;
+        }
+        .bootstrap-switch-handle-off{
+            margin-left: -10px !important;
+            background: rgb(211,211,211) !important;
+        }
+    </style>
+</head>
+<body>
+<form action="{:url('channel/playbackedit')}" method="post">
+    <!--频道id-->
+    <input type="hidden" name="pid" value="{$ad_id}"/>
+    <input type="hidden" name="videourl" id="videourl" value="">
+
+    <div class="video">
+        <div class="content">
+            <!--title-->
+            <div class="title">
+                <p>视频预告/回放</p>
+            </div>
+            <!--视频显示-->
+            <div class="title-bottom">
+                <p>视频显示：
+                    <input type="checkbox" name="my-checkbox" checked>
+                    <span>(功能开启后，当您不在直播时，用户可点击播放该视频)</span>
+                </p>
+            </div>
+            <!--预览 > 选择视频按钮(弹出层)-->
+            <div class="look">
+                <!--<p>预览：</p>-->
+                <div class="play">
+                    <!--视频部分-->
+                    <!--<div class="shipin">
+                        <img src="__PUBLIC__/static/admin/playback/banner.jpg">
+                    </div>-->
+                    <!--按钮部分-->
+                    <span class="xuanze">选择视频</span>
+                </div>
+            </div>
+            <!--提交按钮-->
+            <div class="tijiao">
+                <button>提交</button>
+            </div>
+        </div>
+    </div>
+
+</form>
+    <div class="bfqzhezhao"> <!-- 播放器遮罩层 --> </div>
+    <!--播放器-->
+    <div class="bfq">
+        <img src="__PUBLIC__/static/admin/playback/close.png">
+        <video src="https://meetuuu.oss-cn-shanghai.aliyuncs.com/recording/record/AppName/StreamName181121141716161340/2018-12-05-16-17-38_2018-12-05-16-17-46.mp4" controls="controls"></video>
+    </div>
+
+
+
+    <!--弹出层遮罩-->
+    <div class="zhezhao"></div>
+    <!--点击选择视频 弹出 弹出层-->
+    <div class="bk">
+        <div class="select">
+            <!--title-->
+            <div class="tianjia">
+                <p>添加视频 <span class="closer">x</span> </p>
+            </div>
+            <!--选择视频内容部分-->
+            <div class="big-nr">
+
+                {foreach $list as $key=>$vo}
+                <!--1-->
+                <div class="block one" id="video{$vo.id}" onclick="videoselet({$vo.id})">
+                    <!--左侧图片-->
+                    <div class="img-left">
+                        <video width="100%" height="100%" src="https://meetuuu.oss-cn-shanghai.aliyuncs.com/{$vo.video_folder_name}"></video>
+                    </div>
+                    <!--右侧文字-->
+                    <div class="text">
+                        <p>多云环境下的思科AI人工智能的计算蓝图2018什么什么什么</p>
+                        <p>
+                            <span>上传时间：2018-12-13</span>
+                            <!--<span>|</span>-->
+                            <!--<span>分辨率 1280*720</span>-->
+                        </p>
+
+                    </div>
+                </div>
+                <!--悬停显示播放按钮-->
+                <div class="xuanting">
+                    <img src="__PUBLIC__/static/admin/playback/play.png" style="width: 50px; height: 50px;">
+                </div>
+                {/foreach}
+
+
+
+
+
+
+            </div>
+            <!--底部确定按钮样式-->
+            <!--<div class="qd-bottom">
+                <div class="btn-qd">
+                    <span class="queding">确定</span> &lt;!&ndash;onclick="abc()"&ndash;&gt;
+                    <span class="tishi" style="display: none;"> <img src="__PUBLIC__/static/admin/playback/tan.png"> <span>请至少选择一个视频</span></span>
+                </div>
+            </div>-->
+        </div>
+    </div>
+
+    <!--开关按钮-->
+    <script>
+        $('input[name="my-checkbox"]').bootstrapSwitch({
+            "onColor" : "primary",
+            "offColor" : "",
+            "onText" : "开",
+            "offText" : "关"
+        });
+    </script>
+
+    <script>
+
+
+
+
+        function videoselet(id){
+
+            $("#videourl").val(id);
+            $('.bk').hide(400);
+            $('.zhezhao').css('display','none');
+           /* $('#video'+id).css('border','2px solid #0aa1ed');
+            $("#video"+id).siblings().css('border','1px solid #c9caca');*/
+        }
+
+        // 点击选中 / 点击取消
+        $(function(){
+            $('.one').click(function(){
+                if($(this).hasClass("other"))
+                    $(this).removeClass("other");
+                else
+                    $(this).addClass("other");
+            });
+            $('.two').click(function(){
+                if($(this).hasClass("other"))
+                    $(this).removeClass("other");
+                else
+                    $(this).addClass("other");
+            });
+        });
+
+
+        // 鼠标进入移出显示隐藏开始按钮（第二块）
+        $('.img-left').mouseover(function(){
+                $('.xuanting').show();
+        });
+        $('.img-left').mouseout(function(){
+           $('.xuanting').hide();
+        });
+        // 避免出现闪烁
+        $('.xuanting').hover(function(){
+            $('.xuanting').show();
+        });
+
+        // 鼠标进入移出显示隐藏开始按钮
+        $('.img-left1').mouseover(function(){
+            $('.xuanting1').show();
+        });
+        $('.img-left1').mouseout(function(){
+            $('.xuanting1').hide();
+        });
+        $('.xuanting1').hover(function(){
+            $('.xuanting1').show();
+        });
+
+
+
+
+        // 点击悬停的播放器开始按钮弹出video
+        $('.xuanting>img').click(function(){
+           $('.bfq').css('display','block');
+            $('.bfqzhezhao').css('display','block');
+        });
+        // 点击播放器右上角的 ❌ 关闭播放器
+        $('.bfq>img').click(function(){
+            $('.bfq').css('display','none');
+            $('.bfqzhezhao').css('display','none');
+        });
+
+
+        // 点击选择视频按钮弹出 弹出层
+        $('.xuanze').click(function(){
+            $('.bk').show(400);
+            $('.zhezhao').css('display','block');
+        });
+
+        // 弹出层 右上角 ❌ 点击关闭
+        $('.closer').click(function(){
+           $('.bk').hide(400);
+           $('.zhezhao').css('display','none');
+        });
+
+        // function abc(){
+        //     if($('.one').is(':checked')){
+        //         $('.bk').hide();
+        //         $('.zhezhao').css('display','none');
+        //     }else{
+        //         $('.tishi').css('display','block');
+        //     }
+        //
+        // }
+
+
+
+
+
+        // 点击确定按钮 判断 * * *
+        $('.queding').on('click',function(){
+
+            // var divArr = $('.big-nr .block ');
+            // $.each(divArr,function(i,n){
+            //     if(!($('.block').is(':checked'))){
+            //         $('.tishi').css('display','block');
+            //         return false;
+            //     }else{
+            //         $('.bk').hide();
+            //         $('.zhezhao').css('display','none');
+            //     }
+            // });
+
+
+            // if ($('.block').length){
+            //     if(!($('.block').is(':checked'))){
+            //         $('.tishi').css('display','block');
+            //         return false;
+            //     }else{
+            //         $('.bk').hide();
+            //         $('.zhezhao').css('display','none');
+            //     }
+            // }
+
+                $('.block').each(function(i){
+                    if(!($(this).is(':checked'))){
+                        $('.tishi').css('display','block');
+                    }else{
+                        $('.bk').hide();
+                        $('.zhezhao').css('display','none');
+                        $('.tishi').css('display','none');   /* 隐藏提示的错误信息 */
+                    }
+                });
+
+
+
+        });
+
+
+
+    </script>
+
+</body>
+</html>

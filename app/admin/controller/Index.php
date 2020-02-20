@@ -3,14 +3,17 @@ namespace app\admin\controller;
 use think\Controller;
 use think\Db;
 use think\Input;
+use think\session;
 
 class Index extends Common
 {
     public function _initialize(){
         parent::_initialize();
+
     }
     public function index()
     {
+
         //导航
         // 获取缓存数据
         $authRule = cache('authRule');

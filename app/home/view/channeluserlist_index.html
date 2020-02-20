@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录</title>
+    <link rel="stylesheet" href="__PUBLIC__/static/bmd/bootstrap/css/bootstrap.min.css">
+    <style>
+
+        @media (min-width: 1920px) {
+           .container{
+               width: 450px;
+               margin: 0 auto;
+           }
+        }
+
+        @media (min-width: 1680px) {
+            .container{
+                width: 450px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (min-width: 1440px) {
+            .container{
+                width: 450px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (min-width: 1366px) {
+            .container{
+                width: 450px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (min-width: 1280px) {
+            .container{
+                width: 450px;
+                margin: 0 auto;
+            }
+        }
+
+        @media (min-width: 1100px) {
+            .container{
+                width: 450px;
+                margin: 0 auto;
+            }
+        }
+
+
+        .top_title{
+            text-align: center;
+        }
+        .top_title h3{
+            font-size: 20px;
+            color: #666;
+            border-bottom: 1px solid #f4f4f4;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .logo{
+            margin-bottom: 10px;
+            margin-top: 100px;
+        }
+        .logo img{
+            width: 100px;
+            margin: 0 auto;
+        }
+
+        .div{
+            margin-bottom: 15px;
+        }
+        .name_title{
+            font-size: 16px;
+            color: #999999;
+            margin-bottom: 5px;
+        }
+        input{
+            width: 100%;
+            height: 40px;
+            border: none;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #fff;
+            border: solid 1px #e5e5e5;
+            font-size: 14px;
+            line-height: 14px;
+            color: #333333;
+            padding: 0 8px;
+            outline: none;
+        }
+        .login_btn{
+            text-align: center;
+            margin-top: 20px;
+        }
+        .login_btn a{
+            display: inline-block;
+            width: 90px;
+            height: 32px;
+            line-height: 32px;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            background-color: #1E8EEF;
+            -webkit-box-shadow: 0px 2px 3px 0px #1e8eef;
+            -moz-box-shadow: 0px 2px 3px 0px #1e8eef;
+            box-shadow: 0px 2px 3px 0px #1e8eef;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            -webkit-transition: all .3s;
+            -moz-transition: all .3s;
+            transition: all .3s;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="logo">
+                <img src="" class="img-responsive">
+            </div>
+        </div>
+        <!--邮箱-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="div">
+                <p class="name_title">用户名</p>
+                <input type="text"  class="email">
+            </div>
+        </div>
+        <!--密码-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="div">
+                <p class="name_title">密码</p>
+                <input type="password"  class="password">
+            </div>
+        </div>
+
+        <!--登录按钮-->
+        <div class="col-md-12 col-sm-12 col-xs-12">
+            <div class="login_btn">
+                <a href="javascript:void(0);">提交</a>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="__PUBLIC__/static/bmd/jquery/jquery.min.js"></script>
+    <script src="__PUBLIC__/static/bmd/layui/layui.all.js"></script>
+    <script>
+        $(".login_btn a").click(function(){
+            var $pass = $(".password").val();
+            var $email = $(".email").val();
+            var reg = new RegExp("^[a-z0-9A-Z]+[- | a-z0-9A-Z . _]+@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-z]{2,}$");
+            var id = "{$cid}";
+
+            if($email == ""){
+                layer.msg("用户名不能为空");
+                return false;
+            }else if($pass == ""){
+                layer.msg("密码不能为空");
+                return false;
+            }else{
+                $.ajax({
+                    url:"{:url('home/channeluserlist/bmd')}",
+                    type:'get',
+                    dataType:'json',
+                    data:{ad_id:id,w_name:$email,w_pwd:$pass},
+                    async:true,
+                    success:function(data){
+                         if(data == 1){  //用户名不存在
+                             layer.msg("用户名不存在");
+                             return false;
+                        }else if(data == 2){  //密码错误
+                             layer.msg("密码错误");
+                             return false;
+                        }else if(data == 3){  //验证正确
+                             window.location.href = "http://easycast.cloud/index.php/index-ad_id-"+id+".html";
+                        }
+                    }
+                });//ajax结束
+                //layer.msg("通过");
+            }
+
+        });
+    </script>
+
+</body>
+</html>

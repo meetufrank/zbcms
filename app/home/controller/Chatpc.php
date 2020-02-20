@@ -21,18 +21,53 @@ class Chatpc extends Common{
         $chat_userid = time();
 
 
+        $perPage=21; //由于layim框架的显示问题，这里需要多一条数据，用户看到的是20条数据
+        //查询该用户是否可以查询该群组聊天记录
+        $count=db('chat')->where("cid = $cid")->count();
+        $chatlogs=[];
+        if($count){
+            $result = db('chat')->where("cid = $cid")
+                ->order('id desc')->limit($perPage)->select();
+            $result = array_reverse($result); //反转
+
+            foreach ($result as $key => $value) {
+                $result[$key]['mine']=false;
+                $result[$key]['type']='group';
+                $result[$key]['timestamp']=strtotime($result[$key]['chattime'])*1000;
+            }
+
+            $this->assign('chatlogs', json_encode($result));
+        }else{
+            $this->assign('chatlogs', json_encode($chatlogs));
+        }
+
+
+
+        //聊天头像
+        if(Session::get('userimgurl') == ''){
+           $userimgurl = "https://static.mudu.tv/index/avatar.png";
+        }else{
+            $userimgurl = Session::get('userimgurl');
+        }
+
+        //聊天人名称
+        if(Session::get('usernames') == ''){
+            $usernames = "网友";
+        }else{
+            $usernames = Session::get('usernames');
+        }
 
         //聊天初始化数据
         $return = array(
 
             //我的信息
             'mine' => array(
-                'username' => Session::get('usernames'),     //聊天人名称
+                'username' => $usernames,     //聊天人名称
                 'id' => $chat_userid,                //聊天人id
                 'status' => 'online',     //在线状态 online：在线、hide：隐身
                 'sign' => '',             //签名
                 'jinyan' => '1', //禁言 1正常  2解禁  3被解禁
-                'avatar' => Session::get('userimgurl')  //头像
+                'avatar' => $userimgurl  //头像
             ),
 
             //群租信息

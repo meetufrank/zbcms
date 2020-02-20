@@ -3,10 +3,12 @@
 
 
 
-    <form class="layui-form layui-form-pane">
+    <form class="layui-form layui-form-pane" action="{:url('Medialibrary/video_edit')}" method="post">
+
+        <input name="vid" type="hidden" value="{$info['id']}">
 
         <div class="layui-form-item">
-            <video width="600px;" src="{$video_url}" controls="controls"></video>
+            <video width="500px;" height="300px;" src="{$info['video_folder_name']}" controls="controls"></video>
         </div>
 
         <br>
@@ -14,12 +16,20 @@
         <div class="layui-form-item">
             <label class="layui-form-label" style="width: 120px;">视频下载地址</label>
             &nbsp;&nbsp;
-            <label>{$video_url}</label>
+            <label>{$info['video_folder_name']}</label>
         </div>
 
 
         <div class="layui-form-item">
+            <label class="layui-form-label" style="width: 120px;">修改视频名称</label>
+            <div class="layui-input-4">
+                <input type="text" name="video_name" value="{$info['video_name']}" ng-model="field.name" lay-verify="required" placeholder="{:lang('pleaseEnter')}视频文件名称" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
             <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
                 <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
             </div>
         </div>

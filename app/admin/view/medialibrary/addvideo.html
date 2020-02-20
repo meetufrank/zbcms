@@ -1,0 +1,70 @@
+<style>
+    #drbmd{
+        position: relative;
+    }
+    #drbmd .use{
+        position: relative;
+        top: -45px;
+        left: 13px;
+    }
+    #drbmd .baimingdan{
+        position: absolute;
+        left: 350px;
+        top: 1px;
+    }
+
+    .layui-form-label{
+        width:110px !important;
+        padding:8px 15px;
+        height:38px !important;
+        line-height:20px;
+        border-width:1px;
+        border-style:solid;
+        border-radius:2px 0 0 2px;
+        text-align:center;
+        background-color:#FBFBFB;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        box-sizing:border-box;
+        border-color: #e6e6e6;
+    }
+
+</style>
+
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <!--最上面横线部分-->
+    <!--<fieldset class="layui-elem-field layui-field-title">-->
+    <!--<legend>{$title}</legend>-->
+    <!--</fieldset>-->
+
+
+    <form class="layui-form layui-form-pane" enctype="multipart/form-data" action="{:url('Medialibrary/upload_video')}" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传视频</label>
+
+        </div>
+        <input type="file" name="video"/>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+            </div>
+        </div>
+    </form>
+
+</div>
+{include file="common/foot"/}
+
+<script src="__STATIC__/admin/js/jquery.min.js"></script>
+
+
+
+
+
+
+

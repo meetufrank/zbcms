@@ -7,6 +7,8 @@
 
     }
 
+
+
 </style>
 <div class="admin-main layui-anim layui-anim-upbit">
     <fieldset class="layui-elem-field layui-field-title">
@@ -20,6 +22,7 @@
         <a href="{:url('index')}" class="layui-btn">显示全部</a>
 
         <a href="{:url('add')}" class="layui-btn">添加直播频道</a>
+        <a target="_blank" href="https://api.meetv.com.cn/webex_login" class="layui-btn">Webex会议预约</a>
         <button type="button" class="layui-btn layui-btn-danger" id="delAll">批量删除</button>
     </blockquote>
     <table class="layui-table" id="list" lay-filter="list"></table>
@@ -45,19 +48,31 @@
     <input type="checkbox" name="open" value="{{d.ad_id}}" lay-skin="switch" lay-text="开启|关闭" lay-filter="open" {{ d.open == 1 ? 'checked' : '' }}>
 </script>
 <script type="text/html" id="action">
+    <a href="{:url('edit')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">编辑</a>
     <!--<a href="{:url('edit')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">设置</a>-->
     <a href="{:url('info')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">设置</a>
+    <a href="{:url('gateway')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">门户管理</a>
+    <a href="{:url('paylive')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">付费观看</a>
     <a href="{:url('Home/Userlogin/index')}?ad_id={{d.id}}&&user_type={{d.user_type}}" target="view_window" class="layui-btn layui-btn-xs">pc直播地址</a>
     <!-- <a href="{:url('userinfo')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">用户统计</a>
     <a href="{:url('chatdata')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">聊天互动</a>
     -->
+    <a href="{:url('Home/Assistant/index')}?ad_id={{d.id}}" target="view_window" class="layui-btn layui-btn-danger layui-btn-xs">互动助手</a>
+    <a href="{:url('Home/Liveassistant/index')}?ad_id={{d.id}}" target="view_window" class="layui-btn layui-btn-danger layui-btn-xs">助手登陆页面</a>
+    <a style="display: none;" href="{:url('kanghonout')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">康弘导出用户统计数据</a>
+    <a  href="{:url('user_record')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">导出用户统计数据</a>
+    <a  href="{:url('chatdataout')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">导出用户聊天数据</a>
 
-    <a href="{:url('wdcz')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">文档设置</a>
-    <a  id="modelewmas{{d.id}}" onclick="modelewmas({{d.id}},{{d.user_type}})" href="#" class="layui-btn layui-btn-xs">手机预览
+
+    <a style="display: none;" href="{:url('wdcz')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">文档设置</a>
+    <a style="display: none;" id="modelewmas{{d.id}}" onclick="modelewmas({{d.id}},{{d.user_type}})" href="#" class="layui-btn layui-btn-xs">手机预览
          <div style="display: none;" id="sjewm{{d.id}}" class="sjewm"></div>
     </a>
-      <a href="{:url('edit')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">编辑</a>
+    <a href="{:url('chatadmin')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">审核</a>
+    <a style="display:none;" href="{:url('playback')}?ad_id={{d.id}}" class="layui-btn layui-btn-xs">视频预告/回放</a>
+
     <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
     <div><div id="cs"></div></div>
 </script>
 
@@ -74,7 +89,7 @@
             var layer = layui.layer;
 
             //生成手机二维码
-            var qrcodelink = "http://www.rflinker.com/zhibo/home/MobileUserlogin/index.html?ad_id="+id+"&user_type="+type;
+            var qrcodelink = "http://www.rflinker.com/zhibo/home/mobile_userlogin/index.html?ad_id="+id+"&user_type="+type;
 
 
             $("#sjewm"+id).qrcode({width: 290,height: 300,text: qrcodelink});
@@ -116,8 +131,8 @@
                 {checkbox: true, fixed: true},
                 {field: 'id', title: '{:lang("id")}', width: 60, fixed: true},
                 {field: 'channel_name', title: '直播频道名称', width: 300,templet: '#channel_name'},
-                {field: 'channel_logo', title: '直播频道logo', width: 200,templet: '#channel_logo'},
-                {width: 500, align: 'center', toolbar: '#action'}
+                {field: 'channel_logo',align: 'center',title: '频道logo', width: 100,templet: '#channel_logo'},
+                {width: 800, align: 'left', toolbar: '#action'}
             ]],
             limit:10
         });

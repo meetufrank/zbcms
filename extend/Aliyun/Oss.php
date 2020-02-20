@@ -57,7 +57,41 @@ class Oss
             printf($e->getMessage() . "\n");
             return;
         }
+    }
 
+
+    //视频上传
+    public function videoupload($filename,$path){
+        // 存储空间名称
+        $bucket= "meetuuu";
+        // 文件名称
+        $date = date("Y-m-d h:i:s")."/";
+        $object = "video/".$date.$filename;
+
+        // <yourLocalFile>由本地文件路径加文件名包括后缀组成，例如/users/local/myfile.txt
+        $filePath = "$path";
+
+        try{
+            $ossClient = new OssClient(config('aliyun.OSS_ACCESS_ID'), config('aliyun.OSS_ACCESS_KEY'), config('aliyun.OSS_ENDPOINT'));
+            $ossClient->uploadFile($bucket, $object, $filePath);
+        } catch(OssException $e) {
+            printf(__FUNCTION__ . ": FAILED\n");
+            printf($e->getMessage() . "\n");
+            return;
+        }
+
+        //添加本地视频文件信息
+        $video_name = explode(".",$filename);
+
+        $data = [
+            'streamname' => '',
+            'video_folder_name' => $object,
+            'video_name' => $video_name[0],
+            'upload_time' => date("Y-m-d h:i:s"),
+            'video_type' => 2,
+            'update_type' => 1
+        ];
+        db('video_folder')->insert($data);
     }
 
 

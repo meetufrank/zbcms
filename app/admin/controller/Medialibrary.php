@@ -4,6 +4,7 @@ use think\Db;
 use think\Request;
 use think\Controller;
 use app\oss\controller\Aly;
+use app\wdcz\controller\Wdcz;  //阿里云智能媒体管理控制器
 class Medialibrary extends Common
 {
     public function _initialize(){
@@ -12,10 +13,10 @@ class Medialibrary extends Common
     //直播频道
     public function index(){
 
+
         //调用阿里云oss获取视频文件路径接口
         $aly = new Aly();
-        $aly -> index();
-
+        $aly -> index();  //录播视频文件信息
 
 
         if(request()->isPost()) {
@@ -27,20 +28,44 @@ class Medialibrary extends Common
             $pageSize =input('limit')?input('limit'):config('pageSize');
 
 
-            $list = db('video_folder')->alias('v')
+            $where = [
+                'c.channel_name' => ['like',"%".$key."%"],
+                'v.update_type' => 1
+            ];
+            /*$list = db('video_folder')->alias('v')
                 ->join(config('database.prefix').'channel c','v.streamname = c.streamname','left')
-                ->field('v.id,v.streamname,v.video_folder_name,c.channel_name,v.upload_time,video_name')
-                ->where('c.channel_name','like',"%".$key."%")
+                ->field('v.id,v.streamname,v.video_folder_name,c.channel_name,v.upload_time,video_name,v.video_type')
+                ->where($where)
+                ->paginate(array('list_rows'=>$pageSize,'page'=>$page))
+                ->toArray();*/
+
+            $list = db('video_folder')
+                ->field('id,streamname,video_folder_name,upload_time,video_name,video_type')
+                ->where('video_name', 'like', "%" . $key . "%")
+                ->order('id desc')
                 ->paginate(array('list_rows'=>$pageSize,'page'=>$page))
                 ->toArray();
 
 
+
             foreach ($list['data'] as $k=>$v){
+                //查找频道名称
+                $streamname = $list['data'][$k]['streamname'];
+                $channName_where = "streamname = '".$streamname."'";
+                $channName = Db::table('clt_channel')->where($channName_where)->find();
+
+                if(!empty($channName['channel_name'])){
+                    $list['data'][$k]['channel_name'] = $channName['channel_name'];
+                }else{
+                    $list['data'][$k]['channel_name'] = "上传视频";
+                }
+
+
 
                 //视频链接
                 $list['data'][$k]['videourl'] = "https://meetuuu.oss-cn-shanghai.aliyuncs.com/".$v['video_folder_name'];
             }
-
+            /*print_r($list['data']);exit;*/
             return $result = ['code'=>0,'msg'=>'获取成功!','data'=>$list['data'],'count'=>$list['total'],'rel'=>1];
 
         }
@@ -48,15 +73,89 @@ class Medialibrary extends Common
     }
 
 
-    //查看直播详情
+    //上传视频
+    public function addvideo(){
+        return $this -> fetch();
+    }
+
+    //本地视频上传至obs中
+    public function upload_video(){
+
+        $file = request()->file('video');
+
+        // 移动到框架应用根目录/uploads/ 目录下
+        $info = $file->validate(['size'=>5000000,'ext'=>'wmv,asf,asx,rm,rmvb,mp4,3gp,mov,m4v,avi,dat,mkv,flv,vob'])->move('public' . DS . 'uploads/video');
+        if($info){
+
+        }else{
+            // 上传失败获取错误信息
+            $this -> error("上传失败!!!请核实上传文件");exit;
+        }
+
+
+        $aly = new Aly();
+        $filename = $info->getInfo()['name'];  //视频名称加后缀
+        $path = "public/uploads/video/".$info->getSaveName();   //本地视频文件路径
+
+
+        //上传文件到oss中   $filename 上传文件名称和文件后缀  $path 文件路径
+        $aly -> videoupload($filename,$path);
+
+        return $this -> fetch('index');
+    }
+
+
+    //视频设置
     public function info(){
         $id=input('ad_id');
-        $video_url_select = db('video_folder')->where("id = $id")->field("video_folder_name")->find();
 
-        $video_url = "https://meetuuu.oss-cn-shanghai.aliyuncs.com/".$video_url_select['video_folder_name'];
+        $info = db('video_folder')->where("id = $id")->field("video_folder_name,video_name,id")->find();
 
-        $this -> assign('video_url',$video_url);
+        //组装视频文件链接
+        $video_url = "https://meetuuu.oss-cn-shanghai.aliyuncs.com/".$info['video_folder_name'];
+        $info['video_folder_name'] = $video_url;
+
+        $this -> assign("info",$info); //视频库详情
+
         return $this->fetch();
+    }
+
+
+    //视频文件修改
+    public function video_edit(){
+
+        $vid = input('vid'); //视频文件主键id
+        $video_name = input("video_name");   //视频文件名称
+
+        Db::name('video_folder')
+            ->where('id', $vid)
+            ->update(['video_name' => $video_name]);
+
+        return $this -> fetch('index');
+    }
+
+
+    /*public function edit(){
+
+        $vid = input('vid'); //视频文件主键id
+        $video_name = input("video_name");   //视频文件名称
+       /* print_r($vid);
+        print_r($video_name);
+        exit;*/
+       /* Db::name('video_folder')
+            ->where('id', $vid)
+            ->update(['update_type' => '2']);  //假性删除状态*/
+
+
+    //}
+
+    //视频库假性删除
+    public function typedelete(){
+        $id=input('ad_id');
+        Db::name('video_folder')
+            ->where('id', $id)
+            ->update(['update_type' => '2']);  //假性删除状态
+        return $this -> fetch('index');
     }
 
 
@@ -222,6 +321,9 @@ class Medialibrary extends Common
         $PHPWriter->save("php://output"); //表示在$path路径下面生成demo.xlsx文件
 
     }
+
+
+
 
 
 

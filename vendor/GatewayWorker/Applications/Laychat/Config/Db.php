@@ -14,11 +14,11 @@ class Db
      * @var array
      */
     public static $db1 = array(
-        'host'    => 'localhost',
+        'host'    => 'rm-bp19d3e41secoh6wa.mysql.rds.aliyuncs.com',
         'port'    => 3306,
-        'user'    => 'root',
-        'password' => '',
-        'dbname'  => 'rfdata',
+        'user'    => 'zbcms',
+        'password' => 'Cisco123!@#',
+        'dbname'  => 'zbcms',
         'charset'    => 'utf8'
     );
 }

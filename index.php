@@ -1,4 +1,5 @@
 <?php
+require_once "./mysafe.php";
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
@@ -9,6 +10,14 @@
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
 // [ 应用入口文件 ]
+$url='http://'.$_SERVER['SERVER_NAME'].$_SERVER["REQUEST_URI"];
+
+if($url=='http://'.$_SERVER['SERVER_NAME'].'/watch/2924837'){
+
+    header('location:http://easycast.cloud/index.php/index-ad_id-92.html');
+    die;
+}
+
 if (!defined('__PUBLIC__')) {
     $_public = rtrim(dirname(rtrim($_SERVER['SCRIPT_NAME'], '/')), '/');
     

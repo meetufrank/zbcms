@@ -41,6 +41,9 @@
 
     <form action="{:url('whitelist_user_list')}" enctype="multipart/form-data" method="post">
 
+        <input type="hidden" id="ca_user" value="{$ca_info.ca_user}">
+        <input type="hidden" id="ca_pwd" value="{$ca_info.ca_pwd}">
+
         <div class="layui-form-item">
             <label class="layui-form-label" style="text-align: center">推流地址</label>
             &nbsp;&nbsp;&nbsp;
@@ -64,6 +67,8 @@
             &nbsp;&nbsp;&nbsp;
             <label>{$info.m3u8url}</label>
         </div>
+
+
         <input type="type" style="display: none;" name="pid" value="{$info.id}"/>
         <div id="drbmd">
             <div class="layui-form-item">
@@ -131,6 +136,22 @@
 <script src="__STATIC__/common/js/angular.min.js"></script>
 <script src="__STATIC__/admin/js/jquery.min.js"></script>
 <script>
+
+    function wbyy(){
+        var ca_user = $("#ca_user").val();
+        var ca_pwd = $("#ca_pwd").val();
+
+        $.ajax({
+            type: "POST",
+            url: "https://api.meetv.com.cn/webex_login",
+            data: {ca_user:ca_user, ca_pwd:ca_pwd},
+            dataType: "json",
+            success: function(data){
+
+            }
+        });
+
+    }
 
     function ischeck(){
         var isChecked = $('#cb').is(":checked");

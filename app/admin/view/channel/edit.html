@@ -66,9 +66,9 @@
             <img style="width:100px; height:100px;"  src="__PUBLIC__/{$info.channel_logo}">
         </div>
 
-
+        <br/><br/>
         <div class="layui-form-item">
-            <label class="layui-form-label">频道背景图</label>
+            <label class="layui-form-label">PC频道背景图</label>
             <input type="hidden" name="channel_logo" id="" value="{{field.pic}}">
             <div class="layui-input-block">
                 <div class="layui-upload">
@@ -78,7 +78,21 @@
         </div>
 
         <div>
-            <img style="width:100px; height:100px;"  src="__PUBLIC__/{$info.channel_logo}">
+            <img style="width:100px; height:100px;"  src="">
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">广告图片</label>
+            <input type="hidden" name="pic" id="pic" value="{{field.pic}}">
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary" id="adBtn"><i class="icon icon-upload3"></i>点击上传</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="adPic">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
@@ -108,4 +122,8 @@
 
 
 
+
+
 </script>
+
+

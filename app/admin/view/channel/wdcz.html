@@ -36,7 +36,7 @@
 <div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
     <!--最上面横线部分-->
     <!--<fieldset class="layui-elem-field layui-field-title">-->
-        <!--<legend>{$title}</legend>-->
+    <!--<legend>{$title}</legend>-->
     <!--</fieldset>-->
 
 
@@ -53,11 +53,6 @@
         <br><br><br><br>
 
 
-
-
-
-
-
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
@@ -65,11 +60,12 @@
             </div>
         </div>
     </form>
-
-
+    <input type="text" id="wdid">
+    <input type="button" value="切换" id="qiehuan">
+    <div id="wd"></div>
 </div>
 {include file="common/foot"/}
-<script src="__STATIC__/common/js/angular.min.js"></script>
+
 <script src="__STATIC__/admin/js/jquery.min.js"></script>
 <script>
 
@@ -83,3 +79,39 @@
     }
 
 </script>
+
+
+<script>
+    //连接websocker
+    var ws = new WebSocket("ws://127.0.0.1:8282");
+
+    //服务端主动推送消息时会触发这里的onmessage
+    ws.onmessage = function(e){
+        var message = eval("("+e.data+")");  //获取到data
+
+        switch(message.type){
+            case "wdcz":
+                $("#wd").append('<p>'+message.data+'</p>');
+                return;
+        }
+        console.log(e);
+    }
+
+    //客户端向服务端发送消息
+    $("#qiehuan").click(function(){
+
+        var wddata =  $("#wdid").val(); //文档操作信息
+
+        //向服务端发送数据,data = 数据 type = 消息类型
+        var message = '{"data":"'+wddata+'","type":"wdcz"}';
+
+        ws.send(message); //发送到服务端
+    });
+
+
+</script>
+
+
+
+
+

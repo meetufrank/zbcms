@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>直播助手</title>
+    <link rel="stylesheet" href="__PC__/liveassistant/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__PC__/liveassistant/css/login.css">
+</head>
+<body>
+<!--最外层-->
+<div class="signup-layer">
+
+        <div class="signup-wrapper">
+            <!--banner-->
+            <div class="signup-image">
+                <img src="__PC__/liveassistant/images/signup_cover.png" alt="">
+            </div>
+            <!--输入框-->
+            <div class="signup-content-box">
+                <div class="signup-column-box">
+                    <div class="input-column">
+                        <p class="name-p "><span>账号</span></p>
+                        <p>
+                            <input type="text" class="input number">
+                        </p>
+                    </div>
+                    <div class="input-column">
+                        <p class="name-p"><span>密码</span></p>
+                        <p>
+                            <input type="password" class="input passed">
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <p class="signup-submit-box">
+                <span class="signup-submit-btn">提交</span>
+            </p>
+        </div>
+
+</div>
+
+<script src="__PC__/liveassistant/jquery/jquery.min.js"></script>
+<script src="__PC__/liveassistant/layui/layui.all.js"></script>
+<script>
+    $(function(){
+        $(".signup-submit-btn").on('click',function(){
+            var $number = $(".number").val();
+            var $passed = $(".passed").val();
+            if($number==""){
+                layer.msg("账号不能为空");
+                $(".number").focus();
+                return false;
+            }else if($passed == ""){
+                layer.msg("密码不能为空");
+                $(".passed").focus();
+                return false;
+            }else if($number != "cisco"){
+                layer.msg("账号错误");
+                $(".passed").focus();
+                return false;
+            }else if($passed != "cisco123"){
+                layer.msg("密码错误");
+                $(".passed").focus();
+                return false;
+            }else{
+                /*easycast.cloud/index.php/Home/assistant/index.html?ad_id=104*/
+                var cid = '{$cid}';
+                window.location.href='{:url("Home/assistant/index")}?ad_id='+cid;
+            }
+        });
+    });
+</script>
+</body>
+</html>

@@ -51,7 +51,7 @@
             <div class="wxpay" style="text-align:center; border-bottom:1px solid #D9D9D9;">
                  <img src="__ADMIN__/wx_pay/assets/img/wx.gif"  style="height:100px"/>
             </div>
-            <h3 class="am-text-ss  am-margin-top-lg">付款金额：<font color="#E61C42" size="5">{$wxje}元</font></h3>
+            <h3 class="am-text-ss  am-margin-top-lg">{$code_url}付款金额：<font color="#E61C42" size="5">{$wxje}元</font></h3>
             <style>
               .admin-content img{
                    width:40%;
@@ -64,7 +64,7 @@
         if(<?php echo $unifiedOrderResult["code_url"] != NULL; ?>)
         {
             var url = 'http://paysdk.weixin.qq.com/example/qrcode.php?data='+"<?php echo urlencode($code_url); ?>";
-            
+
             var wording=document.createElement('p');
             wording.innerHTML = "请打开微信使用扫一扫进行微信支付";
             var code=document.createElement('DIV');

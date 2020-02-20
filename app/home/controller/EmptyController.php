@@ -7,6 +7,7 @@ class EmptyController extends Common{
     protected  $dao,$fields;
     public function _initialize()
     {
+
         parent::_initialize();
         $this->dao = db(DBNAME);
     }

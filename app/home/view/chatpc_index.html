@@ -15,7 +15,10 @@
 <script src="__PC__/layim/src/layui.js"></script>
 <script>
 
+
     var chat_init = {$return_json};
+
+
 
 
     //循环取出群组信息
@@ -39,6 +42,7 @@
 			voice: false //是否开启消息提醒声音
         });
 
+        window.logdata = {$chatlogs};
 
         //创建群聊
         layim.chat({
@@ -46,19 +50,31 @@
             ,name: ''   //群聊name
             ,type: 'group' //friend、group等字符，如果是group，则创建的是群聊
             ,avatar: ''    //群聊头像
+            ,ceshi:'测试',
         });
 
 
         //建立WebSocket通讯
-        var socket = new WebSocket('ws://139.129.217.147:8282');
-
+        /*var socket = new WebSocket('ws://121.42.207.83:8283');
+        * var socket = new WebSocket('ws://127.0.0.1:8282');
+        * */
+        var socket = new WebSocket('ws://121.42.207.83:8283');
 
         //连接成功时触发
         socket.onopen = function(){
             var login_data = '{"type":"init","data":{"cid":'+cid+'}}';
             socket.send(login_data);
             //layer.msg('连接成功');
+
+            //极限测试
+            // for(var i=1;i<=5; i++){
+                //var csjx = '{"type":"chatMessage","data":{"mine":{"username":"上海网友","avatar":"https://static.mudu.tv/index/avatar.png","id":1564219812,"mine":true,"content":"123"}, "to":{"id":"85","name":"","type":"group","avatar":"","ceshi":"测试"}}}';
+                //socket.send(csjx);
+            // }
+
         };
+
+
 
 
         //监听发送消息
@@ -69,23 +85,29 @@
             //data.mine.jinyan=2;
 
             var mine = JSON.stringify(data.mine);
-            console.log(mine);
-           // console.log(to);
+
+
             var to = JSON.stringify(data.to);
 
+            //var text = "测试";
+
+
             var login_data = '{"type":"chatMessage","data":{"mine":'+mine+', "to":'+to+'}}';
+
+
+
             socket.send(login_data);
         });
 
         //监听收到的消息
         socket.onmessage = function(res){
-            //console.log(res.data);
+
 
             var data = eval("("+res.data+")");
             switch(data['message_type']){
                 // 服务端ping客户端
                 case 'ping':
-                    console.log(data);
+
                     socket.send('{"type":"ping","groupid":"'+window.groupid+'"}');
                     break;
                 // 在线
@@ -109,8 +131,17 @@
                     break;
                 // 检测聊天数据
                 case 'chatMessage':
-                    console.log(res.data);
-                    layim.getMessage(data.data);
+                    //console.log(data.data.ctype);
+                    var type = data.data.ctype; //1审核    2不审核
+                   if(type != 1){  //不需要审核
+                       layim.getMessage(data.data);
+                   }
+                    break;
+
+                // 检测数据
+                case 'chatexamine':
+                        layim.getMessage(data.data);
+
                     break;
 
                 // 离线消息推送

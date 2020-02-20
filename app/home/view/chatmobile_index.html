@@ -3,32 +3,48 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
-    <title>mobile live</title>
+    <title>{$info.channel_name}</title>
+    <link rel="stylesheet" href="__MB__/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="__MB__/css/common.css">
+    <link rel="stylesheet" href="__MB__/mobile.css">
     <!-- layim移动端 -->
     <link rel="stylesheet" type="text/css" href="__MB__/layim/css/layui.mobile.css">
 
-
+    <!--    倒计时-->
+    <link href="__PC__/jcountdown/jcountdown.css" rel="stylesheet" type="text/css">
 
     <style type="text/css">
 
 
         /*手机端视频背景图片位置 background-image*/
         #video{
-            /*background-position: 0  -40px !important;*/
-            background-size: 100% 192px !important;
+            background-size: 100% 100% !important;
+            /*height: 240px !important;*/
+            background-repeat: no-repeat;
+
         }
         /*手机端直播背景*/
         #video{
-            background-image: url('/zhibo/public/static/mobile/images/phone.jpg') !important;
+            background-image: url('__PUBLIC__/{$info.channel_live_bgpic}') !important;
         }
 
+        /*表情高度*/
+        .layui-layim-face{
+            max-height: 190px !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
 
         body .layim-title{display: none;}
         body .layim-chat-main, body .layui-layim{top: 0}
-        body .layim-panel{position: fixed;top: 240px;}
-        body .layim-panel .layim-content{top: 240px;}
-        body .layim-chat-main{top: 240px;bottom: 50px; background: #fff;}
+
+
+        /*公告的样式*/
+        body .layim-panel{position: fixed;top: 363px;}
+        body .layim-panel .layim-content{top: 363px;}
+        body .layim-chat-main{top: 363px;bottom: 50px; background: #fff;padding-top: 7px !important; } /*  max-height: 300px; */
+
+
 
         /*聊天 滚动条 取消*/
         .layim-chat-main ul{
@@ -37,9 +53,9 @@
         /*每个li的高度 左边距距离*/  /* li 下边框 虚线 border-bottom: 1px dotted #77787c  */
         body .layim-chat-main ul li{
             padding-left: 50px;
-            border-bottom: 1px dotted #77787c;
+            /*border-bottom: 1px dotted #77787c;*/
             /*margin-bottom: 10px;*/
-            margin-bottom: 0px !important;
+            margin-bottom: 5px !important;
             min-height: 0px !important;
         }
 
@@ -72,9 +88,9 @@
         }
         /*聊天对话框上下间距*/
         body .layim-chat-text{
-            margin-top: 18px;
-            padding: 0px 15px;
         }
+        margin-top: 18px;
+        padding: 0px 15px;
         /* 聊天对话框高度 */
         body .layim-chat-text{
             min-height: 25px !important;
@@ -118,6 +134,9 @@
                 top: 17% !important;
                 left: 40% !important;
             }
+            /*.waiDiv{*/
+            /*    height: 14.5%;*/
+            /*}*/
         }
         /*适配iphone6 / 7 */
         @media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (orientation : portrait) {
@@ -126,6 +145,9 @@
                 top: 14% !important;
                 left: 40% !important;
             }
+            /*.waiDiv{*/
+            /*    height: 14.5%;*/
+            /*}*/
         }
 
         /*适配iphone6Plus*/
@@ -135,6 +157,9 @@
                 top: 13% !important;
                 left: 40% !important;
             }
+            /*.waiDiv{*/
+            /*    height: 14.5%;*/
+            /*}*/
         }
         /*适配iphoneX*/
         @media screen and (min-width: 375px) and (max-width: 812px){
@@ -143,6 +168,9 @@
                 top: 13% !important;
                 left: 40% !important;
             }
+            /*.waiDiv{*/
+            /*    height: 14.5%;*/
+            /*}*/
         }
 
 
@@ -293,6 +321,293 @@
             border: 0px;
         }
 
+        /*正在直播文字样式*/
+        .now{
+            display: none;
+            position: absolute;
+            top: 120px;
+            left: 0;
+            width: 83px;
+            height: 20px;
+            line-height: 20px;
+            background: rgba(8, 8, 241, 0.31);
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+            z-index: 999999999999999999999999999999999999;
+        }
+        /*小红点*/
+        .now span:first-child{
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border: 1px solid red;
+            border-radius: 50%;
+            background: red;
+            margin-left: 8px;
+            margin-right: 3px;
+        }
+        .now span:last-child{
+            color: #fff;
+        }
+
+        /*公告的样式*/
+        .showGongao{
+            position: relative;
+            top: -8px;
+            z-index: 99;
+            border-top: 1px solid #e8e8e8;
+            width: 100%;
+            height: 44%;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        .gongao{
+            padding: 5px 15px;
+            border-bottom: 1px solid #e8e8e8;
+            background: #f5f5f5;
+            /*min-height: 86px;*/
+            width: 93%;
+            position: relative;
+            z-index: 99;
+        }
+        .alone img{
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            float: left;
+            padding-top: 1px;
+        }
+        .alone .aText{
+            padding-left: 45px;
+            padding-top: 6px;
+        }
+        /*.alone .aText p{*/
+        /*    visibility: hidden;*/
+        /*}*/
+        .alone .aText .showText{
+            margin-bottom: 7px;
+            word-wrap: break-word;
+            word-break: normal;
+            overflow: hidden;
+            /*max-height: 90px;*/
+            /*width: 80%;*/
+        }
+        /*下箭头*/
+        .downPng{
+            text-align: center;
+        }
+        .downPng  img{
+            float: none;
+            border-radius: 0;
+            width: 14px;
+            height: 14px;
+            padding: 0;
+            margin-bottom: 5px;
+        }
+
+        .topPng{
+            text-align: center;
+            position: fixed;
+            top: 44%;
+            right: 3%;
+            -webkit-transform: translate3d(-44%,-10%,0) scale(1);
+            transform: translate3d(-44%,-10%,0) scale(1);
+            z-index: 100;
+        }
+        .topPng  img{
+            float: none;
+            border-radius: 0;
+            width: 20px;
+            height: 20px;
+            padding: 0;
+            margin-bottom: 5px;
+
+            -webkit-animation-timing-function:ease-in-out;
+            -webkit-animation-name:breathe;
+            -webkit-animation-duration:1000ms;
+            -webkit-animation-iteration-count:infinite;
+            -webkit-animation-direction:alternate;
+
+        }
+        @-webkit-keyframes breathe {
+            0% {
+                opacity:.2;
+            }
+            100% {
+                opacity:.8;
+            }
+        }
+        /*.minHeight{*/
+        /*    min-height: 16% !important;*/
+        /*}*/
+        /*.maxHeight{*/
+        /*    max-height: 62px;*/
+        /*}*/
+        .disNo{
+            display: none;
+        }
+
+        /*.waiDiv{*/
+        /*    min-height: 10.5%;*/
+        /*}*/
+
+        /*选项卡部分*/
+        .tab-title-box {
+            position: relative;
+            font-size: 0;
+            z-index:999;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            background-color: #ffffff;
+            -webkit-box-shadow: 0 0.2rem 0.4rem 0 rgba(30, 142, 239, 0.2);
+            -moz-box-shadow: 0 0.2rem 0.4rem 0 rgba(30, 142, 239, 0.2);
+            box-shadow: 0 0.2rem 0.4rem 0 rgba(30, 142, 239, 0.2);
+        }
+        .tab-title-box .one-tab {
+            position: relative;
+            display: inline-block;
+            height: 3.5rem;
+            line-height: 3.5rem;
+            text-align: center;
+            -webkit-transition: all 0.2s ease-in-out;
+            -moz-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            font-size: 0;
+        }
+        .tab-title-box .one-tab span {
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            color: #808080;
+            font-size: 1.4rem;
+        }
+        .tab-title-box .one-tab.active span {
+            color: #1e8eef;
+        }
+        .tab-title-box .one-tab .tab-tgl {
+            position: absolute;
+            bottom: 0;
+            width: 0;
+            height: 0;
+            left: 50%;
+            margin-left: -0.28rem;
+            border-style: solid;
+            border-width: 0 .42rem .56rem .42rem;
+            border-color: transparent transparent rgba(30, 142, 239, 0.2) transparent;
+        }
+
+        /*切换页面的样式 反馈问卷里面的内容*/
+        .content-box{
+            overflow-x: hidden;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            height: 100%;
+            padding: 1.3rem 1rem;
+            display: none;
+
+
+        }
+        .content-box .detail-box{
+            position: relative;
+        }
+        .content-box .detail-box p{
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+
+        /*显示天数部分*/
+        .countdown-title {
+            display: inline-block;
+            padding: 0 16px;
+            margin: 40px 0 40px 0;
+            height: 67px;
+            line-height: 67px;
+            background-color: #29AAE1;
+            color: #FFFFFF;
+            -webkit-border-radius: 0.05em;
+            -moz-border-radius: 0.05em;
+            border-radius: 0.05em;
+            letter-spacing: 0.01em;
+        }
+        .countdown-title > span {
+            font-size: 32px;
+            vertical-align: top;
+        }
+        .countdown-title .countdown-days {
+            font-size: 50px;
+            letter-spacing: 0.1em;
+            margin-left: 0.2em;
+        }
+        .countdown-title .countdown-day {
+            font-size: 24px;
+        }
+
+        .countdown1{
+            display: inline-block;
+            position: relative;
+            top: -4px;
+        }
+        .jCountdown.flip.white .group>.container{
+            background: none;
+        }
+
+        /*图片样式*/
+        .detail-box .Img{
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+
+
+        /*新样式*/
+        .dd_block{
+            display: flex;
+            height: 100px;
+            margin-bottom: 1rem;
+        }
+        .dd_block .leftImg{
+            width: 100px;
+            margin-right: .75rem;
+        }
+        .dd_block .leftImg img{
+            width: 100%;
+            height: 100%;
+        }
+        .dd_block .middleText{
+            width: 39.5%;
+            border: 1px solid #eee;
+            padding: .5rem 0 0 .5rem;
+        }
+        .dd_block .middleText p:first-child{
+            font-size: 16px;
+            font-weight: bold;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            margin-bottom: 1rem;
+        }
+        .dd_block .middleText p:last-child{
+            font-size: 12px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+        .dd_block .rightNum{
+            width: 32%;
+            text-align: center;
+            background: #086da0;
+            line-height: 100px;
+        }
+        .dd_block .rightNum p{
+            font-size: 48px;
+            color: #fff;
+            font-family: 微软雅黑;
+        }
+
 
     </style>
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -300,10 +615,35 @@
     <!--[if lt IE 9]>
     <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+
     <![endif]-->
+
+
+
+    <style>
+        .admin-title {
+            display: inline-block;
+            margin-left: 0.2rem;
+            padding: 0.3rem 0.5rem 0.25rem;
+            line-height: 1.0rem;
+            font-size: 1rem;
+            color: #fff;
+            background-color: #5c95eb;
+            -webkit-border-radius: 4px;
+            -moz-border-radius: 4px;
+            border-radius: 4px;
+            vertical-align: top;
+        }
+    </style>
 
 </head>
 <body>
+<input type="hidden" id="livetype" value="{$livetype}"/>
+<!--正在直播文字样式-->
+<div class="now">
+    <span> <!-- 小红点 --> </span>
+    <span>正在直播</span>
+</div>
 <!--验证码-->
 {if condition="$info.user_type eq 2"}
 <div class="zhezhao">
@@ -326,7 +666,7 @@
 <!--用户白名单 弹出层-->
 <!--深灰色背景色-->
 {if condition="$info.user_type eq 3"}
-<div class="backg">
+<div class="backg" style="display: none;">
     <!--内容部分-->
     <div class="neirong">
         <div class="biaoti">
@@ -345,47 +685,478 @@
     </div>
 </div>
 {/if}
-
+<input id="StreamName" type = "hidden" value="{$streamname}"/>
 <script type="text/javascript" src="__MB__/ckplayer/ckplayer.js"></script>
 
-            <!--video视频开始按钮-->
-            <div class="play"></div>
+<!--video视频开始按钮-->
+<div class="play"></div>
 
-        <!--video 视频/音频-->
-        <div class="video" id="video" style="width: 100%;height: 240px;z-index: 99999;"></div>
+<!--video 视频/音频-->
+<div class="video" id="video" style="width: 100%;height: 240px;z-index: 99999;"></div>
+<img src="__PUBLIC__/{$info.channel_live_bgpic}" class="endImg" style="position: absolute;z-index: 99;top: 0;left: 0;right: 0;height: 240px;width: 100%;display:none;">
 
-<!--外部引入jQuery-->
-<script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-<!--点击按钮隐藏-->
+<div style="width: 100%;height: 240px;display: none;" class="cheng"></div>
+
+{if condition="($info.id eq 103) OR ($info.id eq 102) OR ($info.id eq 99)"}
+<div class="tab-title-box">
+    <div class="one-tab active" style="width: 50%;" data-id="1">
+        <span>聊天</span>
+        <i class="tab-tgl"></i>
+    </div>
+    <div class="one-tab" style="width: 50%;" data-id="2">
+        <span>反馈问卷</span>
+        <i class="tab-tgl" style="display: none;"></i>
+    </div>
+</div>
+{/if}
+<!--测试频道财富商城-->
+{if condition="$info.id eq 108"}
+<div class="tab-title-box">
+    <div class="one-tab active" style="width: 50%;" data-id="1">
+        <span>聊天</span>
+        <i class="tab-tgl"></i>
+    </div>
+    <div class="one-tab" style="width: 50%;" data-id="2">
+        <span>财富商城</span>
+        <i class="tab-tgl" style="display: none;"></i>
+    </div>
+</div>
+{/if}
+<!--反馈问卷的内容-->
+
+{if condition="$info.id eq 103"}
+<div class="content-box">
+    <div class="detail-box">
+        <p>请协助填写会议反馈问卷，地址为 <a href="http://edmcn.net/cisco/20200107_1/CIN_poll.htm">http://edmcn.net/cisco/20200107_1/CIN_poll.htm</a> ，谢谢！</p>
+    </div>
+</div>
+{elseif condition="$info.id eq 102"}
+<div class="content-box">
+    <div class="detail-box">
+        <p>请协助填写会议反馈问卷，地址为 <a href="https://engage2demand.cisco.com/LP=19319">https://engage2demand.cisco.com/LP=19319</a> ，谢谢！</p>
+    </div>
+</div>
+{elseif condition="$info.id eq 99"}
+<div class="content-box">
+    <div class="detail-box">
+        <p>请协助填写会议反馈问卷，地址为 <a href="http://edmcn.net/cisco/20200109_1/CIN_poll.htm">http://edmcn.net/cisco/20200109_1/CIN_poll.htm</a> ，谢谢！</p>
+    </div>
+</div>
+{/if}
+
+<div class="content-box">
+<!--    单独块-->
+    <div class="dd_block">
+<!--        左侧图片-->
+        <div class="leftImg">
+            <img src="__MB__/images/1.png" alt="">
+        </div>
+<!--        中间文字-->
+        <div class="middleText">
+            <p>进财富理财套装</p>
+            <p>财富介绍123撒大苏打萨达萨达萨达萨达萨达的撒旦</p>
+        </div>
+<!--        右侧数值-->
+        <div class="rightNum">
+            <p>6.5%</p>
+        </div>
+    </div>
+
+
+    <div class="detail-box">
+        <img src="__MB__/images/1.png" alt="" class="Img" onclick="window.location.href = 'https://m.zjbyte.com/sbfp/finance/article?groupId=6789744765601579531&itemId=6789744765601579531&timestamp=1580994005&article_category=stock&req_id=202002062100040101310741723C14A48C&group_id=6789744765601579531';">
+        <img src="__MB__/images/2.png" alt="" class="Img" onclick="window.location.href = 'http://m.mnw.cn/news/cj/2247511.html';">
+    </div>
+</div>
+
+
+<div class="waiDiv zk" style="display:none;">
+
+    <!--默认显示公告-->
+    <div id="zhidingfu">
+        {volist name="$notice_list" id="vo" key="k"}
+        {if condition="$k eq 1"}
+        <div class="gongao minHeight" id="zhiding{$vo.id}">
+            <div class="alone">
+                <img src="https://static.mudu.tv/index/avatar.png" alt="">
+                <div class="aText">
+                    <div class="showText maxHeight">{$vo.ctext}</div>
+                    <!--      <p>2019-9-18 12:00</p>-->
+                </div>
+                <div class="downPng">
+                    <img src="http://wj.meetv.com.cn/jiantou.png" alt="" class="dDown">
+                </div>
+            </div>
+        </div>
+        {/if}
+        {if condition="$k gt 1"}
+        <div class="gongao" id="zhiding{$vo.id}" style="display:none;">
+            <div class="alone">
+                <img src="https://static.mudu.tv/index/avatar.png" alt="">
+                <div class="aText">
+                    <div class="showText">{$vo.ctext}</div>
+                    <!--                <p>2019-9-18 12:00</p>-->
+                </div>
+            </div>
+        </div>
+        {/if}
+        {/volist}
+    </div>
+
+
+    <!--上箭头-->
+    <div class="topPng disNo">
+        <img src="http://wj.meetv.com.cn/jiantous.png" alt="" class="tTop">
+    </div>
+
+
+
+</div>
+
+<!--倒计时部分-->
+{if condition="($info.id eq 103) OR ($info.id eq 102) OR ($info.id eq 99)"}
+    {if condition="$ctype neq 1"}
+        <div style="background: #000;text-align: center;position: absolute;width: 100%;height: 240px;top: 0;z-index:100;" class="removeDiv">
+
+            <div class="countdown-title" style="z-index: 100000;">
+                <span style="z-index: 100000;">距直播开始</span>
+                <div class="countdown1" style="z-index: 100000;"></div>
+
+                <span class="countdown-day" style="z-index: 100000;">天</span>
+            </div>
+
+            <div class="countdown" style="z-index: 100000;"></div>
+        </div>
+    {/if}
+{/if}
+
+
+
+
+
+<!--聊天部分-->
+<!-- 聊天对话框 -->
+<div class="comment-main" style="display: none;">
+    <div id="comment-box" class="new-comment-box">
+        <ul>
+            <div id="zhiding">
+                {volist name="chat_list" id="data"}
+                    <!--消息类型为已通过-->
+                    {if condition="$data.to_examine neq 1"}
+                        <!--置顶消息-->
+                        {if condition="$data.chattopping_time neq ''"}
+                            {if condition="$data.userimgurl eq $gfimg"}
+                                <li class="comment clearfix chatli{$data.id}" data-id="{$data.id}">
+                                    <img src="{$data.userimgurl}" alt="" class="cmt-ava">
+                                    <p class="cmt-info">
+                                                                                            <span class="cmt-user">
+                                                                                                <span>{$data.username}</span>
+                                                                                                <span class="admin-title">官方</span>
+                                                                                                <span></span>
+                                                                                                <span class="top">顶</span>
+                                                                                            </span>
+                                        <span class="cmt-time">{$data.chattime}</span>
+                                    </p>
+                                    <div class="cmt-content">{$data.content}</div>
+                                    <div class="content" style="display: none;">
+                                                                                            <span class="broadcast-cmts">
+                                                                                                <span class="broadcast-cmt topcmt cancleTop">取消置顶</span>
+                                                                                                <span class="broadcast-cmt delcmt">删除</span>
+                                                                                                <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                                            </span>
+                                    </div>
+                                </li>
+                            {else/}
+                                <li class="comment clearfix chatli{$data.id}" data-id="{$data.id}">
+                                    <img src="{$data.userimgurl}" alt="" class="cmt-ava">
+                                    <p class="cmt-info">
+                                                                            <span class="cmt-user">
+                                                                                <span>{$data.username}</span>
+                                                                                <span></span>
+                                                                                <span class="top">顶</span>
+                                                                            </span>
+                                        <span class="cmt-time">{$data.chattime}</span>
+                                    </p>
+                                    <div class="cmt-content">{$data.content}</div>
+                                    <div class="content" style="display: none;">
+                                                                            <span class="broadcast-cmts">
+                                                                                <span class="broadcast-cmt topcmt cancleTop">取消置顶</span>
+                                                                                <span class="broadcast-cmt delcmt">删除</span>
+                                                                                <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                            </span>
+                                    </div>
+                                </li>
+                            {/if}
+
+                        {/if}
+                    {/if}
+                {/volist}
+            </div>
+
+            <div style="position: relative;" class="insert">
+                {volist name="chat_list" id="data"}
+                    <!--消息类型为已通过-->
+                    {if condition="$data.to_examine neq 1"}
+                            <!--普通消息-->
+                            {if condition="$data.chattopping_time eq ''"}
+                                            {if condition="$data.userimgurl eq $gfimg"}
+                                                        <li class="comment clearfix chatli{$data.id}" data-id="{$data.id}">
+                                                            <img src="{$data.userimgurl}" alt="" class="cmt-ava">
+                                                            <p class="cmt-info">
+                                                                                                        <span class="cmt-user">
+                                                                                                            <span>{$data.username}</span>
+                                                                                                            <span class="admin-title">官方</span>
+                                                                                                            <span></span>
+                                                                                                            <span class="top disNo">顶</span>
+                                                                                                        </span>
+                                                                <span class="cmt-time">{$data.chattime}</span>
+                                                            </p>
+                                                            <div class="cmt-content">{$data.content}</div>
+                                                            <div class="content" style="display: none;">
+                                                                                                        <span class="broadcast-cmts">
+                                                                                                            <span class="broadcast-cmt topcmt">置顶</span>
+                                                                                                            <span class="broadcast-cmt delcmt">删除</span>
+                                                                                                            <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                                                        </span>
+                                                            </div>
+                                                        </li>
+                                            {else/}
+                                                        <li class="comment clearfix chatli{$data.id}" data-id="{$data.id}">
+                                                            <img src="{$data.userimgurl}" alt="" class="cmt-ava">
+                                                            <p class="cmt-info">
+                                                                                                                    <span class="cmt-user">
+                                                                                                                        <span>{$data.username}</span>
+                                                                                                                        <span></span>
+                                                                                                                        <span class="top disNo">顶</span>
+                                                                                                                    </span>
+                                                                <span class="cmt-time">{$data.chattime}</span>
+                                                            </p>
+                                                            <div class="cmt-content">{$data.content}</div>
+                                                            <div class="content" style="display: none;">
+                                                                                                                    <span class="broadcast-cmts">
+                                                                                                                        <span class="broadcast-cmt topcmt">置顶</span>
+                                                                                                                        <span class="broadcast-cmt delcmt">删除</span>
+                                                                                                                        <span class="broadcast-cmt gag-btn">禁言</span>
+                                                                                                                    </span>
+                                                            </div>
+                                                        </li>
+                                            {/if}
+
+                            {/if}
+                    {/if}
+                {/volist}
+            </div>
+
+            <!-- 无更多历史消息 -->
+            <div class="comment-loading loading-nothing">
+                <img src="__MB__/nothing.png" alt="">
+                <span>已无更多历史消息</span>
+            </div>
+        </ul>
+    </div>
+</div>
+<!-- 聊天页脚 -->
+<!--测试频道，显示聊天页脚-->
+{if condition="$info.id eq 108"}
+<div id="new-public-box" class="">
+    {else}
+<div id="new-public-box" class="" style="display: none;">
+    {/if}
+    <div id="publish-wrap" class="is-focus">
+        <div class="mobile-input-wrap">
+            <!-- 笔icon -->
+            <i class="glyphicon glyphicon-pencil edit"></i>
+            <span class="tip disNo">您已被禁言</span>
+            <input placeholder="我来说两句..." id="input-content" value="">
+            <span class="mobile-emotion-span">
+                    <!-- 表情icon -->
+                    <img src="__MB__/face.png" alt="">
+                </span>
+        </div>
+        <div id="send-btn" class="send-btn">
+            <!-- 发送icon -->
+            <i class="glyphicon glyphicon-send"></i>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="userid" value="{$userid}"/>
+<input type="hidden" id="count_down" value="{$info.count_down}"/>
+
+
+
+<script src="__PC__/js/jquery-1.8.2.min.js"></script>
+<script src="__PC__/jcountdown/jquery.jcountdown.min.js?v=0.5"></script><!-- 倒计时 -->
 <script>
-    // 点击播放按钮 按钮隐藏
-    $(".play").click(function(){
-        $('.play').css('display','none');
-    });
+    // console.log(s.fn.jquery);
 </script>
+<!--倒计时-->
+<script>
+
+
+    // 选项卡切换
+    $(".one-tab").on('click',function(){
+        var $this = $(this);
+        if(!$this.hasClass("active")){
+            $this.addClass("active");
+            $this.siblings().find("i").hide();
+            $this.find("i").show();
+            $this.siblings().removeClass("active");
+        }
+
+        var $data = $this.attr("data-id");
+        if($data == 1){
+            // $(".layim-panel").css("position","fixed");
+            // $(".waiDiv").css("position","relative");
+            $(".comment-main").fadeIn();
+            $("#new-public-box").fadeIn();
+
+            $(".content-box").fadeOut();
+
+        }else if($data == 2){
+            // $(".layim-panel").css("position","absolute");
+            // $(".waiDiv").css("position","absolute");
+
+            $(".comment-main").fadeOut();
+            $("#new-public-box").fadeOut();
+
+            $(".content-box").fadeIn();
+        }
+    });
+
+
+
+
+    var cid = "{$info.id}";
+    if(cid != 99){   //没有选项卡的样式
+        $(".comment-main").css("padding-top","242px");
+    }
+
+
+
+
+    var endTime = $("#count_down").val();
+    window._mytime='{$server_time}';
+    window._ctime=Date.parse(new Date);
+    $(function() {
+
+
+        config = {
+            timeText:  endTime, //倒计时时间，格式：年/月/日 时:分:秒
+            timeZone:'8' , //时区，GMT号码
+            style: "flip", //显示的样式，可选值有flip,slide,metal,crystal(翻动、滑动、金属、水晶)
+            color: "white", //显示的颜色，可选值white,black(黑色、白色)
+            width: 0, //倒计时宽度，无限制，默认为0
+            textGroupSpace: 0, //天、时、分、秒之间间距
+            textSpace: 5, //数字之间间距
+            reflection: 0, //是否显示倒影
+            reflectionOpacity: 10, //倒影透明度
+            reflectionBlur: 0, //倒影模糊程度
+            dayTextNumber: 2, //倒计时天数数字个数
+            displayDay: !0, //是否显示天数
+            displayHour: 0, //是否显示小时数
+            displayMinute: 0, //是否显示分钟数
+            displaySecond: 0, //是否显示秒数
+            displayLabel: 0, //是否显示倒计时底部label
+            onFinish: function() {}//完成事件，您可以在时间结束时执行一些脚本，在创建倒计时时只需传递一个函数即可。
+        };
+        $(".countdown1").jCountdown(config);
+    });
+
+
+    $(function() {
+
+        config = {  //  显示小时/分钟/秒数的初始化插件
+            timeText: endTime, //倒计时时间，格式：年/月/日 时:分:秒
+            timeZone:'8' , //时区，GMT号码
+            style: "flip", //显示的样式，可选值有flip,slide,metal,crystal(翻动、滑动、金属、水晶)
+            color: "black", //显示的颜色，可选值white,black(黑色、白色)
+            width: 0, //倒计时宽度，无限制，默认为0
+            textGroupSpace: 15, //天、时、分、秒之间间距
+            textSpace: 0, //数字之间间距
+            reflection: 0, //是否显示倒影
+            reflectionOpacity: 10, //倒影透明度
+            reflectionBlur: 0, //倒影模糊程度
+            dayTextNumber: 2, //倒计时天数数字个数
+            displayDay: 0, //是否显示天数
+            displayHour: !0, //是否显示小时数
+            displayMinute: !0, //是否显示分钟数
+            displaySecond: !0, //是否显示秒数
+            displayLabel: 0, //是否显示倒计时底部label
+            onFinish: function() {}//完成事件，您可以在时间结束时执行一些脚本，在创建倒计时时只需传递一个函数即可。
+        };
+        $(".countdown").jCountdown(config);
+    });
+    $(function() {
+        //循环监听倒计时
+        function listenEnd() {
+
+            var endarr = $(".djsdiv");
+
+            var count=0;
+            $.each(endarr, function (i) {
+                var isend = $(this).children(".text").attr('style');
+
+                if(isend=='background-position: -450px -896px;'){  //结束
+
+                    count++;
+
+                }
+            })
+
+
+
+            if(count==8){  //全部为0
+
+                $(".removeDiv").remove();   //删除倒计时
+                $("#video").css("display","block");
+                $(".cheng").css("display","none");
+                clearInterval(listenend);
+            }
+
+        }
+
+
+        var listenend=setInterval(function(){ listenEnd() }, 1000);
+    });
+    // 封装删除倒计时的函数
+    function del(){
+        $(".removeDiv").remove();
+    }
+
+    // del();
+</script>
+
+
+
+
 
 <script type="text/javascript">
 
-    var rtmpurl = "{$info.m3u8url}";
+    //var rtmpurl = "{$info.m3u8url}";   //视频播放地址
+    var rtmpurl = "{$playurl}";
+    var livebjt = "__PUBLIC__/{$info.channel_live_bgpic}";
     var videoObject = {
         container: '.video',//“#”代表容器的ID，“.”或“”代表容器的class
         variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
-        poster:'__MB__/images/video.jpg',
+        poster:livebjt,
         loaded:'loadedHandler',//监听播放器加载成功
         debug:true,
-        live:true,
+        live:false,
+        autoplay:true,
         video:rtmpurl //视频地址
     };
-    var player=new ckplayer(videoObject);
+    window.player=new ckplayer(videoObject);
+
     function loadedHandler() {
         // console.log('进入监听事件');
-        player.addListener('error', errorHandler); //监听视频加载出错
-        player.addListener('ended', endedHandler);
+        // alert("开始监听");
+        window.player.addListener('error', errorHandler); //监听视频加载出错
+        window.player.addListener('ended', endedHandler);
     }
 
     function errorHandler() {
         // alert('出错');
-        player.getByElement('#video').style.background='url(__MB__/images/video.jpg) no-repeat 100% 0/100% 100% ';
+        window.player.getByElement('#video').style.background='url(livebjt) no-repeat 100% 0/100% 100%';
         var divvideo = document.getElementById('video').children[0];
         // console.log(divvideo);
         divvideo.style.background='';
@@ -394,7 +1165,7 @@
     }
     function endedHandler() {
         // alert('结束');
-        player.getByElement('#video').style.background='url(__MB__/images/video.jpg) no-repeat ';
+        window.player.getByElement('#video').style.background='url(livebjt) no-repeat ';
         var divvideo = document.getElementById('video').children[0];
         // console.log(divvideo);
         divvideo.style.background='';
@@ -403,6 +1174,433 @@
 
 
 </script>
+<!--点击按钮隐藏-->
+<script>
+    // 点击播放按钮 按钮隐藏
+    $(".play").click(function(){
+        $('.play').css('display','none');
+    });
+</script>
+<script>
+    $(window).load(function(){
+        var live = "{$livetype}";
+        var cid = "{$info.id}";
+        var ctype = "{$ctype}";
+
+        if(live == "0"){
+            $('.now').css('display','none');
+        }else if(live == "1"){   //正在直播
+            if(ctype != 1){   //倒计时时间未到
+                if(cid == 99){   //没有选项卡的样式
+                    $("#video").css("display","none");
+                    $(".cheng").css("display","block");
+
+                }
+            }
+
+
+
+
+            $('.now').css('display','block');
+
+            setTimeout(function () {
+                $('.now').css('display','none');
+            }, 3000);
+        }
+    });
+</script>
+
+<script>
+    //连接websocker
+    var ws = new WebSocket('ws://121.42.207.83:8283');
+    //连接成功时触发
+    ws.onopen = function(){
+        var cid = "{$info.id}";
+        var userid = "{$userid}";  //用户id
+
+        var login_data = '{"type":"init","data":{"cid":'+cid+',"userid":'+userid+'}}';
+        ws.send(login_data);
+        console.log("连接成功");
+    };
+
+
+    //发送聊天消息
+    $(document).on('click','#send-btn',function(){
+
+        var inputText = $("#input-content").val();  //获取到输入内容
+        if(inputText == ''){
+            alert("内容不可为空");
+            return;
+        }
+
+        var cid = "{$info.id}";  //频道id
+        var userid = "{$userid}";  //用户id
+        var usernames = "{$usernames}";  //用户昵称
+        var userimgurl = "{$userimgurl}";  //用户头像
+
+
+        $.ajax({
+            type:"post",
+            url:"{:url('home/Index/chatsend')}",
+            dataType:"json",
+            data:{ctext:inputText,cid:cid,userid:userid,usernames:usernames,userimgurl:userimgurl},
+            success:function(data){
+                if(data.data == 1){
+                    var html = '<li class="comment clearfix chatli'+data.nid+'" data-id="'+data.nid+'">\n' +
+                        '                        <img src="'+data.userimgurl+'" alt="" class="cmt-ava">\n' +
+                        '                        <p class="cmt-info">\n' +
+                        '                            <span class="cmt-user">\n' +
+                        '                                <span>'+data.username+'</span>\n' +
+                        '                                <span></span>\n' +
+                        '                                <span class="top disNo">顶</span>\n' +
+                        '                            </span>\n' +
+                        '                            <span class="cmt-time">'+data.ndate+'</span>\n' +
+                        '                        </p>\n' +
+                        '                        <div class="cmt-content">'+data.ctext+'</div>\n' +
+                        '                        <div class="content" style="display: none;">\n' +
+                        '                            <span class="broadcast-cmts">\n' +
+                        '                                <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                        '                                <span class="broadcast-cmt delcmt">删除</span>\n' +
+                        '                                <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                        '                            </span>\n' +
+                        '                        </div>\n' +
+                        '                    </li>';
+                    $(".insert").prepend(html);
+                    $("#input-content").val('');    //清空输入框聊天数据
+                    var message = '{"type":"chatsend","cid":"'+data.cid+'","nid":"'+data.nid+'"}';  //发送消息给客户端
+                    ws.send(message); //发送到服务端
+
+                }
+            }
+        });
+
+
+    });
+
+    //服务端主动推送消息时会触发这里的onmessage
+    ws.onmessage = function(e){
+        var data = eval("("+e.data+")");
+
+        switch(data['message_type']){
+            case 'ping':
+                var countdown = $("#count_down").val();  //倒计时
+                var wddata = $("#livetype").val();
+                var StreamName = $("#StreamName").val();
+                var cid= "{$info.id}";
+
+                //直播状态
+                var islive = '{"data":{"wdata":"'+wddata+'","streamname":"'+StreamName+'","cid":"'+cid+'","countdowntime":"'+countdown+'"},"type":"live"}';
+                ws.send(islive);
+
+                //倒计时
+               var daojishi = '{"data":{"countdowntime":"'+countdown+'"},"type":"countdown"}';
+                ws.send(daojishi);
+                return;
+            case "chatsend":    //获取到聊天信息
+
+
+                if (data.data.to_examine != 1) {  //to_examine = 1 需要审核通过
+                    if(data.data.avatar == 'https://cdn13.mudu.tv/assets/upload/154466654253127.png') {  //  gu官方
+                        $(".insert").prepend('<li class="comment clearfix chatli' + data.data.id + '" data-id="' + data.data.id + '">\n' +
+                            '                        <img src="' + data.data.avatar + '" alt="" class="cmt-ava">\n' +
+                            '                        <p class="cmt-info">\n' +
+                            '                            <span class="cmt-user">\n' +
+                            '                                <span>' + data.data.username + '</span>\n' +
+                            '                                <span class="admin-title">官方</span>\n' +
+                            '                                <span class="top disNo">顶</span>\n' +
+                            '                            </span>\n' +
+                            '                            <span class="cmt-time">' + data.data.chattime + '</span>\n' +
+                            '                        </p>\n' +
+                            '                        <div class="cmt-content">' + data.data.content + '</div>\n' +
+                            '                        <div class="content" style="display: none;">\n' +
+                            '                            <span class="broadcast-cmts">\n' +
+                            '                                <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                            '                                <span class="broadcast-cmt delcmt">删除</span>\n' +
+                            '                                <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                            '                            </span>\n' +
+                            '                        </div>\n' +
+                            '                    </li>');
+                    }else{
+                        $(".insert").prepend('<li class="comment clearfix chatli' + data.data.id + '" data-id="' + data.data.id + '">\n' +
+                            '                        <img src="' + data.data.avatar + '" alt="" class="cmt-ava">\n' +
+                            '                        <p class="cmt-info">\n' +
+                            '                            <span class="cmt-user">\n' +
+                            '                                <span>' + data.data.username + '</span>\n' +
+                            '                                <span></span>\n' +
+                            '                                <span class="top disNo">顶</span>\n' +
+                            '                            </span>\n' +
+                            '                            <span class="cmt-time">' + data.data.chattime + '</span>\n' +
+                            '                        </p>\n' +
+                            '                        <div class="cmt-content">' + data.data.content + '</div>\n' +
+                            '                        <div class="content" style="display: none;">\n' +
+                            '                            <span class="broadcast-cmts">\n' +
+                            '                                <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                            '                                <span class="broadcast-cmt delcmt">删除</span>\n' +
+                            '                                <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                            '                            </span>\n' +
+                            '                        </div>\n' +
+                            '                    </li>');
+                    }
+                }
+                return;
+        }
+
+        switch(data.type){
+
+            case "live":
+                $("#livetype").val(data.data);   //给直播状态赋值
+
+
+
+                    if(data.status==1){   //不通过
+                        if (data.data === 0){   //未直播
+                            $("#video").css("height","240px");
+
+                            $('.now').css('display','none');
+                            $(".endImg").css("display","block");
+                            $(".endImg").css("z-index","99999999");
+
+                            var playurl='{$trail_notice_url}';
+
+                            if(playurl==''){
+                                play('{$live_url}');
+                            }else{
+                                play(playurl);
+                            }
+
+                        }else if(data.data == 1){   //直播中
+
+
+                            $("#video").css("height","210px");
+
+                            $('.now').css('display','block');
+                            $(".endImg").css("display","none");
+
+                            play('{$live_url}');
+
+
+                        }
+                    }
+
+
+                return;
+            case "logout":
+                layer.msg('账号在另一地点登录,  您已被迫下线');
+                setTimeout(function(){
+                    window.location.href = "http://easycast.cloud/index.php/home-chatmobile-zhojiner-ad_id-79.html";
+                    return;
+                },3000);
+
+        /*    case "countdown":    //倒计时
+                var ctype = data.ctype; //倒计时状态
+                if(ctype == 1){  //时间已到
+                    $(".removeDiv").remove();   //删除倒计时
+                    $("#video").css("display","block");
+                    $(".cheng").css("display","none");
+                }
+
+
+                return;*/
+            case "chatdelete":    //删除聊天数据
+                var chatid = data.data.chatid;   //获取到指定删除id
+                $(".chatli"+chatid).remove();  //删除div
+                return;
+
+            //审核通过聊天数据
+            case "adoptchat":    //获取到聊天信息
+                /*$(".chatli"+chatid)*/
+                var chatid = data.data.id;
+                $(".chatli"+chatid).remove();  //删除div
+
+
+                $(".insert").prepend('<li class="comment clearfix chatli'+data.data.id+'" data-id='+data.data.id+'>\n' +
+                    '                        <img src="' + data.data.avatar + '" alt="" class="cmt-ava">\n' +
+                    '                        <p class="cmt-info">\n' +
+                    '                            <span class="cmt-user">\n' +
+                    '                                <span>' + data.data.username + '</span>\n' +
+                    '                                <span></span>\n' +
+                    '                                <span class="top disNo">顶</span>\n' +
+                    '                            </span>\n' +
+                    '                            <span class="cmt-time">' + data.data.chattime + '</span>\n' +
+                    '                        </p>\n' +
+                    '                        <div class="cmt-content">' + data.data.content + '</div>\n' +
+                    '                        <div class="content" style="display: none;">\n' +
+                    '                            <span class="broadcast-cmts">\n' +
+                    '                                <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                    '                                <span class="broadcast-cmt delcmt">删除</span>\n' +
+                    '                                <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                    '                            </span>\n' +
+                    '                        </div>\n' +
+                    '                    </li>');
+
+                return;
+            case "chattopping":    //置顶聊天数据
+                var chatid = data.data.id;   //获取到聊天数据置顶id
+
+                $(".chatli"+chatid).remove();  //先删除该div
+
+
+                //插入置顶消息
+                if(data.data.avatar == 'https://cdn13.mudu.tv/assets/upload/154466654253127.png') {  //  gu官方
+                    var html = '<li class="comment clearfix chatli' + data.data.id + '" data-id="' + data.data.id + '">\n' +
+                        '                        <img src="' + data.data.avatar + '" alt="" class="cmt-ava">\n' +
+                        '                        <p class="cmt-info">\n' +
+                        '                            <span class="cmt-user">\n' +
+                        '                                <span>' + data.data.username + '</span>\n' +
+                        '                                <span class="admin-title">官方</span>\n' +
+                        '                                <span class="top">顶</span>\n' +
+                        '                            </span>\n' +
+                        '                            <span class="cmt-time">' + data.data.chattime + '</span>\n' +
+                        '                        </p>\n' +
+                        '                        <div class="cmt-content">' + data.data.content + '</div>\n' +
+                        '                        <div class="content" style="display:none;">\n' +
+                        '                            <span class="broadcast-cmts">\n' +
+                        '                                <span class="broadcast-cmt topcmt cancleTop">取消置顶</span>\n' +
+                        '                                <span class="broadcast-cmt delcmt">删除</span>\n' +
+                        '                                <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                        '                            </span>\n' +
+                        '                        </div>\n' +
+                        '                    </li>';
+                }else{
+                    var html = '<li class="comment clearfix chatli' + data.data.id + '" data-id="' + data.data.id + '">\n' +
+                        '                        <img src="' + data.data.avatar + '" alt="" class="cmt-ava">\n' +
+                        '                        <p class="cmt-info">\n' +
+                        '                            <span class="cmt-user">\n' +
+                        '                                <span>' + data.data.username + '</span>\n' +
+                        '                                <span></span>\n' +
+                        '                                <span class="top">顶</span>\n' +
+                        '                            </span>\n' +
+                        '                            <span class="cmt-time">' + data.data.chattime + '</span>\n' +
+                        '                        </p>\n' +
+                        '                        <div class="cmt-content">' + data.data.content + '</div>\n' +
+                        '                        <div class="content" style="display:none;">\n' +
+                        '                            <span class="broadcast-cmts">\n' +
+                        '                                <span class="broadcast-cmt topcmt cancleTop">取消置顶</span>\n' +
+                        '                                <span class="broadcast-cmt delcmt">删除</span>\n' +
+                        '                                <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                        '                            </span>\n' +
+                        '                        </div>\n' +
+                        '                    </li>';
+                }
+                $("#zhiding").prepend(html);
+
+                return;
+            case "cancelchattopping":    //取消置顶聊天数据
+                var chatid = data.data.id;   //获取到聊天数据置顶id
+                $(".chatli"+chatid).remove();  //先删除该div
+
+                $(".insert").append('<li class="comment clearfix chatli'+data.data.id+'" data-id="'+data.data.id+'">\n' +
+                    '                        <img src="' + data.data.avatar + '" alt="" class="cmt-ava">\n' +
+                    '                        <p class="cmt-info">\n' +
+                    '                            <span class="cmt-user">\n' +
+                    '                                <span>' + data.data.username + '</span>\n' +
+                    '                                <span></span>\n' +
+                    '                                <span class="top disNo">顶</span>\n' +
+                    '                            </span>\n' +
+                    '                            <span class="cmt-time">' + data.data.chattime + '</span>\n' +
+                    '                        </p>\n' +
+                    '                        <div class="cmt-content">' + data.data.content + '</div>\n' +
+                    '                        <div class="content" style="display: none;">\n' +
+                    '                            <span class="broadcast-cmts">\n' +
+                    '                                <span class="broadcast-cmt topcmt">置顶</span>\n' +
+                    '                                <span class="broadcast-cmt delcmt">删除</span>\n' +
+                    '                                <span class="broadcast-cmt gag-btn">禁言</span>\n' +
+                    '                            </span>\n' +
+                    '                        </div>\n' +
+                    '                    </li>');
+
+
+                return;
+
+            case "prohibitions":    //禁言用户
+                var userid = data.data.userid;   //要删除的置顶消息id
+                var user_id = $("#userid").val();
+
+                if(userid == user_id){
+                    $(".tip").removeClass("disNo");
+                }
+                return;
+
+            case "liftaban":    //取消禁言用户
+                var userid = data.data.userid;   //要删除的置顶消息id
+                var user_id = $("#userid").val();
+
+                if(userid == user_id){
+                    $(".tip").addClass("disNo");
+                }
+                return;
+        }
+
+    }
+
+    function play(rtmpurl){
+        var rtmpurl = rtmpurl;
+        var livebjt = "__PUBLIC__/{$info.channel_live_bgpic}";
+        var videoObject = {
+            container: '.video',//“#”代表容器的ID，“.”或“”代表容器的class
+            variable: 'player',//该属性必需设置，值等于下面的new chplayer()的对象
+            poster:livebjt,
+            loaded:'loadedHandler',//监听播放器加载成功
+            debug:true,
+            live:true,
+            autoplay:false,
+            video:rtmpurl //视频地址
+        };
+        window.player=new ckplayer(videoObject);
+    }
+
+</script>
+<script>
+    $(function(){
+        // 点击置顶
+        $(document).on('click','.topcmt',function(){
+            var $this = $(this);    //  自己
+            var $top = $this.parent().parent().siblings().find(".top"); //  顶 (文字)
+            var $parent = $this.parent().parent().parent(); //  当前整条消息
+            if(!$this.hasClass("cancleTop")){   // 置顶的事件
+                $top.removeClass("disNo");
+                $this.html("取消置顶");
+                $this.addClass("cancleTop");
+                // 把当前消息插入到最顶部
+                $(".insert").prepend($parent);
+            }else{                              // 取消置顶的事件
+                $top.addClass("disNo");
+                $this.html("置顶");
+                $this.removeClass("cancleTop");
+                // 取消置顶的事件
+                $(".insert").append($parent);
+            }
+        });
+
+        // 点击删除
+        $(document).on('click','.delcmt',function(){
+            var $par = $(this).parent().parent().parent();
+            $par.remove();
+        });
+
+        // 点击禁言
+        $(document).on('click','.gag-btn',function(){
+            var $this = $(this);
+            var $text = $this.parent().parent().siblings().find(".cmt-user span:first-child").html();// 找到当前聊天的名字
+            console.log($text);
+            if(!$this.hasClass("gaged")){
+                layer.msg($text+"已被禁言");//  你已被禁言
+                $this.html("解禁");
+                $this.addClass("gaged");
+                $(".tip").removeClass("disNo");
+            }else{
+                layer.msg($text+"已被解禁");//  你已被解禁
+                $this.html("禁言");
+                $this.removeClass("gaged");
+                $(".tip").addClass("disNo");
+            }
+        });
+
+
+    })
+
+</script>
+
 
 <!--验证码观看-->
 <script>
@@ -455,126 +1653,138 @@
         });//ajax结束
     }
 </script>
+<script type="text/javascript" src="__PC__/layer/layer/layer.js"></script>
+<!--<script src="__PC__/layim/src/layui.js"></script>-->
+{if  condition="$info.id neq 90 and $info.id neq 91"}
+<!--<script>-->
 
-<script src="__PC__/layim/src/layui.js"></script>
-<script>
-
-    var chat_init = {$return_json};
-
-
-    //循环取出群组信息
-    for(var key in chat_init) {
-        for (var k in chat_init) {
-            //群组id
-            var cid = chat_init['group']['id'];
-        }
-    }
-
-    layui.use('mobile', function(){
-        var mobile = layui.mobile
-            //初始化配置
-            ,layim = mobile.layim
-            ,layer = mobile.layer;
-        layim.config({
-
-            //初始用户数据
-            init: chat_init,
-            isgroup: true, //是否开启“群聊”
-            voice: false //是否开启消息提醒声音
-
-        });
+<!--    var chat_init = {$return_json};-->
 
 
-        //创建群聊
-        layim.chat({
-            id: cid    //群聊id
-            ,name: ''   //群聊name
-            ,type: 'group' //friend、group等字符，如果是group，则创建的是群聊
-            ,avatar: ''    //群聊头像
-        });
+<!--    //循环取出群组信息-->
+<!--    for(var key in chat_init) {-->
+<!--        for (var k in chat_init) {-->
+<!--            //群组id-->
+<!--            var cid = chat_init['group']['id'];-->
+<!--        }-->
+<!--    }-->
 
-        //alert(cid);
+<!--    layui.use('mobile', function(){-->
+<!--        var mobile = layui.mobile-->
+<!--            //初始化配置-->
+<!--            ,layim = mobile.layim-->
+<!--            ,layer = mobile.layer;-->
+<!--        layim.config({-->
+
+<!--            //初始用户数据-->
+<!--            init: chat_init,-->
+<!--            isgroup: true, //是否开启“群聊”-->
+<!--            voice: false //是否开启消息提醒声音-->
+
+<!--        });-->
+
+<!--        window.logdata = {$chatlogs};-->
+<!--        //创建群聊-->
+<!--        layim.chat({-->
+<!--            id: cid    //群聊id-->
+<!--            ,name: ''   //群聊name-->
+<!--            ,type: 'group' //friend、group等字符，如果是group，则创建的是群聊-->
+<!--            ,avatar: ''    //群聊头像-->
+<!--        });-->
+
+<!--        //alert(cid);-->
 
 
-        //建立WebSocket通讯
-        //var socket = new WebSocket('ws://127.0.0.1:8282');
-        var socket = new WebSocket('ws://139.129.217.147:8282');
+<!--        //建立WebSocket通讯-->
+<!--        //var socket = new WebSocket('ws://127.0.0.1:8282');-->
+<!--        var socket = new WebSocket('ws://121.42.207.83:8283');-->
 
 
-        //连接成功时触发
-        socket.onopen = function(){
-            var login_data = '{"type":"init","data":{"cid":'+cid+'}}';
-            socket.send(login_data);
-            //layer.msg('连接成功');
-        };
+<!--        //连接成功时触发-->
+<!--        socket.onopen = function(){-->
+<!--            var login_data = '{"type":"init","data":{"cid":'+cid+'}}';-->
+<!--            socket.send(login_data);-->
+<!--            //layer.msg('连接成功');-->
+<!--        };-->
 
 
-        //监听发送消息
-        layim.on('sendMessage', function(data){
+<!--        //监听发送消息-->
+<!--        layim.on('sendMessage', function(data){-->
 
-            // //ajax 接口
-            // ( 查询禁言表，根据这个直播间id和当前登录用户的id，查到的话，return  2 )
-            //data.mine.jinyan=2;
+<!--            // //ajax 接口-->
+<!--            // ( 查询禁言表，根据这个直播间id和当前登录用户的id，查到的话，return  2 )-->
+<!--            //data.mine.jinyan=2;-->
 
-            var mine = JSON.stringify(data.mine);
-            console.log(mine);
-            // console.log(to);
-            var to = JSON.stringify(data.to);
+<!--            var mine = JSON.stringify(data.mine);-->
+<!--            console.log(mine);-->
+<!--            // console.log(to);-->
+<!--            var to = JSON.stringify(data.to);-->
 
-            var login_data = '{"type":"chatMessage","data":{"mine":'+mine+', "to":'+to+'}}';
-            socket.send(login_data);
-        });
+<!--            var login_data = '{"type":"chatMessage","data":{"mine":'+mine+', "to":'+to+'}}';-->
+<!--            socket.send(login_data);-->
+<!--        });-->
 
-        //监听收到的消息
-        socket.onmessage = function(res){
-            //console.log(res.data);
+<!--        //监听收到的消息-->
+<!--        socket.onmessage = function(res){-->
+<!--            //console.log(res.data);-->
 
-            var data = eval("("+res.data+")");
-            switch(data['message_type']){
-                // 服务端ping客户端
-                case 'ping':
-                    console.log(data);
-                    socket.send('{"type":"ping","groupid":"'+window.groupid+'"}');
-                    break;
-                // 在线
-                case 'online':
-                    layim.setFriendStatus(data.id, 'online');
-                    break;
-                // 离线短信
-                case 'sendmsg':
-                    $.ajax({
-                        url:"{:url('Phone/sendMsg')}",
-                        type:"post",
-                        data:{data:JSON.stringify(data.data)},
-                        success:function(){
+<!--            var data = eval("("+res.data+")");-->
+<!--            switch(data['message_type']){-->
+<!--                // 服务端ping客户端-->
+<!--                case 'ping':-->
+<!--                    console.log(data);-->
+<!--                    socket.send('{"type":"ping","groupid":"'+window.groupid+'"}');-->
+<!--                    break;-->
+<!--                // 在线-->
+<!--                case 'online':-->
+<!--                    layim.setFriendStatus(data.id, 'online');-->
+<!--                    break;-->
+<!--                // 离线短信-->
+<!--                case 'sendmsg':-->
+<!--                    $.ajax({-->
+<!--                        url:"{:url('Phone/sendMsg')}",-->
+<!--                        type:"post",-->
+<!--                        data:{data:JSON.stringify(data.data)},-->
+<!--                        success:function(){-->
 
-                        }
-                    });
-                    break;
-                // 下线
-                case 'offline':
-                    layim.setFriendStatus(data.id, 'offline');
-                    break;
-                // 检测聊天数据
-                case 'chatMessage':
-                    console.log(res.data);
-                    layim.getMessage(data.data);
-                    break;
+<!--                        }-->
+<!--                    });-->
+<!--                    break;-->
+<!--                // 下线-->
+<!--                case 'offline':-->
+<!--                    layim.setFriendStatus(data.id, 'offline');-->
+<!--                    break;-->
+<!--                // 检测聊天数据-->
+<!--                case 'chatMessage':-->
+<!--                    console.log(res.data);-->
 
-                // 离线消息推送
-                case 'logMessage':
-                    setTimeout(function(){layim.getMessage(data.data)}, 1000);
-                    break;
-                // 用户退出 更新用户列表
-                case 'logout':
-                    layim.setFriendStatus(data.id, 'offline');
-                    break;
-            }
-        };
-    });
+<!--                    var type = data.data.ctype; //1审核    2不审核-->
+<!--                    if(type != 1){  //不需要审核-->
+<!--                        layim.getMessage(data.data);-->
+<!--                    }-->
 
-</script>
+<!--                    break;-->
 
+<!--                //审核通过消息-->
+<!--                case 'chatexamine':-->
+<!--                    layim.getMessage(data.data);-->
+
+<!--                    break;-->
+
+<!--                // 离线消息推送-->
+<!--                case 'logMessage':-->
+<!--                    setTimeout(function(){layim.getMessage(data.data)}, 1000);-->
+<!--                    break;-->
+<!--                // 用户退出 更新用户列表-->
+<!--                case 'logout':-->
+<!--                    layim.setFriendStatus(data.id, 'offline');-->
+<!--                    break;-->
+<!--            }-->
+<!--        };-->
+<!--    });-->
+
+<!--</script>-->
+{/if}
 <!--微信分享-->
 <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
@@ -598,8 +1808,8 @@
         //分享到朋友圈
         wx.onMenuShareTimeline({
             title: '{$info.channel_name}', // 分享标题
-            link: 'http://www.rflinker.com/zhibo/home/chatmobile/index.html?ad_id={$info.id}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: 'http://www.rflinker.com/zhibo/public/{$info.channel_logo}', // 分享图标
+            link: 'http://easycast.cloud/home/chatmobile/index.html?ad_id={$info.id}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 'http://easycast.cloud/public/{$info.channel_logo}', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
             },
@@ -612,8 +1822,8 @@
         wx.onMenuShareAppMessage({
             title: '{$info.channel_name}', // 分享标题
             desc: '{$info.channel_name}', // 分享描述
-            link: 'http://www.rflinker.com/zhibo/home/chatmobile/index.html?ad_id={$info.id}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-            imgUrl: 'http://www.rflinker.com/zhibo/public/{$info.channel_logo}', // 分享图标
+            link: 'http://easycast.cloud/home/chatmobile/index.html?ad_id={$info.id}', // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+            imgUrl: 'http://easycast.cloud/public/{$info.channel_logo}', // 分享图标
             type: '', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
             success: function () {

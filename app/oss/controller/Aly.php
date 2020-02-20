@@ -14,7 +14,7 @@ use think\Db;
 class Aly
 {
 
-
+   //录播视频文件信息
    public function index(){
 
 
@@ -51,6 +51,7 @@ class Aly
                //上传视频时间
                $video_name = trim(basename($val));
                $data_video_folder['upload_time'] = substr($video_name,0,10);
+               $data_video_folder['video_type'] = 1;   //录播视频
 
 
                //视频名称  频道名称 + 上传到oss的时间 年-月-日
@@ -79,10 +80,20 @@ class Aly
 
    }
 
+
+
+   //文档操作
    public function fileupload($filename,$path){
        $oss = new Oss();
        $oss -> fileupload($filename,$path);
    }
+
+   //视频上传
+    public function videoupload($filename,$path){
+        $oss = new Oss();
+
+        $oss -> videoupload($filename,$path);
+    }
 
 }
 

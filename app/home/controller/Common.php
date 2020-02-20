@@ -9,6 +9,7 @@ use think\Session;
 class Common extends Controller{
     protected $pagesize;
     public function _initialize(){
+
         $sys = F('System');
         $this->assign('sys',$sys);
         //获取控制方法
@@ -51,7 +52,9 @@ class Common extends Controller{
             $linkList = db('link')->where('open',1)->order('sort asc')->select();
             cache('linkList', $linkList, 3600);
         }
+
 		$this->assign('linkList', $linkList);
+
     }
     public function _empty(){
         return $this->error('空操作，返回上次访问页面中...');
@@ -83,6 +86,15 @@ class Common extends Controller{
         return $content;
     }
 
+    public function get_position(){
+        if(empty($ip)){
+            return  '缺少用户ip';
+        }
+        $url = 'http://ip.taobao.com/service/getIpInfo.php?ip='.$ip;
+        $ipContent = file_get_contents($url);
+        $ipContent = json_decode($ipContent,true);
+        return $ipContent;
+    }
     //根据ip,获取城市名称
     public function getIpInfo($ip){
 

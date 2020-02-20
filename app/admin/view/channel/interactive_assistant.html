@@ -1,0 +1,136 @@
+<style>
+    #drbmd{
+        position: relative;
+    }
+    #drbmd .use{
+        position: relative;
+        top: -45px;
+        left: 13px;
+    }
+    #drbmd .baimingdan{
+        position: absolute;
+        left: 350px;
+        top: 1px;
+    }
+
+    .layui-form-label{
+        width:110px !important;
+        padding:8px 15px;
+        height:38px !important;
+        line-height:20px;
+        border-width:1px;
+        border-style:solid;
+        border-radius:2px 0 0 2px;
+        text-align:center;
+        background-color:#FBFBFB;
+        overflow:hidden;
+        white-space:nowrap;
+        text-overflow:ellipsis;
+        box-sizing:border-box;
+        border-color: #e6e6e6;
+    }
+
+</style>
+
+{include file="common/head"/}
+<div class="admin-main layui-anim layui-anim-upbit" ng-app="hd" ng-controller="ctrl">
+    <!--最上面横线部分-->
+    <!--<fieldset class="layui-elem-field layui-field-title">-->
+    <!--<legend>{$title}</legend>-->
+    <!--</fieldset>-->
+
+
+    <form class="layui-form layui-form-pane" enctype="multipart/form-data" action="{:url('channel/document')}" method="post">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">上传文档</label>
+
+        </div>
+        <input type="file" name="image"/>
+
+        <input type="hidden" name="pid" value="{$pid}"/>
+        <label>PPT、Excel、Word、PDF单文件大小不超过50M</label>
+        <br><br><br><br>
+
+
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
+                <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
+            </div>
+        </div>
+    </form>
+    <input type="text" id="wdid">
+    <input type="button" value="切换" id="qiehuan">
+    <div id="wd"></div>
+</div>
+{include file="common/foot"/}
+
+<script src="__STATIC__/admin/js/jquery.min.js"></script>
+<script>
+
+    function ischeck(){
+        var isChecked = $('#cb').is(":checked");
+        if(isChecked == true){
+            $("#yzmdiv").css("display","none");  //隐藏验证码
+        }else if(isChecked == false){
+            $("#yzmdiv").css("display","block");  //显示验证码
+        }
+    }
+
+</script>
+
+
+<script>
+    //连接websocker
+    var ws = new WebSocket('ws://121.42.207.83:8284');
+    //连接成功时触发
+    ws.onopen = function(){
+        var cid = {$cid};
+        var login_data = '{"type":"init","data":{"cid":'+cid+'}}';
+        ws.send(login_data);
+       console.log("连接成功");
+    };
+
+    //服务端主动推送消息时会触发这里的onmessage
+    ws.onmessage = function(e){
+        var message = eval("("+e.data+")");  //获取到data
+
+        console.log(message);
+        switch(message.message_type){
+            case 'ping':
+                //console.log(data);
+                //console.log(message);
+                var cid = {$cid};
+                var islive = '{"type":"ping","data":{"cid":'+cid+'}}';
+                console.log(islive);
+                ws.send(islive);
+
+               return;
+            case "roofplacement":
+                $("#wd").append('<p>'+message.data.content+'</p>');
+                return;
+        }
+
+    }
+
+    //客户端向服务端发送消息
+    $("#qiehuan").click(function(){
+
+        var wddata =  $("#wdid").val(); //文档操作信息
+        var cid = {$cid};
+        //向服务端发送数据,data = 数据 type = 消息类型
+        var message = '{"data":"'+wddata+'","type":"roofplacement","cid":'+cid+'}';
+
+        $("#wd").append('<p>'+wddata+'</p>');
+        ws.send(message); //发送到服务端
+
+    });
+
+
+</script>
+
+
+
+
+

@@ -21,13 +21,13 @@
 	    function Check(){
 	    	var out_trade_no = "<?php echo $out_trade_no; ?>";
 
-            $.post("{:url('system/paylog')}",{out_trade_no:out_trade_no},function(result){
+            $.post("{:url('Paylist/paylog')}",{out_trade_no:out_trade_no},function(result){
 
                 //支付成功跳转
                 if(result==1){
-                   alert("付款成功,即将关闭页面");
-                    //location.href = "http://www.baidu.com"; //页面跳转
-                    window.close();
+
+                    location.href = "http://easycast.cloud/index.php/"; //页面跳转
+                    //window.close();
 				}
             });
 	    }
@@ -63,7 +63,7 @@
     <script>
         if(<?php echo $unifiedOrderResult["code_url"] != NULL; ?>)
         {
-            var url = 'http://paysdk.weixin.qq.com/example/qrcode.php?data='+"<?php echo urlencode($code_url); ?>";
+            var url = 'http://easycast.cloud/index.php/pay/paylist/qrcode?data='+"<?php echo urlencode($code_url); ?>";
             
             var wording=document.createElement('p');
             wording.innerHTML = "请打开微信使用扫一扫进行微信支付";

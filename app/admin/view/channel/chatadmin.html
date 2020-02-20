@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="__ADMIN__/chatadmin/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="__ADMIN__/chatadmin/dialog.css">
+</head>
+<body>
+
+<!--对话框 最外层-->
+<div class="bigContent">
+    <!--最顶部title-->
+    <div class="topTitle"> <span>聊天互动</span> </div>
+    <!--聊天内容-->
+    <div class="content">
+        <!--内层包裹-->
+        <div class="comment-box">
+            <!--显示几条聊天内容/本人的昵称-->
+            <p class="boxTitle">
+                <span>共</span>
+                <span class="comment-num">5</span>
+                <span>条聊天</span>
+                <span class="comment-nick">
+                        <span>我的昵称：</span><span class="nick">上海市网友</span>
+                    </span>
+            </p>
+            <!--聊天对话部分内容-->
+            <ul class="comments norank">
+                <div class="insert" style="position: relative;">
+                    <noscript>Your browser does not support JavaScript!</noscript>
+                    <li class="commentList" data-id="0">
+                        <img src="https://static.mudu.tv/index/avatar.png" alt="" class="avatar">
+                        <p class="user-info"><span class="username">上海市网友1</span><span class="top">顶</span><i title="已通过" class="glyphicon glyphicon-ok"></i> </p>
+                        <div class="broadcast">
+                            <div class="text">123</div>
+                            <span class="broadcast-cmts">
+                                    <span class="broadcast-cmt disable">通过</span>
+                                    <span class="broadcast-cmt">弹幕高亮</span>
+                                    <span class="broadcast-cmt disable">弹幕</span>
+                                    <span class="broadcast-cmt topcmt">置顶</span>
+                                    <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+                                    <span class="broadcast-cmt delcmt">删除</span>
+                                    <span class="broadcast-cmt gag-btn">禁言</span>
+                                    <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                                </span>
+                        </div>
+
+                        <p class="time">2019-09-16 16:08</p>
+                    </li>
+                    <li class="commentList" data-id="1">
+                        <img src="https://static.mudu.tv/index/avatar.png" alt="" class="avatar">
+                        <p class="user-info"><span class="username">上海市网友2</span><span class="top">顶</span><i title="已通过" class="glyphicon glyphicon-ok"></i></p>
+                        <div class="broadcast">
+                            <div class="text">123456</div>
+                            <span class="broadcast-cmts">
+                                    <span class="broadcast-cmt disable">通过</span>
+                                    <span class="broadcast-cmt">弹幕高亮</span>
+                                    <span class="broadcast-cmt disable">弹幕</span>
+                                    <span class="broadcast-cmt topcmt">置顶</span>
+                                    <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+                                    <span class="broadcast-cmt delcmt">删除</span>
+                                    <span class="broadcast-cmt gag-btn">禁言</span>
+                                    <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                                </span>
+                        </div>
+                        <p class="time">2019-09-16 16:08</p>
+                    </li>
+                    <li class="commentList" data-id="2" >
+                        <img src="https://static.mudu.tv/index/avatar.png" alt="" class="avatar">
+                        <p class="user-info"><span class="username">上海市网友3</span><span class="top">顶</span><i title="已通过" class="glyphicon glyphicon-ok"></i></p>
+                        <div class="broadcast">
+                            <div class="text">123456789</div>
+                            <span class="broadcast-cmts">
+                                    <span class="broadcast-cmt disable">通过</span>
+                                    <span class="broadcast-cmt">弹幕高亮</span>
+                                    <span class="broadcast-cmt disable">弹幕</span>
+                                    <span class="broadcast-cmt topcmt">置顶</span>
+                                    <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+                                    <span class="broadcast-cmt delcmt">删除</span>
+                                    <span class="broadcast-cmt gag-btn">禁言</span>
+                                    <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+                                </span>
+                        </div>
+                        <p class="time">2019-09-16 16:08</p>
+                    </li>
+                </div>
+            </ul>
+            <!--输入textarea部分 / 发送按钮-->
+            <div class="publish-box">
+                <!--textarea-->
+                <div class="input-wrap">
+                    <div class="input-tip"><p>您已被禁言</p></div>
+                    <textarea class="input-text"></textarea>
+                </div>
+                <!--发送按钮-->
+                <div class="send-wrap">
+                    <span class="publish-btn right">发送</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="text" value="1" class="xuhao">
+
+<!--要被复制的-->
+<li class="commentList" style="display: none;" id="newline">
+    <img src="https://static.mudu.tv/index/avatar.png" alt="" class="avatar">
+    <p class="user-info"><span class="username">上海市网友66</span><span class="top">顶</span><i title="已通过" class="glyphicon glyphicon-ok"></i> </p>
+    <div class="broadcast">
+        <div class="text">666</div>
+        <span class="broadcast-cmts">
+                 <span class="broadcast-cmt disable">通过</span>
+                 <span class="broadcast-cmt">弹幕高亮</span>
+                 <span class="broadcast-cmt disable">弹幕</span>
+                 <span class="broadcast-cmt topcmt">置顶</span>
+                 <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+                 <span class="broadcast-cmt delcmt">删除</span>
+                 <span class="broadcast-cmt gag-btn">禁言</span>
+                 <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+            </span>
+    </div>
+
+    <p class="time">2019-09-16 16:08</p>
+</li>
+
+
+<div id="wd"></div>
+
+<script src="__ADMIN__/chatadmin/jquery.min.js"></script>
+<script>
+    //连接websocker
+    var ws = new WebSocket('ws://121.42.207.83:8284');
+
+    //连接成功时触发
+    ws.onopen = function(){
+        var cid = {$cid};
+        var login_data = '{"type":"init","data":{"cid":'+cid+'}}';
+        ws.send(login_data);
+        console.log("连接成功");
+    };
+
+    //服务端主动推送消息时会触发这里的onmessage
+    /*ws.onmessage = function(e){
+        var message = eval("("+e.data+")");  //获取到data
+
+        console.log(message);
+        switch(message.message_type){
+            case 'ping':
+                //console.log(data);
+                //console.log(message);
+                var cid = {$cid};
+                var islive = '{"type":"ping","data":{"cid":'+cid+'}}';
+                console.log(islive);
+                ws.send(islive);
+
+                return;
+                case "roofplacement":
+                $("#wd").append('<p>'+message.data.content+'</p>');
+                return;
+        }
+
+    }*/
+
+
+    //监听收到的消息
+    ws.onmessage = function(res){
+
+        var data = eval("("+res.data+")");
+
+        switch(data['message_type']){
+            // 接受客户端消息
+            case 'chatMessage':
+                console.log(data.data);
+                var html = "<li class=\"commentList\" data-id="+data.data.chatid+"><img src=\"https://static.mudu.tv/index/avatar.png\" alt=\"\" class=\"avatar\"><p class=\"user-info\"><span class=\"username\">上海市网友3</span><span class=\"top\">顶</span><i title=\"已通过\" class=\"glyphicon glyphicon-ok\"></i></p><div class=\"broadcast\"><div class=\"text\">"+data.data.content+"</div><span class=\"broadcast-cmts\"><span class=\"broadcast-cmt disable\">通过</span><span class=\"broadcast-cmt\">弹幕高亮</span><span class=\"broadcast-cmt disable\">弹幕</span><span class=\"broadcast-cmt topcmt\">置顶</span><span class=\"broadcast-cmt cancelTop\" style=\"display: none;\">取消置顶</span><span class=\"broadcast-cmt delcmt\">删除</span><span class=\"broadcast-cmt gag-btn\">禁言</span><span class=\"broadcast-cmt gaged\" style=\"display: none;\">解禁</span></span></div><p class=\"time\">2019-09-16 16:08</p></li>";
+                $(".insert").append(html);
+                //$("#wd").append(data.data.content);
+                //layim.getMessage(data.data);
+                break;
+        }
+    };
+
+
+
+
+</script>
+
+
+
+
+
+
+<script>
+    $(function(){
+
+        for(var i=0;i<$(".commentList").length;i++){    //  循环出有多少
+            var item = $(".commentList")[i];
+            console.log(item);
+        }
+
+
+        var arr = new Array();
+        arr.push($(".commentList").eq(0));
+        arr.push($(".commentList").eq(1));
+        arr.push($(".commentList").eq(2));
+        for(var i=0;i<arr.length;i++){
+            console.log(i);
+        }
+        // console.log(arr[0]);
+        // console.log(arr[1].text());
+        // console.log(arr[2].text());
+
+
+        // 聊天内容有几条就显示几
+        // $(".comment-num").html($(".commentList").length);
+
+        // 悬停哪个对话 在哪个对话内部显示操作按钮
+        // $(".comments li").hover(function(){
+        //    var $this = $(this);
+        //     // console.log($this.text());
+        //     var $btn = $this.find(".broadcast-cmts");
+        //     $btn.show();
+        // },function(){
+        //     var $this = $(this);
+        //     // console.log($this.text());
+        //     var $btn = $this.find(".broadcast-cmts");
+        //     $btn.hide();
+        // });
+
+        // 点击置顶按钮显示当前的 顶 字
+        $(document).on('click','.topcmt',function(){
+
+            // })
+            // $(".topcmt").on('click',function(){
+            var $this = $(this);
+            $this.hide();
+            $this.siblings(".cancelTop").show();
+            var $d = $this.parent().parent().siblings().find(".top");
+            $d.show();
+            var $parent = $this.parent().parent().parent(); //  获取选中的最外层div
+            $(".insert").prepend($parent);  //  放到最前
+
+            $parent.addClass("zhiD");
+        });
+        // 点击取消置顶 取消显示 顶
+        $(document).on('click','.cancelTop',function(){
+
+            // })
+            // $(".cancelTop").on('click',function(){
+            var $this = $(this);
+            $this.hide();
+            $this.siblings(".topcmt").show();
+            var $d = $this.parent().parent().siblings().find(".top");
+            $d.hide();      // 隐藏字
+            var $parent = $this.parent().parent().parent(); //  获取选中的最外层div
+
+            var $data = $parent.attr("data-id");
+            //  获取 data-id=0 的元素
+            if($data==0){
+                if($parent.hasClass("zhiD")){
+                    $(".insert").append($parent);
+                    $parent.removeClass("zhiD");
+                }else{
+                    $(".insert").prepend($parent);
+                    $parent.removeClass("zhiD");
+                }
+            }else if($data==1){     //  获取 data-id=1 的元素
+
+                if($parent.hasClass("zhiD")){
+                    $(".insert").append($parent);
+                    $parent.removeClass("zhiD");
+                }else{
+                    arr[2].before($parent);
+                    $parent.removeClass("zhiD");
+                }
+
+            }else if($data == 2){   //  获取 data-id=2 的元素
+                $(".insert").append($parent);
+                $parent.removeClass("zhiD");
+            }
+
+            if(!$(".commentList").hasClass("zhiD")){
+                $(".insert").prepend(arr[0]);       // 把第一个放到最上面
+                return false;
+            }
+
+            $(".insert").append($parent);
+        });
+
+        // 点击禁言
+        $(document).on('click','.gag-btn',function(){
+
+            // })
+            // $(".gag-btn").on('click',function(){
+            $(this).hide();
+            $(this).siblings(".gaged").show();
+            var $newLine = `<li class="commentList">
+                                    <p class="message-model">
+                                        <i class="glyphicon glyphicon-volume-up"></i><span>上海市网友已被禁言</span>
+                                    </p>
+                                </li>`;
+            $(".insert").append($newLine);
+
+            $(".input-tip").show();
+
+        });
+        // 点击解禁
+        $(document).on('click','.gaged',function(){
+
+            // })
+            // $(".gaged").on('click',function(){
+            $(this).hide();
+            $(this).siblings(".gag-btn").show();
+            var $newLine = `<li class="commentList">
+                                    <p class="message-model">
+                                        <i class="glyphicon glyphicon-volume-up"></i><span>上海市网友已被解除禁言</span>
+                                    </p>
+                                </li>`;
+            $(".insert").append($newLine);
+
+            $(".input-tip").hide();
+        });
+
+        // 点击删除
+        $(document).on('click','.delcmt',function(){
+
+            // })
+            // $(".delcmt").on('click',function(){
+            var $this = $(this);
+            var $parent = $this.parent().parent().parent(); //  获取选中的最外层div
+            var $data = $parent.attr("data-id");
+            alert($data);
+            $(this).parent().parent().parent().remove();
+            // $(".comment-num").html($(".commentList").length);
+        });
+
+        // 发送
+        $(".publish-btn").on('click',function(){
+            // var $newLine = `<li class="commentList newline" data-id="">
+            //                         <img src="https://static.mudu.tv/index/avatar.png" alt="" class="avatar">
+            //                         <p class="user-info"><span class="username">上海市网友66</span><span class="top">顶</span><i title="已通过" class="glyphicon glyphicon-ok"></i> </p>
+            //                         <div class="broadcast">
+            //                             <div class="text">666</div>
+            //                             <span class="broadcast-cmts">
+            //                                 <span class="broadcast-cmt disable">通过</span>
+            //                                 <span class="broadcast-cmt">弹幕高亮</span>
+            //                                 <span class="broadcast-cmt disable">弹幕</span>
+            //                                 <span class="broadcast-cmt topcmt">置顶</span>
+            //                                 <span class="broadcast-cmt cancelTop" style="display: none;">取消置顶</span>
+            //                                 <span class="broadcast-cmt delcmt">删除</span>
+            //                                 <span class="broadcast-cmt gag-btn">禁言</span>
+            //                                 <span class="broadcast-cmt gaged" style="display: none;">解禁</span>
+            //                             </span>
+            //                         </div>
+            //
+            //                         <p class="time">2019-09-16 16:08</p>
+            //                     </li>`;
+
+            var $xu = $(".xuhao").val();
+            var $num = parseInt($xu)+1; //  让input的value值加1
+            $(".xuhao").val($num);  //  赋值到input框中
+
+            $append = $("#newline").clone(true);
+            $append.appendTo(".insert");
+            $append.show();
+            $append.attr("data-id",$num);
+
+            // alert($num);
+            // $(".insert").append($newLine);
+        });
+
+    })
+</script>
+</body>
+</html>
