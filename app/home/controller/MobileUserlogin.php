@@ -12,8 +12,8 @@ class MobileUserlogin extends Common{
         $id = input("ad_id");  //频道id
 
         $type = input('user_type');   //用户登录类型
-        if($id == 99 and $type == 0){  //频道id为思科
-            $this->redirect('http://qiandao.easylaa.com/webinar/cisco/login.aspx?b=30326');
+        if($id == 102 and $type == 0){  //频道id为思科
+            $this->redirect('http://qiandao.easylaa.com/webinar/cisco/index.aspx?b=30324');
         }
 
 

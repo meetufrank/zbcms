@@ -4,6 +4,7 @@ use think\Session;
 use think\Request;
 use Ipaddresscity\Iplocation;
 use Think\Db;
+use think\Cookie;
 class Userlogin extends Common{
 
 
@@ -50,8 +51,8 @@ class Userlogin extends Common{
 
 
 
-        if($pid == 99 and $type == 0){  //频道id为思科
-            $this->redirect('http://qiandao.easylaa.com/webinar/cisco/login.aspx?b=30326');
+        if($pid == 102 and $type == 0){  //频道id为思科
+            $this->redirect('http://qiandao.easylaa.com/webinar/cisco/index.aspx?b=30324');
         }
 
         if($type == 4){  //客户网页授权

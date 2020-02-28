@@ -880,7 +880,7 @@
             {/if}
 
             <!--判断显示聊天框测试直播频道和思科-->
-            {if condition="($info.id eq 103) OR ($info.id eq 102) OR ($info.id eq 99) OR ($info.id eq 108)"}
+            {if condition="($info.chat_column eq 1) OR ($info.chat_column eq 2) OR ($info.chat_column eq 3)"}
             <div class="container-left fl">
 {else/}
             <div class="container-left fl" style="position:relative;margin: 0 auto;float: none !important;">
@@ -1174,7 +1174,7 @@
 
 <!--    聊天框-->
             <!--测试频道和思科显示聊天框-->
-            {if condition="($info.id eq 103) OR ($info.id eq 102) OR ($info.id eq 99) OR ($info.id eq 108)"}
+            {if condition="($info.chat_column eq 1) OR ($info.chat_column eq 2) OR ($info.chat_column eq 3)"}
     <div class="container-right" id="container-right" >
         {else/}
         <div class="container-right" id="container-right" style="display:none;">
@@ -1878,23 +1878,26 @@
            }
            return;
        case "logout":
-           layer.msg('账号在另一地点登录,  您已被迫下线');
-           setTimeout(function(){
-               window.location.href = "http://easycast.cloud/index.php/home-index-zhojiner-ad_id-79.html";
-               return;
-           },3000);
 
-           // alert("账号在另一地点登录,  a您已被迫下线");
-           // window.location.href = "http://easycast.cloud/index.php/home-index-zhojiner-ad_id-79.html";
-           // return;
-      /* case "countdown":    //倒计时
-           var ctype = data.ctype; //倒计时状态
-           if(ctype == 1){  //时间已到82
 
-               $(".removeDiv").remove();   //删除倒计时
-           }
-           return;
-*/
+
+
+
+           var cid = "{$info.id}";  //频道id
+               //if(cid == 79){}
+               layer.msg('账号在另一地点登录,  您已被迫下线');
+
+               setTimeout(function(){
+                   /*if(cid != 79){
+                       window.location.href = "http://easycast.cloud/index.php/home-channeluserlist-index.html?ad_id="+cid;
+                   }else{
+                       window.location.href = "http://easycast.cloud/index.php/home-chatmobile-zhojiner-ad_id-79.html";
+                   }*/
+                   /*window.location.href = "http://easycast.cloud/index.php/home-chatmobile-zhojiner-ad_id-79.html";*/
+                   window.location.href = "http://easycast.cloud/index.php/home-channeluserlist-index.html?ad_id=106";
+                   return;
+               },3000);
+
        case "roofplacement":
            var html = "";
            $(".zhidingf").empty();

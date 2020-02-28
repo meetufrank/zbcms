@@ -14,7 +14,7 @@
     }
 
     .layui-form-label{
-        width:110px !important;
+        width:120px !important;
         padding:8px 15px;
         height:38px !important;
         line-height:20px;
@@ -68,7 +68,6 @@
             <label>{$info.m3u8url}</label>
         </div>
 
-
         <input type="type" style="display: none;" name="pid" value="{$info.id}"/>
         <div id="drbmd">
             <div class="layui-form-item">
@@ -89,21 +88,27 @@
             </div>
             <br/>
         </div>
+
+
+
+
     </form>
+
+
     <form class="layui-form layui-form-pane" action="{:url('usertype')}" method="post">
 
 
         <input type="type" style="display: none;" name="pid" value="{$info.id}"/>
 
 
-        <div class="layui-form-item">
+        <div class="layui-form-item" style="display:none;">
             <label class="layui-form-label">报名问卷</label>
             <div class="layui-input-block">
                 <input id='cb' onclick="ischeck()" style="display: inline-block" class="layui-form-radio" type="checkbox"  name="bmwj" value="1" title="报名问卷" {if condition="$info.user_type eq 1"}checked="checked"{/if}>报名问卷
             </div>
         </div>
 
-        <div id="yzmdiv">
+        <div id="yzmdiv" style="display:none;">
                 <div class="layui-form-item">
                     <label class="layui-form-label">验证码观看</label>
 

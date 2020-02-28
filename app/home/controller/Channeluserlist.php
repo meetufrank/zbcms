@@ -4,6 +4,7 @@ use think\Session;
 use think\Request;
 use Ipaddresscity\Iplocation;
 use Think\Db;
+use think\Cookie;
 class channeluserlist extends Common{
 
 
@@ -48,7 +49,7 @@ class channeluserlist extends Common{
             $ispwd = db('whitelist_user_list')->where($where_pwd)->find();
 
             Session::set('userid',$ispwd['id']);
-            Session::set('usernames',$ispwd['w_name']);
+            Cookie::set('usernames',$ispwd['w_name']);
 
 
             if(empty($isusername)){

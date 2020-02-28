@@ -11,6 +11,7 @@ use think\Session;
 use think\Request;
 use Ipaddresscity\Iplocation;
 use think\Db;
+use think\Cookie;
 class Chatmobile extends Common{
 
     public function _initialize(){
@@ -217,6 +218,23 @@ class Chatmobile extends Common{
         $id = input('ad_id');
         $user_type = input('user_type');  //频道访问类型
 
+
+        //存在白名单,且用户未登录
+        $channel_user_list = db('whitelist_user_list')->where("pid =$id")->find();   //查询该频道是否有用户白名单
+        if($id != 79){  //不是中金财富2
+            if(!empty($channel_user_list)){    //存在白名单
+                if(empty(Cookie::get('usernames'))){  //用户未登录
+                    if(Request::instance()->isMobile()) { //手机端
+                        $this->redirect('home/channeluserlist/mobiile_index', ['ad_id' => $id]);
+                    }else{   //pc端
+                        $this->redirect('home/channeluserlist/index', ['ad_id' => $id]);
+                    }
+                }
+            }
+        }
+
+
+
         if($id == 79){   //频道id为中金财富02
 
             if(empty(Session::get('userid'))){  //当获取到的用户id为空时
@@ -237,9 +255,9 @@ class Chatmobile extends Common{
         $ipres = $Index -> getlocation($ip); //根据查询地址地址
         $user_ip = $ipres['ip'];  //客户端 --- 最后登录ip
 
-
-
-
+        //财富商城
+        $cfcslist = db('cfsc')->where(array('cid'=>$id))->select();
+        $this -> assign('cfcslist',$cfcslist);
 
 //添加到访问记录表
         $adata['cid'] = $id;    //关联频道id
@@ -367,12 +385,12 @@ class Chatmobile extends Common{
 
 
         if($id == 79){   //中金
-            $usernames_access =  Session::get('usernames');
-        }else if($id == 99){   //思科
-             if(Session::get('usernames') == ''){
+            $usernames_access =  Cookie::get('usernames');
+        }else if($id == 99 || $id == 110){   //思科与东风风神
+             if(Cookie::get('usernames') == ''){
                  $this->redirect('http://qiandao.easylaa.com/webinar/cisco/login.aspx?b=30326');
              }else{
-                 $usernames_access = Session::get('usernames');
+                 $usernames_access = Cookie::get('usernames');
              }
             $ipres = $Index -> getlocation($ip); //根据查询地址地址
 
@@ -385,7 +403,7 @@ class Chatmobile extends Common{
             $user_name_wx = $wxuserinfo['nickname'];
             Session::set('usernames',$user_name_wx);
 
-            if(empty(Session::get('usernames'))){   //usernames为空时，采用ip地址区域加上"用户" = 做为用户名
+            if(empty(Cookie::get('usernames'))){   //usernames为空时，采用ip地址区域加上"用户" = 做为用户名
 
                 $Index = new IpLocation();
                 $ipres = $Index -> getlocation($ip); //根据查询地址地址
@@ -396,7 +414,7 @@ class Chatmobile extends Common{
                 $usernames_access = $ipres['city']."网友";
             }else{
 
-                $usernames_access = Session::get('usernames');
+                $usernames_access = Cookie::get('usernames');
             }
             $adata['username'] = $usernames_access;  //logininfo username
             $user_address = $ipres['city'];  //用户地址

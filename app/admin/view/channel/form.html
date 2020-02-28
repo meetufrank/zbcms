@@ -81,6 +81,63 @@
 
 
         <div class="layui-form-item">
+            <label class="layui-form-label">互动聊天官方logo</label>
+            <input type="hidden" name="caht_gf_logo" id="pic_caht_gf_logo" value="{{field.caht_gf_logo}}">
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-primary" id="adBtn_caht_gf_logo"><i class="icon icon-upload3"></i>点击上传</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" id="adPic_caht_gf_logo">
+                        <p id="demoText"></p>
+                    </div>
+                </div>
+            </div>
+            <!--文字-->
+            <div style="margin-left:110px;position: relative;top: -5px;">
+                <p style="margin-top: 8px;line-height: 1;text-align: left;color: #999999;">图片尺寸：60*60px；图片大小：2M以内；</p>
+                <p style="margin-top: 8px;line-height: 1;text-align: left;color: #999999;">图片格式：png、jpg、jpeg；</p>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:150px;">互动聊天官方title</label>
+            <div class="layui-input-4">
+                <input type="text" name="chat_gf_title"  ng-model="field.chat_gf_title"  placeholder="互动聊天官方title" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:150px;">互动聊天登录账号</label>
+            <div class="layui-input-4">
+                <input type="text" name="chat_login_username"  ng-model="field.chat_login_username"  placeholder="互动聊天登录账号" class="layui-input">
+            </div>
+        </div>
+
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:150px;">互动聊天登录密码</label>
+            <div class="layui-input-4">
+                <input type="text" name="chat_login_pwd"  ng-model="field.chat_login_pwd"  placeholder="互动聊天登录密码" class="layui-input">
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label" style="width:150px;">互动聊天显示类型</label>
+            <div class="layui-input-4">
+                <select name="chat_column" ng-model="field.chat_column">
+                    <option value="0">互动聊天栏不显示</option>
+                    <option value="1">只显示互动聊天</option>
+                    <option value="2">显示互动聊天和显示报名问卷</option>
+                    <option value="3">显示互动聊天和显示财富商城</option>
+                </select>
+            </div>
+        </div>
+
+
+
+
+        <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="button" class="layui-btn" lay-submit="" lay-filter="submit">{:lang('submit')}</button>
                 <a href="{:url('index')}" class="layui-btn layui-btn-primary">{:lang('back')}</a>
@@ -93,19 +150,27 @@
 <script>
     var m = angular.module('hd',[]);
     m.controller('ctrl',['$scope',function($scope) {
-        $scope.field = '{$info}'!='null'?{$info}:{id:'',channel_name:'',channel_logo:'',channel_bgpic:'',channel_live_bgpic:'',bottomtext:'',ca_id:''};
+        $scope.field = '{$info}'!='null'?{$info}:{id:'',channel_name:'',channel_logo:'',channel_bgpic:'',channel_live_bgpic:'',caht_gf_logo:'',bottomtext:'',ca_id:''};
         $scope.group = {$adtypeList};
         layui.use(['form', 'layer','upload'], function () {
             var form = layui.form, $ = layui.jquery, upload = layui.upload;
+            //显示频道logo
             if($scope.field.channel_logo){
                 adPic.src = "__PUBLIC__"+ $scope.field.channel_logo;
             }
+            //显示频道背景
             if($scope.field.channel_bgpic){
                 adPicbjtp.src = "__PUBLIC__"+ $scope.field.channel_bgpic;
             }
+            //显示频道播放器封面
             if($scope.field.channel_live_bgpic){
                 adPiclivebj.src = "__PUBLIC__"+ $scope.field.channel_live_bgpic;
             }
+            //显示互动聊天官方logo
+            if($scope.field.caht_gf_logo){
+                adPic_caht_gf_logo.src = "__PUBLIC__"+ $scope.field.caht_gf_logo;
+            }
+
             form.on('submit(submit)', function (data) {
                 // 提交到方法 默认为本身
                 data.field.id = $scope.field.id;
@@ -135,6 +200,36 @@
                 done: function(res){
                     if(res.code>0){
                         $('#pic').val(res.url);
+                    }else{
+                        //如果上传失败
+                        return layer.msg('上传失败');
+                    }
+                }
+                ,error: function(){
+                    //演示失败状态，并实现重传
+                    var demoText = $('#demoText');
+                    demoText.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-mini demo-reload">重试</a>');
+                    demoText.find('.demo-reload').on('click', function(){
+                        uploadInst.upload();
+                    });
+                }
+            });//直播图标结束
+
+
+
+            //互动聊天官方logo
+            var uploadInst = upload.render({
+                elem: '#adBtn_caht_gf_logo'
+                ,url: '{:url("UpFiles/upload")}'
+                ,before: function(obj){
+                    //预读本地文件示例，不支持ie8
+                    obj.preview(function(index, file, result){
+                        $('#adPic_caht_gf_logo').attr('src', result); //图片链接（base64）
+                    });
+                },
+                done: function(res){
+                    if(res.code>0){
+                        $('#pic_caht_gf_logo').val(res.url);
                     }else{
                         //如果上传失败
                         return layer.msg('上传失败');

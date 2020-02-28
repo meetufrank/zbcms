@@ -116,7 +116,20 @@ class Index extends Common{
         $id = input('ad_id');
 
 
+        //存在白名单,且用户未登录
+        $channel_user_list = db('whitelist_user_list')->where("pid =$id")->find();   //查询该频道是否有用户白名单
 
+        if($id != 79){  //不是中金财富2
+            if(!empty($channel_user_list)){    //存在白名单
+                if(empty(Cookie::get('usernames'))){  //用户未登录
+                    if(Request::instance()->isMobile()) { //手机端
+                        $this->redirect('home/channeluserlist/mobiile_index', ['ad_id' => $id]);
+                    }else{   //pc端
+                        $this->redirect('home/channeluserlist/index', ['ad_id' => $id]);
+                    }
+                }
+            }
+        }
 
 
 
@@ -166,9 +179,6 @@ class Index extends Common{
                     if(empty(Session::get('userid'))){  //当获取到的用户id为空时
                         $this->redirect('Index/zhojiner', ['ad_id' => $id]);
                     }
-                }else if(!empty($channel_user_list)){  //pc端用户白名单
-
-                    $this->redirect('home/channeluserlist/index', ['ad_id' => $id]);
                 }
             }
 
@@ -193,7 +203,9 @@ class Index extends Common{
             //添加到访问记录表
             $adata['cid'] = $id;    //关联频道id
 
-            if(empty(Session::get('usernames'))){   //usernames为空时，采用ip地址区域加上"用户" = 做为用户名
+
+
+            if(empty(Cookie::get('usernames'))){   //usernames为空时，采用ip地址区域加上"用户" = 做为用户名
                 if($id == 99){   //思科直播频道没有登陆名称时
                     $this->redirect('http://qiandao.easylaa.com/webinar/cisco/login.aspx?b=30326');
                 }
@@ -205,7 +217,7 @@ class Index extends Common{
                 }
                 $usernames_access = $ipres['city']."网友";
             }else{
-                $usernames_access = Session::get('usernames');
+                $usernames_access = Cookie::get('usernames');
             }
 
             //用户地址

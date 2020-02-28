@@ -47,15 +47,20 @@ class Assistant extends Common{
             $bmd_user_login_count = 0;  //频道白名单登录统计初始化
             foreach($bmd_channel_user_list as $k => $v){
                 $bmd_login_where = "cid = $id and username = '".$v['w_name']."'";
-                $bmd_login_user_find = db('access')->where($bmd_login_where)->find();
+                $bmd_login_user_find = db('user_record')->where($bmd_login_where)->find();
+
                 $bmd_login_user_s[$k]['username'] = $v['w_name'];
-                if(!empty($bmd_login_user_find)){   //存在更改其为在线状态
+                if($bmd_login_user_find['leave_time'] == 1){   //存在更改其为在线状态
                     $bmd_login_user_s[$k]['type'] = $v['type'] = 1;  //上线
                     $bmd_user_login_count++;
                 }else{
-                    $bmd_login_user_s[$k]['type'] = $v['type'] = 2;  //上线
+                    $bmd_login_user_s[$k]['type'] = $v['type'] = 2;  //未上线
                 }
             }
+
+            //排序  上线排在未上线前面
+            $last_type= array_column($bmd_login_user_s,'type');   //抽取字段 type
+            array_multisort($last_type,SORT_ASC,$bmd_login_user_s);    //对类型上线进行降序排序
 
 
             $this -> assign('bmd_login_user_s',$bmd_login_user_s);  //查看用户登录数据状态集
@@ -66,6 +71,48 @@ class Assistant extends Common{
 
 
         return $this -> fetch();
+    }
+
+    //白名单登录列表
+    public function chatuserbmd(){
+        $cid = $_POST['cid'];   //频道id
+
+        //用户白名单
+        $channel_user_list = db('whitelist_user_list')->where("pid =$cid")->find();   //查询该频道是否有用户白名单
+        if(!empty($channel_user_list)){  //存在白名单
+            $count_liust_bmd = db('whitelist_user_list')->where("pid =$cid")->count();  //该频道白名单统计人数
+
+            //查看用户登录数据
+            $bmd_channel_user_list = db('whitelist_user_list')->where("pid =$cid")->select();   //查询该频道的用户
+
+            //对比赋值状态
+            $bmd_login_user_s = [];
+            $bmd_user_login_count = 0;  //频道白名单登录统计初始化
+            foreach($bmd_channel_user_list as $k => $v){
+                $bmd_login_where = "cid = $cid and username = '".$v['w_name']."'";
+                $bmd_login_user_find = db('user_record')->where($bmd_login_where)->find();
+
+                $bmd_login_user_s[$k]['username'] = $v['w_name'];
+                if($bmd_login_user_find['leave_time'] == 1){   //存在更改其为在线状态
+                    $bmd_login_user_s[$k]['type'] = $v['type'] = '上线';  //上线
+                    $bmd_user_login_count++;
+                }else{
+                    $bmd_login_user_s[$k]['type'] = $v['type'] = '未上线';  //未上线
+                }
+            }
+
+            //排序  上线排在未上线前面
+            $last_type= array_column($bmd_login_user_s,'type');   //抽取字段 type
+            array_multisort($last_type,SORT_ASC,$bmd_login_user_s);    //对类型上线进行降序排序
+            $data['bmd_login_user_s'] = $bmd_login_user_s;  //查看用户登录数据状态集
+            $data['count_liust_bmd'] = $count_liust_bmd;  //该频道白名单统计人数
+            $data['bmd_user_login_count'] = $bmd_user_login_count;  //频道白名单登录统计
+            $data['channel_user_list_type'] = 1;  //存在白名单，赋值状态判断1
+            echo json_encode($data);exit;
+
+
+        }
+
     }
 
 

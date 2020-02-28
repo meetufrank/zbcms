@@ -6,7 +6,8 @@ use think\Controller;
 use excel\excels;
 use app\oss\controller\Aly;  //阿里云oss 操作控制器
 use app\wdcz\controller\Wdcz;  //阿里云智能媒体管理控制器
-use think\session;
+use think\Session;
+
 class Channel extends Common
 {
     public function _initialize(){
@@ -149,6 +150,76 @@ class Channel extends Common
             $this->assign("ca_id",$ca_id);
             return $this->fetch('form');
         }
+    }
+
+    //财富商城删除
+    public function cfcsdel(){
+        db('cfsc')->where(array('id'=>input('id')))->delete();
+        cache('adList', NULL);
+        return ['code'=>1,'msg'=>'删除成功！'];
+    }
+
+    //财富商城修改添加
+    public function cfcsadd(){
+        if(request()->isPost()) {
+            $data = input('post.');
+
+            if($data['id'] == ''){
+                Db::name('cfsc')->insert($data);   //新增
+            }else{
+                db('cfsc')->update($data);  //修改
+            }
+           $cid = $data['cid']; //频道id
+
+           return $this -> success('操作成功!',url("channel/cfcs?ad_id=$cid"));
+
+        }else{
+            $ad_id = $_GET['ad_id'];
+            $id = $_GET['id'];
+
+            $cfcsInfo=db('cfsc')->where(array('id'=>$id,))->find();
+
+
+            $this->assign('info',json_encode($cfcsInfo,true));
+            $this -> assign('ca_id',$ad_id);
+            $this -> assign('id',$id);
+            $this->assign('title',"修改直播频道");
+            return $this->fetch('cfcsform');
+        }
+    }
+
+
+    //财富商城管理
+    public function cfcs(){
+        $ad_id = $_GET['ad_id'];
+
+
+        if($ad_id != ''){
+            $cfcsInfo=db('cfsc')->where(array('id'=>$ad_id))->find();
+            $this -> assign('cid',$ad_id);
+        }
+
+
+        if(request()->isPost()) {
+
+            $page =input('page')?input('page'):1;
+            $pageSize =input('limit')?input('limit'):config('pageSize');
+            $cid =input('cid')?input('cid'):1;
+
+
+            $list = db('cfsc')
+                ->field('id,cid,cf_name,cf_title,cf_logo,cf_num')
+                ->where("cid = $cid")
+                ->order("id desc")
+                ->paginate(array('list_rows'=>$pageSize,'page'=>$page))
+                ->toArray();
+
+
+            return $result = ['code'=>0,'msg'=>'获取成功!','data'=>$list['data'],'count'=>$list['total'],'rel'=>1];
+
+        }
+
+        return $this -> fetch('cfcsindex');
     }
 
     //查看直播详情
@@ -640,6 +711,8 @@ class Channel extends Common
     public function edit(){
         if(request()->isPost()) {
             $data = input('post.');
+
+
             db('channel')->update($data);
             $result['code'] = 1;
             $result['msg'] = '频道修改成功!';

@@ -131,6 +131,41 @@
             vertical-align: top;
             display: inline-block;
         }
+
+
+        /*表格部分*/
+        .outSide{
+            height: 400px;
+            overflow: auto;
+            width: 1000px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            margin-bottom: 20px;
+        }
+        .table{
+            width: 1000px;
+            margin: 0 auto;
+            border-color: #fff;
+            max-height:400px;
+            overflow-y: auto;
+        }
+        .table thead tr{
+            background: #436ecc !important;
+        }
+        .table thead tr td{
+            color: #fff;
+        }
+        .table tr:nth-child(odd){
+            background: #d0d7ea;
+        }
+        .table tr:nth-child(even){
+            background: #e9ecf5;
+        }
+        .table tr td{
+            width :50%;
+            height: 40px;
+        }
+
     </style>
 </head>
 <body>
@@ -367,24 +402,43 @@
     <p class="time">2019-09-16 16:08</p>
 </li>
 <input type="hidden" id="istoexamine" value="{$issh}"/>
+
+
+
 <!--用户登录情况-->
 {if condition="$channel_user_list_type eq 1"}
-<div>
-    <p>用户观看直播名单<span><input type="button" value="实时更新"/></span></p>
-    <div>
-        <span>用户</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span>上线状态({$bmd_user_login_count}/{$count_liust_bmd})</span>
-        <br/>
+<div style="width:1000px;margin:0 auto;">
+    <button style="
+    background: #436ecc;
+    color: #fff;
+    border: none;
+    width: 80px;
+    height: 40px;
+    margin-bottom: 5px;
+               " onclick="gengxin()">更新</button></div>
+<div class="outSide">
+    <table id="userlist" class="table" border="1">
+        <thead>
+        <tr>
+            <td>用户</td>
+            <td>上线状态<span>({$bmd_user_login_count}/{$count_liust_bmd})</span></td>
+        </tr>
+        </thead>
+        <tbody>
         {foreach $bmd_login_user_s as $vo}
-           <p><span>{$vo.username}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-               {if condition="$vo.type eq 1"}
-                    <span>上线</span></p>
-               {elseif condition = "$vo.type eq 2"/}
-                    <span>未上线</span></p>
-               {/if}
+            <tr>
+                <td>{$vo.username}</td>
+                {if condition="$vo.type eq 1"}
+                    <td>上线</td>
+                {elseif condition = "$vo.type eq 2"/}
+                    <td>未上线</td>
+                {/if}
+            </tr>
         {/foreach}
-    </div>
+    </table>
 </div>
 {/if}
+
 
 
 
@@ -410,7 +464,7 @@
     var videoObject = {
         container: '#video', 	//容器的ID或className
         variable: 'player', 	//播放函数名称
-        poster: jklive, 		//封面图片
+        // poster: jklive, 		//封面图片
         live:true,				//	是否为直播
         debug:true,				//	允许调试播放器
         volume:0.5,				//	初始音量
@@ -422,6 +476,32 @@
 
 
 <script>
+    //更新用户在线数据
+    function gengxin(){
+
+        var cid = "{$info.id}";  //绑定直播id
+        $.ajax({
+            type:"post",
+            url:"{:url('home/Assistant/chatuserbmd')}",
+            dataType:"json",
+            data:{cid:cid},
+            success:function(data){
+                var html = '<table id="userlist" class="table" border="1"><thead><tr><td>用户</td><td>上线状态<span>('+data.bmd_user_login_count+'/'+data.count_liust_bmd+')</span></td></tr></thead><tbody>';
+                $(".outSide").empty();   //清空白名单登录列表
+                $(data.bmd_login_user_s).each(function(k,v){
+
+                   html += '<tr><td>'+v.username+'</td><td>'+v.type+'</td></tr>';
+                })
+                html += '</tbody></table>';
+                $(".outSide").append(html);
+
+            }
+        });
+    }
+
+
+
+
     //聊天
     $("#input-text").emoji({
         showTab: true,
@@ -629,8 +709,8 @@
             // 触发需要调用的方法
             var cid = "{$info.id}";  //初始化绑定群聊
             var content = $(".input-text").val();
-            var usernames = "思科官方";
-            var userimgurl = "https://cdn13.mudu.tv/assets/upload/154466654253127.png";
+            var usernames = "{$info.chat_gf_title}";   //互动聊天官方title
+            var userimgurl = "__PUBLIC__{$info.caht_gf_logo}";   //互动聊天官方logo
 
             $.ajax({
                 type:"post",
@@ -684,8 +764,11 @@
 
         var cid = "{$info.id}";  //初始化绑定群聊
         var content = $(".input-text").val();
-        var usernames = "思科官方";
-        var userimgurl = "https://cdn13.mudu.tv/assets/upload/154466654253127.png";
+
+            var usernames = "{$info.chat_gf_title}";   //互动聊天官方title
+            var userimgurl = "__PUBLIC__{$info.caht_gf_logo}";   //互动聊天官方logo
+
+
 
         $.ajax({
             type:"post",

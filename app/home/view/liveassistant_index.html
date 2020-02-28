@@ -15,7 +15,7 @@
 
         <div class="signup-wrapper">
             <!--banner-->
-            <div class="signup-image">
+            <div class="signup-image" style="display:none;">
                 <img src="__PC__/liveassistant/images/signup_cover.png" alt="">
             </div>
             <!--输入框-->
@@ -49,6 +49,8 @@
         $(".signup-submit-btn").on('click',function(){
             var $number = $(".number").val();
             var $passed = $(".passed").val();
+            var username = "{$username}";
+            var pwd = "{$pwd}";
             if($number==""){
                 layer.msg("账号不能为空");
                 $(".number").focus();
@@ -57,11 +59,11 @@
                 layer.msg("密码不能为空");
                 $(".passed").focus();
                 return false;
-            }else if($number != "cisco"){
+            }else if($number != username){
                 layer.msg("账号错误");
                 $(".passed").focus();
                 return false;
-            }else if($passed != "cisco123"){
+            }else if($passed != pwd){
                 layer.msg("密码错误");
                 $(".passed").focus();
                 return false;
